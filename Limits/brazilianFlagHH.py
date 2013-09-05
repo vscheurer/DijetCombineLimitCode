@@ -3,7 +3,7 @@ from ROOT import *
 
 withAcceptance=False
 unblind=True
-number_of_mc_events=30000.
+number_of_mc_events=20000.
 
 gROOT.Reset()
 gROOT.SetStyle("Plain")
@@ -208,39 +208,39 @@ def Plot(files, label, obs):
 
             
 
-    gtheoryRS1 = rt.TGraphErrors(1)
-    gtheoryRS1.SetLineColor(28)
-    gtheoryRS1.SetLineWidth(3)
+    gtheoryBrane = rt.TGraphErrors(1)
+    gtheoryBrane.SetLineColor(28)
+    gtheoryBrane.SetLineWidth(3)
     ftheory=open("HH_crosssections.txt")
     j=0
-    glogtheoryRS1 = rt.TGraphErrors(1)
+    glogtheoryBrane = rt.TGraphErrors(1)
     for lines in ftheory.readlines():
      for line in lines.split("\r"):
-      if "RS1Graviton" in line:
+      if "BraneGraviton" in line:
         split=line.split(":")
         print split[1]
-        gtheoryRS1.SetPoint(j, float(split[0][-4:])/1000., float(split[1]))
-        glogtheoryRS1.SetPoint(j, float(split[0][-4:])/1000., log(float(split[1])))
+        gtheoryBrane.SetPoint(j, float(split[0][-4:])/1000., float(split[1]))
+        glogtheoryBrane.SetPoint(j, float(split[0][-4:])/1000., log(float(split[1])))
 	j+=1
-    mg.Add(gtheoryRS1,"L")
-    gtheoryRS1.Draw("L")
+    mg.Add(gtheoryBrane,"L")
+    gtheoryBrane.Draw("L")
     if "HH" in label.split("_")[0]:
-        ltheoryRS1="RS1 #rightarrow HH"
+        ltheoryBrane="Brane G #rightarrow HH"
     
     crossing=0
     for mass in range(int(radmasses[0]*1000.),int(radmasses[-1]*1000.)):
-        if exp(glogtheoryRS1.Eval(mass/1000.))>grmean.Eval(mass/1000.) and crossing>=0:
+        if exp(glogtheoryBrane.Eval(mass/1000.))>grmean.Eval(mass/1000.) and crossing>=0:
 	    print label,"exp crossing",mass
 	    crossing=-1
-        if exp(glogtheoryRS1.Eval(mass/1000.))<grmean.Eval(mass/1000.) and crossing<=0:
+        if exp(glogtheoryBrane.Eval(mass/1000.))<grmean.Eval(mass/1000.) and crossing<=0:
 	    print label,"exp crossing",mass
 	    crossing=1
     crossing=0
     for mass in range(int(radmasses[0]*1000.),int(radmasses[-1]*1000.)):
-        if exp(glogtheoryRS1.Eval(mass/1000.))>grobs.Eval(mass/1000.) and crossing>=0:
+        if exp(glogtheoryBrane.Eval(mass/1000.))>grobs.Eval(mass/1000.) and crossing>=0:
 	    print label,"obs crossing",mass
 	    crossing=-1
-        if exp(glogtheoryRS1.Eval(mass/1000.))<grobs.Eval(mass/1000.) and crossing<=0:
+        if exp(glogtheoryBrane.Eval(mass/1000.))<grobs.Eval(mass/1000.) and crossing<=0:
 	    print label,"obs crossing",mass
 	    crossing=1
 
@@ -263,7 +263,7 @@ def Plot(files, label, obs):
     mg.Add(gtheoryBulk,"L")
     gtheoryBulk.Draw("L")
     if "HH" in label.split("_")[0]:
-        ltheoryBulk="Bulk #rightarrow HH"
+        ltheoryBulk="Bulk G #rightarrow HH"
     
     crossing=0
     for mass in range(int(radmasses[0]*1000.),int(radmasses[-1]*1000.)):
@@ -296,7 +296,7 @@ def Plot(files, label, obs):
     leg.AddEntry(gryellow, "#pm 1 #sigma Expected", "f")
     leg.AddEntry(grgreen, "#pm 2 #sigma Expected", "f")
     leg.AddEntry(gtheoryRadion, ltheoryRadion, "L")
-    leg.AddEntry(gtheoryRS1, ltheoryRS1, "L")
+    leg.AddEntry(gtheoryBrane, ltheoryBrane, "L")
     leg.AddEntry(gtheoryBulk, ltheoryBulk, "L")
     #leg.SetHeader("X #rightarrow %s" %label.split("_")[0])
 

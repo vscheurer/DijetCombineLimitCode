@@ -33,10 +33,10 @@ def Plot(files, label, obs):
     for mass in radmasses:
 	efficiencies[mass]=0.001*number_of_mc_events/19800.0
         # W-tagging scale factor
-        #if "qW" in label.split("_")[0] or "qZ" in label.split("_")[0]:
-        #    efficiencies[mass]*=0.89
-        #else:
-        #    efficiencies[mass]*=0.89*0.89
+        if "qW" in label.split("_")[0] or "qZ" in label.split("_")[0]:
+            efficiencies[mass]*=0.89
+        else:
+            efficiencies[mass]*=0.89*0.89
 
     fChain = []
     for onefile in files:
@@ -130,7 +130,7 @@ def Plot(files, label, obs):
     mg.GetXaxis().SetTitleSize(0.06)
     mg.GetXaxis().SetLabelSize(0.045)
     mg.GetYaxis().SetLabelSize(0.045)
-    mg.GetYaxis().SetRangeUser(0.001,4)
+    mg.GetYaxis().SetRangeUser(0.0004,0.4)
     mg.GetYaxis().SetTitleOffset(1.4)
     mg.GetYaxis().CenterTitle(True)
     mg.GetXaxis().SetTitleOffset(1.1)
@@ -168,11 +168,11 @@ def Plot(files, label, obs):
     if obs: grobs.Draw("L,P,E")
 
 
-    """
+    
     gtheoryRadion = rt.TGraphErrors(1)
     gtheoryRadion.SetLineColor(rt.kBlue)
     gtheoryRadion.SetLineWidth(3)
-    ftheory=open("HH_crosssections.txt")
+    ftheory=open("HH_crosssections_total.txt")
     j=0
     glogtheoryRadion = rt.TGraphErrors(1)
     for lines in ftheory.readlines():
@@ -207,49 +207,49 @@ def Plot(files, label, obs):
 
 
             
-
-    gtheoryRS1 = rt.TGraphErrors(1)
-    gtheoryRS1.SetLineColor(28)
-    gtheoryRS1.SetLineWidth(3)
-    ftheory=open("HH_crosssections.txt")
+    
+    gtheoryBrane = rt.TGraphErrors(1)
+    gtheoryBrane.SetLineColor(28)
+    gtheoryBrane.SetLineWidth(3)
+    ftheory=open("HH_crosssections_total.txt")
     j=0
-    glogtheoryRS1 = rt.TGraphErrors(1)
+    glogtheoryBrane = rt.TGraphErrors(1)
     for lines in ftheory.readlines():
      for line in lines.split("\r"):
-      if "RS1Graviton" in line:
+      if "BraneGraviton" in line:
         split=line.split(":")
         print split[1]
-        gtheoryRS1.SetPoint(j, float(split[0][-4:])/1000., float(split[1]))
-        glogtheoryRS1.SetPoint(j, float(split[0][-4:])/1000., log(float(split[1])))
+        gtheoryBrane.SetPoint(j, float(split[0][-4:])/1000., float(split[1]))
+        glogtheoryBrane.SetPoint(j, float(split[0][-4:])/1000., log(float(split[1])))
 	j+=1
-    mg.Add(gtheoryRS1,"L")
-    gtheoryRS1.Draw("L")
+    mg.Add(gtheoryBrane,"L")
+    gtheoryBrane.Draw("L")
     if "HH" in label.split("_")[0]:
-        ltheoryRS1="RS1 #rightarrow HH"
+        ltheoryBrane="Brane G #rightarrow HH"
     
     crossing=0
     for mass in range(int(radmasses[0]*1000.),int(radmasses[-1]*1000.)):
-        if exp(glogtheoryRS1.Eval(mass/1000.))>grmean.Eval(mass/1000.) and crossing>=0:
+        if exp(glogtheoryBrane.Eval(mass/1000.))>grmean.Eval(mass/1000.) and crossing>=0:
 	    print label,"exp crossing",mass
 	    crossing=-1
-        if exp(glogtheoryRS1.Eval(mass/1000.))<grmean.Eval(mass/1000.) and crossing<=0:
+        if exp(glogtheoryBrane.Eval(mass/1000.))<grmean.Eval(mass/1000.) and crossing<=0:
 	    print label,"exp crossing",mass
 	    crossing=1
     crossing=0
     for mass in range(int(radmasses[0]*1000.),int(radmasses[-1]*1000.)):
-        if exp(glogtheoryRS1.Eval(mass/1000.))>grobs.Eval(mass/1000.) and crossing>=0:
+        if exp(glogtheoryBrane.Eval(mass/1000.))>grobs.Eval(mass/1000.) and crossing>=0:
 	    print label,"obs crossing",mass
 	    crossing=-1
-        if exp(glogtheoryRS1.Eval(mass/1000.))<grobs.Eval(mass/1000.) and crossing<=0:
+        if exp(glogtheoryBrane.Eval(mass/1000.))<grobs.Eval(mass/1000.) and crossing<=0:
 	    print label,"obs crossing",mass
 	    crossing=1
-
+    
 
 
     gtheoryBulk = rt.TGraphErrors(1)
     gtheoryBulk.SetLineColor(6)
     gtheoryBulk.SetLineWidth(3)
-    ftheory=open("HH_crosssections.txt")
+    ftheory=open("HH_crosssections_total.txt")
     j=0
     glogtheoryBulk = rt.TGraphErrors(1)
     for lines in ftheory.readlines():
@@ -263,7 +263,7 @@ def Plot(files, label, obs):
     mg.Add(gtheoryBulk,"L")
     gtheoryBulk.Draw("L")
     if "HH" in label.split("_")[0]:
-        ltheoryBulk="Bulk #rightarrow HH"
+        ltheoryBulk="Bulk G #rightarrow HH"
     
     crossing=0
     for mass in range(int(radmasses[0]*1000.),int(radmasses[-1]*1000.)):
@@ -281,7 +281,7 @@ def Plot(files, label, obs):
         if exp(glogtheoryBulk.Eval(mass/1000.))<grobs.Eval(mass/1000.) and crossing<=0:
 	    print label,"obs crossing",mass
 	    crossing=1
-    """
+    
 
             
     
@@ -295,9 +295,9 @@ def Plot(files, label, obs):
     leg.AddEntry(grmean, "Expected", "L")
     leg.AddEntry(gryellow, "#pm 1 #sigma Expected", "f")
     leg.AddEntry(grgreen, "#pm 2 #sigma Expected", "f")
-    #leg.AddEntry(gtheoryRadion, ltheoryRadion, "L")
-    #leg.AddEntry(gtheoryRS1, ltheoryRS1, "L")
-    #leg.AddEntry(gtheoryBulk, ltheoryBulk, "L")
+    leg.AddEntry(gtheoryRadion, ltheoryRadion, "L")
+    leg.AddEntry(gtheoryBrane, ltheoryBrane, "L")
+    leg.AddEntry(gtheoryBulk, ltheoryBulk, "L")
 
     leg.Draw()
 
@@ -318,7 +318,7 @@ if __name__ == '__main__':
     Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel0.root",
           "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel0.root",
           "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel0.root"],
-          "HH3-btags", unblind)
+          "HH-3btags", unblind)
     Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel1.root",
           "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel1.root",
           "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel1.root"],
