@@ -8,7 +8,7 @@ observation   0
 bin                      cat0      cat0      
 process                  MggSigHH  MggBkg     
 process                  0         1          
-rate                     0.729     0.939
+rate                     1.037     19.6
 --------------------------------
 lumi_8TeV       lnN  1.044  - 
 CMS_eff_vtau         lnN  1.122      - # tau21 efficiency

@@ -24,7 +24,7 @@ channels=["HHcounting"]
 
 for chan in channels:
 
-    masses =[1000.0, 1500.0, 2000.0]
+    masses =[1000.0, 1500.0, 2000.0, 2500.0]
 
     for mass in masses:
         print "mass = ",mass
@@ -38,3 +38,13 @@ for chan in channels:
 
         print comb01
         os.system( comb01  )
+
+        bin2="ch2=datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel2.txt "
+        bin3="ch3=datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel3.txt "
+        
+        bin23="datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel23.txt "
+
+        comb23 = "combineCards.py " + bin2 + bin3 + " >" + bin23
+
+        print comb23
+        os.system( comb23  )

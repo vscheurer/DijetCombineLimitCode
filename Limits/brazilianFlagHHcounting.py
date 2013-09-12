@@ -317,13 +317,31 @@ def Plot(files, label, obs):
 if __name__ == '__main__':
     Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel0.root",
           "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel0.root"],
+          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel0.root",
+          "Xvv.mX2500.0_HHcounting_Asymptotic_8TeV_channel0.root"],
           "HH-3btags", unblind)
     Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel1.root",
           "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel1.root"],
-          "HH-2btags", unblind)
+          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel1.root",
+          "Xvv.mX2500.0_HHcounting_Asymptotic_8TeV_channel1.root"],
+          "HH-4btags", unblind)
     Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel01.root",
           "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel01.root"],
-          "HH-23btags", unblind)
+          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel01.root",
+          "Xvv.mX2500.0_HHcounting_Asymptotic_8TeV_channel01.root"],
+          "HH-34btags", unblind)
+    Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel2.root",
+          "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel2.root",
+          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel2.root",
+          "Xvv.mX2500.0_HHcounting_Asymptotic_8TeV_channel2.root"],
+          "HH-3btags-tau21", unblind)
+    Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel3.root",
+          "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel3.root",
+          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel3.root",
+          "Xvv.mX2500.0_HHcounting_Asymptotic_8TeV_channel3.root"],
+          "HH-4btags-tau21", unblind)
+    Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel23.root",
+          "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel23.root",
+          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel23.root",
+          "Xvv.mX2500.0_HHcounting_Asymptotic_8TeV_channel23.root"],
+          "HH-34btags-tau21", unblind)

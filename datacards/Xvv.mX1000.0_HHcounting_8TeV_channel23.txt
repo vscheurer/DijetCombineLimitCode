@@ -1,15 +1,15 @@
-Combination of ch0=datacards/Xvv.mX2000.0_HHcounting_8TeV_channel0.txt  ch1=datacards/Xvv.mX2000.0_HHcounting_8TeV_channel1.txt
+Combination of ch2=datacards/Xvv.mX1000.0_HHcounting_8TeV_channel2.txt  ch3=datacards/Xvv.mX1000.0_HHcounting_8TeV_channel3.txt
 imax 2 number of bins
 jmax 1 number of processes minus 1
 kmax 6 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-bin          ch0    ch1  
+bin          ch2    ch3  
 observation  0.0    0.0  
 ----------------------------------------------------------------------------------------------------------------------------------
-bin                              ch0       ch0       ch1       ch1     
+bin                              ch2       ch2       ch3       ch3     
 process                          MggSigHH  MggBkg    MggSigHH  MggBkg  
 process                          0         1         0         1       
-rate                             0.7470    2.3600    1.0210    1.0000  
+rate                             0.6580    75.1900   0.6830    8.6900  
 ----------------------------------------------------------------------------------------------------------------------------------
 CMS_eff_vmass           lnN      1.185     -         1.185     -       
 CMS_eff_vtau            lnN      1.122     -         1.122     -       
