@@ -46,7 +46,7 @@ for chan in channels:
 	    outfile="Limits/Xvv.mX"+str(mass)+"_"+chan+"_8TeV_channel"+str(bin)+".out"
             outputfile = open(outputname,'w')
             outputfile.write('#!/bin/bash\n')
-            outputfile.write("cd ${CMSSW_BASE}/src/CMGTools/StatTools/MacrosCombine; eval `scramv1 run -sh`\n")
+            outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
 	    if fullToys:
                 outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_"+chan+"_8TeV_channel"+str(bin)+".txt -M HybridNew --frequentist -T 1000 --fork 0 -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
             else:

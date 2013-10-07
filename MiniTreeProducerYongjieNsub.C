@@ -34,6 +34,7 @@
 
 
  string sInFile = "~hinzmann/public/yxin/DataCategoriesBin1GeVJECSWAP.root";
+ //string sInFile = "~hinzmann/public/yxinNoDeta/Bin1GeVDataDropDeltaEta.root";
  cout << sInFile.c_str() << endl;
  TFile file0(sInFile.c_str(), "read");
  

@@ -18,7 +18,7 @@ gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
 if __name__ == '__main__':
- for suffix in ["","-tau21"]:
+ for suffix in ["","-tau21","-medium"]:
   f1=TFile.Open("brazilianFlag_HH-3btags"+suffix+".root")
   f2=TFile.Open("brazilianFlag_HH-4btags"+suffix+".root")
   f3=TFile.Open("brazilianFlag_HH-34btags"+suffix+".root")

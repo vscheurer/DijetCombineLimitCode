@@ -7,7 +7,7 @@ for mass in masses:
   logname = "submit_VV_"+str(mass)+".log"
   outputfile = open(outputname,'w')
   outputfile.write('#!/bin/bash\n')
-  outputfile.write("cd ${CMSSW_BASE}/src/CMGTools/StatTools/MacrosCombine; eval `scramv1 run -sh`\n")
+  outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
   outputfile.write("root -b -q 'R2JJFitter.cc("+str(mass)+","+'""'+",0)'\n")
   outputfile.close
   
@@ -25,7 +25,7 @@ for mass in masses:
   logname = "submit_qV_"+str(mass)+".log"
   outputfile = open(outputname,'w')
   outputfile.write('#!/bin/bash\n')
-  outputfile.write("cd ${CMSSW_BASE}/src/CMGTools/StatTools/MacrosCombine; eval `scramv1 run -sh`\n")
+  outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
   outputfile.write("root -b -q 'R2JJFitter.cc("+str(mass)+","+'""'+",1)'\n")
   outputfile.close
   

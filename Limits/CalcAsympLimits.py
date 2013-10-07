@@ -59,7 +59,7 @@ for chan in channels:
             logname = "Xvv.mX"+str(mass)+"_"+chan+"_8TeV_channel"+str(bin)+"_limit"+str(int(point*10))+"_submit.out"
             outputfile = open(outputname,'w')
             outputfile.write('#!/bin/bash\n')
-            outputfile.write("cd ${CMSSW_BASE}/src/CMGTools/StatTools/MacrosCombine; eval `scramv1 run -sh`\n")
+            outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
 	    if fullToys:
               outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".txt -M HybridNew --frequentist --clsAcc 0 -T 100 -i 30 --singlePoint "+str(point)+" -s 10000"+str(int(point*100))+" --saveHybridResult --saveToys -m "+str(mass) + " -n "+chan+str(bin)+" &>Xvv.mX"+str(mass)+"_" + chan + "_Full_8TeV_channel"+str(bin)+"_toy"+str(int(point*10))+".out\n")
               outputfile.write("hadd -f grid_mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".root higgsCombine" + chan + str(bin)+".HybridNew.mH"+str(int(mass))+".10000*.root\n")

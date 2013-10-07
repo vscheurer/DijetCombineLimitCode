@@ -77,13 +77,15 @@ def Plot(files, label, obs):
     y2down = []
     ymean = []
 
-    for i in range(0,len(fChain)):
-        y2up.append(rad[i][0]*efficiencies[radmasses[j]])
-        y1up.append(rad[i][1]*efficiencies[radmasses[j]])
-        ymean.append(rad[i][2]*efficiencies[radmasses[j]])
-        y1down.append(rad[i][3]*efficiencies[radmasses[j]])
-        y2down.append(rad[i][4]*efficiencies[radmasses[j]])
-        yobs.append(rad[i][5]*efficiencies[radmasses[j]])
+    for j in range(0,len(fChain)):
+        y2up.append(rad[j][0]*efficiencies[radmasses[j]])
+        y1up.append(rad[j][1]*efficiencies[radmasses[j]])
+        ymean.append(rad[j][2]*efficiencies[radmasses[j]])
+	print "expected limits at",radmasses[j],"GeV : median:",rad[j][2]*efficiencies[radmasses[j]]
+	print "expected limits at",radmasses[j],"GeV : -2s:",rad[j][4]*efficiencies[radmasses[j]],"-1s:",rad[j][3]*efficiencies[radmasses[j]],"+1s:",rad[j][1]*efficiencies[radmasses[j]],"+2s:",rad[j][0]*efficiencies[radmasses[j]]
+        y1down.append(rad[j][3]*efficiencies[radmasses[j]])
+        y2down.append(rad[j][4]*efficiencies[radmasses[j]])
+        yobs.append(rad[j][5]*efficiencies[radmasses[j]])
 
     grobs = rt.TGraphErrors(1)
     grobs.SetMarkerStyle(rt.kFullDotLarge)
@@ -345,3 +347,18 @@ if __name__ == '__main__':
           "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel23.root",
           "Xvv.mX2500.0_HHcounting_Asymptotic_8TeV_channel23.root"],
           "HH-34btags-tau21", unblind)
+    Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel4.root",
+          "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel4.root",
+          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel4.root",
+          "Xvv.mX2500.0_HHcounting_Asymptotic_8TeV_channel4.root"],
+          "HH-3btags-medium", unblind)
+    Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel5.root",
+          "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel5.root",
+          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel5.root",
+          "Xvv.mX2500.0_HHcounting_Asymptotic_8TeV_channel5.root"],
+          "HH-4btags-medium", unblind)
+    Plot(["Xvv.mX1000.0_HHcounting_Asymptotic_8TeV_channel45.root",
+          "Xvv.mX1500.0_HHcounting_Asymptotic_8TeV_channel45.root",
+          "Xvv.mX2000.0_HHcounting_Asymptotic_8TeV_channel45.root",
+          "Xvv.mX2500.0_HHcounting_Asymptotic_8TeV_channel45.root"],
+          "HH-34btags-medium", unblind)

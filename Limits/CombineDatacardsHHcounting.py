@@ -48,3 +48,13 @@ for chan in channels:
 
         print comb23
         os.system( comb23  )
+
+        bin4="ch4=datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel4.txt "
+        bin5="ch5=datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel5.txt "
+        
+        bin45="datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel45.txt "
+
+        comb45 = "combineCards.py " + bin4 + bin5 + " >" + bin45
+
+        print comb45
+        os.system( comb45  )

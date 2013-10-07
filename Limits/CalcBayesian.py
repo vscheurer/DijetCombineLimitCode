@@ -39,7 +39,7 @@ for ibin in bin:
             logname = "Xvv.mX"+str(mass)+"_" + sChannel[chan] + "_MarkovChainMC_8TeV_channel"+str(ibin)+".out"
             outputfile = open(outputname,'w')
             outputfile.write('#!/bin/bash\n')
-            outputfile.write("cd ${CMSSW_BASE}/src/CMGTools/StatTools/MacrosCombine/Limits; eval `scramv1 run -sh`\n")
+            outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode/Limits; eval `scramv1 run -sh`\n")
             outputfile.write("combine ../datacards/Xvv.mX"+str(mass)+"_" + sChannel[chan] + "_8TeV_channel"+str(ibin)+".txt -M MarkovChainMC -v2 -m "+str(mass+chan)+"\n")
             outputfile.write("mv higgsCombineTest.MarkovChainMC.mH"+str(int(mass+chan))+".root Xvv.mX"+str(mass)+"_" + sChannel[chan] + "_MarkovChainMC_8TeV_channel"+str(ibin)+"_"+sBin[ibin]+".root\n")
             outputfile.close()

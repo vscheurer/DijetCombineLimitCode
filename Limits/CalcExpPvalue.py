@@ -44,7 +44,7 @@ for ibin in bin:
             logname = "Xvv.mX"+str(mass)+"_"+sChan[chan]+"_8TeV_channel"+str(ibin)+"_exp_toys"+str(job)+".out"
             outputfile = open(outputname,'w')
             outputfile.write('#!/bin/bash\n')
-            outputfile.write("cd ${CMSSW_BASE}/src/CMGTools/StatTools/MacrosCombine; eval `scramv1 run -sh`\n")
+            outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
             outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_"+sChan[chan]+"_8TeV_channel"+str(ibin)+".txt -M ProfileLikelihood -v2 -m "+str(mass) + " --signif --expectSignal 0.5 -t "+str(toysPerJob)+" -s "+str(job)+"\n")
             outputfile.close()
   

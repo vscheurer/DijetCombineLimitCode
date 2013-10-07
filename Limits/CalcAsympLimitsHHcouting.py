@@ -28,7 +28,7 @@ for chan in channels:
     print "chan =",chan
 
     masses =[1000.0,1500.0,2000.0,2500.0]
-    bins=[0,1,"01",2,3,"23"]
+    bins=[0,1,"01",2,3,"23",4,5,"45"]
 
     for bin in bins:
       for mass in masses:
