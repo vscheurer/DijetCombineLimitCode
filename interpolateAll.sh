@@ -15,7 +15,7 @@ do
     python interpolate.py ~hinzmann/public/yxin/QstarQZ $resonance
 done
 
-for resonance in `seq  1000 100 2500`
+for resonance in `seq  1000 100 3000`
 do
     python interpolate.py ~hinzmann/public/yxin/Bulk $resonance
 done

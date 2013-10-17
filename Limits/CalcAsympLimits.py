@@ -20,7 +20,7 @@ gStyle.SetLabelSize(0.05, "XYZ")
 gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
-channels=["WW","ZZ","WZ","qW","qZ"]
+channels=["WW","ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
 
 fullToys=False
 

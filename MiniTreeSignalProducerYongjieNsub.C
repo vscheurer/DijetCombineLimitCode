@@ -32,23 +32,26 @@
  evWeight = 1.0;
  normWeight = 1;
 
- for (int iSample = 0; iSample < 5; iSample++){
+ for (int iSample = 0; iSample < 7; iSample++){
    
    string inFile("Wprime");
    if (iSample == 1) inFile = string("RSGWWherwig");
-   //if (iSample == 1) inFile = string("Bulk");
    if (iSample == 2) inFile = string("RSGZZherwig");
    if (iSample == 3) inFile = string("QstarQW");
    if (iSample == 4) inFile = string("QstarQZ");
+   if (iSample == 5) inFile = string("Bulk");
+   if (iSample == 6) inFile = string("Bulk");
 
    string outFile("dijetWtag_Moriond_WZPy6");
    if (iSample == 1) outFile = string("dijetWtag_Moriond_WWHpp");
    if (iSample == 2) outFile = string("dijetWtag_Moriond_ZZHpp");
    if (iSample == 3) outFile = string("dijetWtag_Moriond_QstarQW");
    if (iSample == 4) outFile = string("dijetWtag_Moriond_QstarQZ");
+   if (iSample == 5) outFile = string("dijetWtag_Moriond_WWBulk");
+   if (iSample == 6) outFile = string("dijetWtag_Moriond_ZZBulk");
    
    int massrange=21;
-   if(iSample>2) massrange=31;
+   if((iSample==3)||(iSample==4)) massrange=31;
 
    for (int iMass = 0; iMass<massrange; iMass++){
 

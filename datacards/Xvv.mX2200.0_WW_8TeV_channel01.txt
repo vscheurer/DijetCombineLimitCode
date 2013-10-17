@@ -1,4 +1,4 @@
-Combination of ch0=datacards/Xvv.mX2200.0_WW_8TeV_channel0.txt, ch1=datacards/Xvv.mX2200.0_WW_8TeV_channel1.txt
+Combination of ch0=datacards/Xvv.mX2200.0_WW_8TeV_channel0.txt  ch1=datacards/Xvv.mX2200.0_WW_8TeV_channel1.txt
 imax 2 number of bins
 jmax 3 number of processes minus 1
 kmax 8 number of nuisance parameters
@@ -27,9 +27,9 @@ CMS_eff_vtau            lnN      1.122     1.126     1.124     -         0.891  
 CMS_pu                  lnN      1.03      1.03      1.03      -         1.03      1.03      1.03      -       
 CMS_res_j               lnN      1.04      1.04      1.04      -         1.04      1.04      1.04      -       
 CMS_scale_j             lnN      1.12      1.12      1.12      -         1.12      1.12      1.12      -       
-lumi_8TeV               lnN      1.044     1.044     1.044     -         1.044     1.044     1.044     -       
+lumi_8TeV               lnN      1.022     1.022     1.022     -         1.022     1.022     1.022     -       
 CMS_hgg_sig_sigmaScale  param  1 0.1
-CMS_hgg_sig_m0_absShift  param  1 0.022
+CMS_hgg_sig_m0_absShift  param  1 0.01
 CMS_hgg_bkg_8TeV_slope2_cat0  flatParam
 CMS_hgg_bkg_8TeV_cat1_norm  flatParam
 CMS_hgg_bkg_8TeV_cat0_norm  flatParam
