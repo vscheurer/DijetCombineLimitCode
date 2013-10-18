@@ -17,5 +17,5 @@ done
 
 for resonance in `seq  1000 100 3000`
 do
-    python interpolate.py ~hinzmann/public/yxin/Bulk $resonance
+    python interpolate.py ~hinzmann/public/yxin/BulkCombined $resonance
 done
