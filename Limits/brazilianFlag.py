@@ -26,17 +26,12 @@ def Plot(files, label, obs):
 
     radmasses = []
     for f in files:
-        radmasses.append(float(f.replace("Xvv.mX","").split("_")[0])/1000.)
+        radmasses.append(float(f.replace("CMS_jj_","").split("_")[0])/1000.)
     #print radmasses
 
     efficiencies={}
     for mass in radmasses:
-	efficiencies[mass]=number_of_mc_events*0.005/19700.0
-        # W-tagging scale factor
-        if "qW" in label.split("_")[0] or "qZ" in label.split("_")[0]:
-            efficiencies[mass]*=0.89
-        else:
-            efficiencies[mass]*=0.89*0.89
+	efficiencies[mass]=0.01 # assume 10/fb signal cross section
 
     fChain = []
     for onefile in files:
@@ -122,9 +117,9 @@ def Plot(files, label, obs):
     mg.Draw("AP")
     mg.GetXaxis().SetTitle("Resonance mass (TeV)")
     if withAcceptance:
-        mg.GetYaxis().SetTitle("#sigma #times BR(X #rightarrow "+label.split("_")[0].replace("Bulk","")+") #times A (pb)")
+        mg.GetYaxis().SetTitle("#sigma #times BR(X #rightarrow "+label.split("_")[0].replace("RS1","").replace("Bulk","")+") #times A (pb)")
     else:
-        mg.GetYaxis().SetTitle("#sigma #times BR(X #rightarrow "+label.split("_")[0].replace("Bulk","")+") (pb)")
+        mg.GetYaxis().SetTitle("#sigma #times BR(X #rightarrow "+label.split("_")[0].replace("RS1","").replace("Bulk","")+") (pb)")
     mg.GetYaxis().SetTitleSize(0.06)
     mg.GetXaxis().SetTitleSize(0.06)
     mg.GetXaxis().SetLabelSize(0.045)
@@ -185,11 +180,11 @@ def Plot(files, label, obs):
         ltheory="q* #rightarrow qZ"
     elif "BulkWW" in label.split("_")[0]:
         ltheory="G_{Bulk} #rightarrow WW"
-    elif "WW" in label.split("_")[0]:
+    elif "RS1WW" in label.split("_")[0]:
         ltheory="G_{RS} #rightarrow WW"
     elif "BulkZZ" in label.split("_")[0]:
         ltheory="G_{Bulk} #rightarrow ZZ"
-    elif "ZZ" in label.split("_")[0]:
+    elif "RS1ZZ" in label.split("_")[0]:
         ltheory="G_{RS} #rightarrow ZZ"
     elif "WZ" in label.split("_")[0]:
         ltheory="W' #rightarrow WZ"
@@ -225,7 +220,7 @@ def Plot(files, label, obs):
 
     leg.Draw()
 
-    banner = TLatex(0.22,0.93,"CMS Preliminary, 19.8 fb^{-1}, #sqrt{s} = 8TeV");
+    banner = TLatex(0.22,0.93,"CMS Preliminary, 19.7 fb^{-1}, #sqrt{s} = 8TeV");
     banner.SetNDC()
     banner.SetTextSize(0.045)
     banner.Draw();  
@@ -239,548 +234,29 @@ def Plot(files, label, obs):
 
 
 if __name__ == '__main__':
-    Plot(["Xvv.mX1000.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1100.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1200.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1300.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1400.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1500.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1600.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1700.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1800.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1900.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2000.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2100.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2200.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2300.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2400.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2500.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2600.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2700.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2800.0_WW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2900.0_WW_Asymptotic_8TeV_channel0.root"],
-          "WW_high_purity", unblind)
-    
-    Plot(["Xvv.mX1000.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1100.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1200.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1300.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1400.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1500.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1600.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1700.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1800.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1900.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2000.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2100.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2200.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2300.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2400.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2500.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2600.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2700.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2800.0_ZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2900.0_ZZ_Asymptotic_8TeV_channel0.root"],
-          "ZZ_high_purity", unblind)
 
-    Plot(["Xvv.mX1000.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1100.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1200.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1300.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1400.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1500.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1600.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1700.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1800.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1900.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2000.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2100.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2200.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2300.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2400.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2500.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2600.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2700.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2800.0_WZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2900.0_WZ_Asymptotic_8TeV_channel0.root"
-	  ],
-          "WZ_high_purity", unblind)
-    
-    Plot(["Xvv.mX1000.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1100.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1200.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1300.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1400.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1500.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1600.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1700.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1800.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1900.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2000.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2100.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2200.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2300.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2400.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2500.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2600.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2700.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2800.0_WW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2900.0_WW_Asymptotic_8TeV_channel1.root"],
-          "WW_medium_purity", unblind)
-    
-    Plot(["Xvv.mX1000.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1100.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1200.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1300.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1400.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1500.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1600.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1700.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1800.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1900.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2000.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2100.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2200.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2300.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2400.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2500.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2600.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2700.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2800.0_ZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2900.0_ZZ_Asymptotic_8TeV_channel1.root"],
-          "ZZ_medium_purity", unblind)
+  channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
 
-    Plot(["Xvv.mX1000.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1100.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1200.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1300.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1400.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1500.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1600.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1700.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1800.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1900.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2000.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2100.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2200.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2300.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2400.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2500.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2600.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2700.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2800.0_WZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2900.0_WZ_Asymptotic_8TeV_channel1.root"
-	  ],
-          "WZ_medium_purity", unblind)
+  for chan in channels:
+    print "chan =",chan
+    if "q" in chan:
+       masses =[m*100 for m in range(10,39+1)]
+       cat="qV"
+    elif "Bulk" in chan:
+       masses =[m*100 for m in range(10,25+1)]
+       cat="VV"
+    else:
+       masses =[m*100 for m in range(10,29+1)]
+       cat="VV"
 
-    Plot(["Xvv.mX1000.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1100.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1200.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1300.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1400.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1500.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1600.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1700.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1800.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1900.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2000.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2100.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2200.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2300.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2400.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2500.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2600.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2700.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2800.0_WW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2900.0_WW_Asymptotic_8TeV_channel01.root"],
-          "WW_combined01", unblind)
-    
-    Plot(["Xvv.mX1000.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1100.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1200.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1300.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1400.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1500.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1600.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1700.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1800.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1900.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2000.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2100.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2200.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2300.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2400.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2500.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2600.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2700.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2800.0_ZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2900.0_ZZ_Asymptotic_8TeV_channel01.root"],
-          "ZZ_combined01", unblind)
+    HPplots=[]
+    LPplots=[]
+    combinedplots=[]
+    for mass in masses:
+       HPplots+=["CMS_jj_"+str(mass)+"_"+chan+"_8TeV_CMS_jj_"+cat+"HP_asymptoticCLs.root"]
+       LPplots+=["CMS_jj_"+str(mass)+"_"+chan+"_8TeV_CMS_jj_"+cat+"LP_asymptoticCLs.root"]
+       combinedplots+=["CMS_jj_"+str(mass)+"_"+chan+"_8TeV_CMS_jj_"+cat+"_asymptoticCLs.root"]
 
-    Plot(["Xvv.mX1000.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1100.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1200.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1300.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1400.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1500.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1600.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1700.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1800.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1900.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2000.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2100.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2200.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2300.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2400.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2500.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2600.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2700.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2800.0_WZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2900.0_WZ_Asymptotic_8TeV_channel01.root"
-	  ],
-          "WZ_combined01", unblind)
-
-
-
-    Plot(["Xvv.mX1000.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1100.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1200.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1300.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1400.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1500.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1600.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1700.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1800.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1900.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2000.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2100.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2200.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2300.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2400.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2500.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2600.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2700.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2800.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2900.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3000.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3100.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3200.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3300.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3400.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3500.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3600.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3700.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3800.0_qW_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3900.0_qW_Asymptotic_8TeV_channel3.root",
-          #"Xvv.mX4000.0_qW_Asymptotic_8TeV_channel3.root"
-	  ],
-          "qW_high_purity", unblind)
-    
-    Plot(["Xvv.mX1000.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1100.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1200.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1300.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1400.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1500.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1600.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1700.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1800.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX1900.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2000.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2100.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2200.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2300.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2400.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2500.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2600.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2700.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2800.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX2900.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3000.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3100.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3200.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3300.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3400.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3500.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3600.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3700.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3800.0_qZ_Asymptotic_8TeV_channel3.root",
-          "Xvv.mX3900.0_qZ_Asymptotic_8TeV_channel3.root",
-          #"Xvv.mX4000.0_qZ_Asymptotic_8TeV_channel3.root"
-	  ],
-          "qZ_high_purity", unblind)
-
-    Plot(["Xvv.mX1000.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1100.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1200.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1300.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1400.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1500.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1600.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1700.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1800.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1900.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2000.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2100.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2200.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2300.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2400.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2500.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2600.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2700.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2800.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2900.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3000.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3100.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3200.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3300.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3400.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3500.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3600.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3700.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3800.0_qW_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3900.0_qW_Asymptotic_8TeV_channel4.root",
-          #"Xvv.mX4000.0_qW_Asymptotic_8TeV_channel4.root"
-	  ],
-          "qW_medium_purity", unblind)
-    
-    Plot(["Xvv.mX1000.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1100.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1200.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1300.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1400.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1500.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1600.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1700.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1800.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX1900.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2000.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2100.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2200.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2300.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2400.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2500.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2600.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2700.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2800.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX2900.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3000.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3100.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3200.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3300.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3400.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3500.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3600.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3700.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3800.0_qZ_Asymptotic_8TeV_channel4.root",
-          "Xvv.mX3900.0_qZ_Asymptotic_8TeV_channel4.root",
-          #"Xvv.mX4000.0_qZ_Asymptotic_8TeV_channel4.root"
-	  ],
-          "qZ_medium_purity", unblind)
-
-    Plot(["Xvv.mX1000.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1100.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1200.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1300.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1400.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1500.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1600.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1700.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1800.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1900.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2000.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2100.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2200.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2300.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2400.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2500.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2600.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2700.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2800.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2900.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3000.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3100.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3200.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3300.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3400.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3500.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3600.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3700.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3800.0_qW_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3900.0_qW_Asymptotic_8TeV_channel34.root",
-          #"Xvv.mX4000.0_qW_Asymptotic_8TeV_channel34.root"
-	  ],
-          "qW_combined01", unblind)
-    
-    Plot(["Xvv.mX1000.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1100.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1200.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1300.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1400.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1500.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1600.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1700.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1800.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX1900.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2000.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2100.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2200.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2300.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2400.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2500.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2600.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2700.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2800.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX2900.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3000.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3100.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3200.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3300.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3400.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3500.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3600.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3700.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3800.0_qZ_Asymptotic_8TeV_channel34.root",
-          "Xvv.mX3900.0_qZ_Asymptotic_8TeV_channel34.root",
-          #"Xvv.mX4000.0_qZ_Asymptotic_8TeV_channel34.root"
-	  ],
-          "qZ_combined01", unblind)
-
-
-    Plot(["Xvv.mX1000.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1100.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1200.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1300.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1400.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1500.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1600.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1700.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1800.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1900.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2000.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2100.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2200.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2300.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2400.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2500.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          #"Xvv.mX2600.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          #"Xvv.mX2700.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          #"Xvv.mX2800.0_BulkWW_Asymptotic_8TeV_channel0.root",
-          #"Xvv.mX2900.0_BulkWW_Asymptotic_8TeV_channel0.root"
-	  ],
-          "BulkWW_high_purity", unblind)
-    
-    Plot(["Xvv.mX1000.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1100.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1200.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1300.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1400.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1500.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1600.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1700.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1800.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX1900.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2000.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2100.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2200.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2300.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2400.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          "Xvv.mX2500.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          #"Xvv.mX2600.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          #"Xvv.mX2700.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          #"Xvv.mX2800.0_BulkZZ_Asymptotic_8TeV_channel0.root",
-          #"Xvv.mX2900.0_BulkZZ_Asymptotic_8TeV_channel0.root"
-	  ],
-          "BulkZZ_high_purity", unblind)
-    
-    Plot(["Xvv.mX1000.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1100.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1200.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1300.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1400.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1500.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1600.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1700.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1800.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1900.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2000.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2100.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2200.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2300.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2400.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2500.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          #"Xvv.mX2600.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          #"Xvv.mX2700.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          #"Xvv.mX2800.0_BulkWW_Asymptotic_8TeV_channel1.root",
-          #"Xvv.mX2900.0_BulkWW_Asymptotic_8TeV_channel1.root"
-	  ],
-          "BulkWW_medium_purity", unblind)
-    
-    Plot(["Xvv.mX1000.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1100.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1200.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1300.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1400.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1500.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1600.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1700.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1800.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX1900.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2000.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2100.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2200.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2300.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2400.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          "Xvv.mX2500.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          #"Xvv.mX2600.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          #"Xvv.mX2700.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          #"Xvv.mX2800.0_BulkZZ_Asymptotic_8TeV_channel1.root",
-          #"Xvv.mX2900.0_BulkZZ_Asymptotic_8TeV_channel1.root"
-	  ],
-          "BulkZZ_medium_purity", unblind)
-
-    Plot(["Xvv.mX1000.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1100.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1200.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1300.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1400.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1500.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1600.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1700.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1800.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1900.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2000.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2100.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2200.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2300.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2400.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2500.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          #"Xvv.mX2600.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          #"Xvv.mX2700.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          #"Xvv.mX2800.0_BulkWW_Asymptotic_8TeV_channel01.root",
-          #"Xvv.mX2900.0_BulkWW_Asymptotic_8TeV_channel01.root"
-	  ],
-          "BulkWW_combined01", unblind)
-    
-    Plot(["Xvv.mX1000.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1100.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1200.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1300.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1400.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1500.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1600.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1700.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1800.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX1900.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2000.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2100.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2200.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2300.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2400.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          "Xvv.mX2500.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          #"Xvv.mX2600.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          #"Xvv.mX2700.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          #"Xvv.mX2800.0_BulkZZ_Asymptotic_8TeV_channel01.root",
-          #"Xvv.mX2900.0_BulkZZ_Asymptotic_8TeV_channel01.root"
-	  ],
-          "BulkZZ_combined01", unblind)
+    Plot(HPplots,chan+"_high_purity", unblind)
+    Plot(LPplots,chan+"_low_purity", unblind)
+    Plot(combinedplots,chan+"_combined", unblind)

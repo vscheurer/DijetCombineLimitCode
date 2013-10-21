@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for resonance in `seq  1000 100 3000`
+for resonance in `seq  1000 50 3000`
 do
     python interpolate.py ~hinzmann/public/yxin/RSGWWherwig $resonance &
     python interpolate.py ~hinzmann/public/yxin/RSGZZherwig $resonance &
@@ -9,13 +9,13 @@ do
     python interpolate.py ~hinzmann/public/yxin/Wprime $resonance
 done
 
-for resonance in `seq  1000 100 4000`
+for resonance in `seq  1000 50 4000`
 do
     python interpolate.py ~hinzmann/public/yxin/QstarQW $resonance &
     python interpolate.py ~hinzmann/public/yxin/QstarQZ $resonance
 done
 
-for resonance in `seq  1000 100 3000`
+for resonance in `seq  1000 50 3000`
 do
     python interpolate.py ~hinzmann/public/yxin/BulkCombined $resonance
 done

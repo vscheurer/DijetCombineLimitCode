@@ -1,0 +1,32 @@
+# Fully Hadronic VV analysis
+imax 1
+jmax 2
+kmax *
+---------------
+shapes *      * ../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_$CHANNEL
+shapes bkg_fit_jj * ../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_$CHANNEL
+shapes sig_qW * ../workspaces/CMS_jj_qW_3800_8TeV.root w_all:CMS_jj_qW_sig_$CHANNEL
+shapes sig_qZ * ../workspaces/CMS_jj_qZ_3800_8TeV.root w_all:CMS_jj_qZ_sig_$CHANNEL
+---------------
+bin          CMS_jj_qVHP
+observation   333854
+------------------------------
+bin                      CMS_jj_qVHP      CMS_jj_qVHP      CMS_jj_qVHP      
+process                 sig_qW sig_qZ     bkg_fit_jj     
+process                 -1 0        1          
+rate                        0  11.5987  1
+--------------------------------
+# signal scaled by 0.00656667 to a cross section of 10/fb
+lumi_8TeV       lnN  1.022  1.022    - 
+CMS_eff_vtag_tau21_sf         lnN  1.061  1.063      - # tau21 efficiency
+CMS_eff_vtag_model         lnN  1.093  1.099      - # jet mass efficiency
+CMS_scale_j         lnN  1.060  1.060      - # jet energy scale
+CMS_res_j         lnN  1.020  1.020      - # jet energy resolution
+CMS_pu         lnN  1.030  1.030      - # pileup
+# Parametric shape uncertainties, entered by hand.
+CMS_jj_sig_mjjScale    param   1   0.01   # dijet mass shift due to JES uncertainty
+CMS_jj_sig_mjjResolution     param   1   0.1   # dijet mass resolution shift due to JER uncertainty
+CMS_bkg_fit_CMS_jj_qVHP_norm           flatParam  # Normalization uncertainty on background slope
+CMS_bkg_fit_slope1_CMS_jj_qVHP         flatParam  # Mean and absolute uncertainty on background slope
+CMS_bkg_fit_slope2_CMS_jj_qVHP         flatParam  # Mean and absolute uncertainty on background slope
+CMS_bkg_fit_slope3_CMS_jj_qVHP         flatParam  # Mean and absolute uncertainty on background slope

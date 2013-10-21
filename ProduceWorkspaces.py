@@ -1,6 +1,6 @@
 import os
 
-masses =[1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900]
+masses =[m*100/2 for m in range(2*10,2*29+1)]
 
 for mass in masses:
   outputname = "submit_VV_"+str(mass)+".src"
@@ -18,7 +18,7 @@ for mass in masses:
   print command
   os.system(command)
 
-masses =[1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000]
+masses =[m*100/2 for m in range(2*10,2*40+1)]
 
 for mass in masses:
   outputname = "submit_qV_"+str(mass)+".src"
@@ -36,7 +36,7 @@ for mass in masses:
   print command
   os.system(command)
 
-masses =[1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900]
+masses =[m*100/2 for m in range(2*10,2*29+1)]
 
 for mass in masses:
   outputname = "submit_BulkVV_"+str(mass)+".src"

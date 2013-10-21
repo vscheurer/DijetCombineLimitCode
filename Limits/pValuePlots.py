@@ -76,7 +76,7 @@ def PlotPValue(filePVALNAME, label):
         text[i-1].SetTextColor(2)
         text[i-1].Draw("SAME")
 
-    banner = TLatex(0.27,0.93,"CMS Preliminary, 19.8 fb^{-1}, #sqrt{s} = 8TeV");
+    banner = TLatex(0.27,0.93,"CMS Preliminary, 19.7 fb^{-1}, #sqrt{s} = 8TeV");
     banner.SetNDC()
     banner.SetTextSize(0.04)
     banner.Draw();  
@@ -133,7 +133,7 @@ def PlotMu(muFILENAME, label):
     htemp = muGraphBAND.GetHistogram()
     setStyle(c1,htemp)
     htemp.GetXaxis().SetTitle("Resonance mass (TeV)")
-    htemp.GetYaxis().SetTitle("Best-fit #sigma #times BR(X #rightarrow VV)")
+    htemp.GetYaxis().SetTitle("Best-fit #sigma #times BR(X #rightarrow "+label.split("_")[0].replace("RS1","").replace("Bulk","")+") (pb)")
     htemp.SetMinimum(-150)
     htemp.SetMaximum(150)
     muGraph.Draw("PLSAME")
@@ -145,43 +145,25 @@ def PlotMu(muFILENAME, label):
     c1.SaveAs("mu_%s.pdf" %label)
 
 if __name__ == '__main__':
-    PlotPValue("Xvv_WW_8TeV_Pval_channel0.txt", "WW_high_purity")
-    PlotPValue("Xvv_WW_8TeV_Pval_channel1.txt", "WW_medium_purity")
-    PlotPValue("Xvv_WW_8TeV_Pval_channel01.txt", "WW_combined")
 
-    PlotPValue("Xvv_ZZ_8TeV_Pval_channel0.txt", "ZZ_high_purity")
-    PlotPValue("Xvv_ZZ_8TeV_Pval_channel1.txt", "ZZ_medium_purity")
-    PlotPValue("Xvv_ZZ_8TeV_Pval_channel01.txt", "ZZ_combined")
+  channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
 
-    PlotPValue("Xvv_WZ_8TeV_Pval_channel0.txt", "WZ_high_purity")
-    PlotPValue("Xvv_WZ_8TeV_Pval_channel1.txt", "WZ_medium_purity")
-    PlotPValue("Xvv_WZ_8TeV_Pval_channel01.txt", "WZ_combined")
+  for chan in channels:
+    print "chan =",chan
+    if "q" in chan:
+       masses =[m*100 for m in range(10,39+1)]
+       cat="qV"
+    elif "Bulk" in chan:
+       masses =[m*100 for m in range(10,25+1)]
+       cat="VV"
+    else:
+       masses =[m*100 for m in range(10,29+1)]
+       cat="VV"
 
-    PlotPValue("Xvv_qW_8TeV_Pval_channel3.txt", "qW_high_purity")
-    PlotPValue("Xvv_qW_8TeV_Pval_channel4.txt", "qW_medium_purity")
-    PlotPValue("Xvv_qW_8TeV_Pval_channel34.txt", "qW_combined")
+    HPplots="CMS_jj_"+chan+"_8TeV_CMS_jj_"+cat+"HP_pvalue.txt"
+    LPplots="CMS_jj_"+chan+"_8TeV_CMS_jj_"+cat+"LP_pvalue.txt"
+    combinedplots="CMS_jj_"+chan+"_8TeV_CMS_jj_"+cat+"_pvalue.txt"
 
-    PlotPValue("Xvv_qZ_8TeV_Pval_channel3.txt", "qZ_high_purity")
-    PlotPValue("Xvv_qZ_8TeV_Pval_channel4.txt", "qZ_medium_purity")
-    PlotPValue("Xvv_qZ_8TeV_Pval_channel34.txt", "qZ_combined")
-
-    PlotMu("Xvv_WW_8TeV_channel0.txt", "WW_high_purity")
-    PlotMu("Xvv_WW_8TeV_channel1.txt", "WW_medium_purity")
-    PlotMu("Xvv_WW_8TeV_channel01.txt", "WW_combined")
-
-    PlotMu("Xvv_ZZ_8TeV_channel0.txt", "ZZ_high_purity")
-    PlotMu("Xvv_ZZ_8TeV_channel1.txt", "ZZ_medium_purity")
-    PlotMu("Xvv_ZZ_8TeV_channel01.txt", "ZZ_combined")
-
-    PlotMu("Xvv_WZ_8TeV_channel0.txt", "WZ_high_purity")
-    PlotMu("Xvv_WZ_8TeV_channel1.txt", "WZ_medium_purity")
-    PlotMu("Xvv_WZ_8TeV_channel01.txt", "WZ_combined")
-
-    PlotMu("Xvv_qW_8TeV_channel3.txt", "qW_high_purity")
-    PlotMu("Xvv_qW_8TeV_channel4.txt", "qW_medium_purity")
-    PlotMu("Xvv_qW_8TeV_channel34.txt", "qW_combined")
-
-    PlotMu("Xvv_qZ_8TeV_channel3.txt", "qZ_high_purity")
-    PlotMu("Xvv_qZ_8TeV_channel4.txt", "qZ_medium_purity")
-    PlotMu("Xvv_qZ_8TeV_channel34.txt", "qZ_combined")
-    
+    PlotPValue(HPplots,chan+"_high_purity")
+    PlotPValue(LPplots,chan+"_low_purity")
+    PlotPValue(combinedplots,chan+"_combined")

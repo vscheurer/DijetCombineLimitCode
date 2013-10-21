@@ -20,7 +20,7 @@ gStyle.SetLabelSize(0.05, "XYZ")
 gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
-channels=["WW","ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
+channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
 
 fullToys=False
 
@@ -28,11 +28,11 @@ for chan in channels:
     print "chan =",chan
 
     if "q" in chan:
-       masses =[1000.0, 1100.0, 1200.0, 1300.0, 1400.0, 1500.0, 1600.0, 1700.0, 1800.0, 1900.0, 2000.0, 2100.0, 2200.0, 2300.0, 2400.0, 2500.0, 2600.0, 2700.0, 2800.0, 2900.0, 3000.0, 3100.0, 3200.0, 3300.0, 3400.0, 3500.0, 3600.0, 3700.0, 3800.0, 3900.0, 4000.0]
-       bins=[3,4,"34"]
+       masses =[m*100/2 for m in range(2*10,2*40+1)]
+       bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
-       masses =[1000.0, 1100.0, 1200.0, 1300.0, 1400.0, 1500.0, 1600.0, 1700.0, 1800.0, 1900.0, 2000.0, 2100.0, 2200.0, 2300.0, 2400.0, 2500.0, 2600.0, 2700.0, 2800.0, 2900.0]
-       bins=[0,1,"01"]
+       masses =[m*100/2 for m in range(2*10,2*29+1)]
+       bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
 
     if fullToys:
       points=[]
@@ -55,23 +55,23 @@ for chan in channels:
 
           for point in points:
 
-            outputname = "Xvv.mX"+str(mass)+"_"+chan+"_8TeV_channel"+str(bin)+"_limit"+str(int(point*10))+"_submit.src"
-            logname = "Xvv.mX"+str(mass)+"_"+chan+"_8TeV_channel"+str(bin)+"_limit"+str(int(point*10))+"_submit.out"
+            outputname = "CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_limit"+str(int(point*10))+"_submit.src"
+            logname = "CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_limit"+str(int(point*10))+"_submit.out"
             outputfile = open(outputname,'w')
             outputfile.write('#!/bin/bash\n')
             outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
 	    if fullToys:
-              outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".txt -M HybridNew --frequentist --clsAcc 0 -T 100 -i 30 --singlePoint "+str(point)+" -s 10000"+str(int(point*100))+" --saveHybridResult --saveToys -m "+str(mass) + " -n "+chan+str(bin)+" &>Xvv.mX"+str(mass)+"_" + chan + "_Full_8TeV_channel"+str(bin)+"_toy"+str(int(point*10))+".out\n")
-              outputfile.write("hadd -f grid_mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".root higgsCombine" + chan + str(bin)+".HybridNew.mH"+str(int(mass))+".10000*.root\n")
-              outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".root -m "+str(mass) + " -n "+chan+str(bin)+" &>Xvv.mX"+str(mass)+"_" + chan + "_Full_8TeV_channel"+str(bin)+"_obs.out\n")
-              outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.5 &>Xvv.mX"+str(mass)+"_" + chan + "_Full_8TeV_channel"+str(bin)+"_50.out\n")
-	      outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.16 &>Xvv.mX"+str(mass)+"_" + chan + "_Full_8TeV_channel"+str(bin)+"_16.out\n")
-	      outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.84 &>Xvv.mX"+str(mass)+"_" + chan + "_Full_8TeV_channel"+str(bin)+"_84.out\n")
-	      outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.025 &>Xvv.mX"+str(mass)+"_" + chan + "_Full_8TeV_channel"+str(bin)+"_025.out\n")
-	      outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.975 &>Xvv.mX"+str(mass)+"_" + chan + "_Full_8TeV_channel"+str(bin)+"_975.out\n")
+              outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M HybridNew --frequentist --clsAcc 0 -T 100 -i 30 --singlePoint "+str(point)+" -s 10000"+str(int(point*100))+" --saveHybridResult --saveToys -m "+str(mass) + " -n "+chan+str(bin)+" &>CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_toy"+str(int(point*10))+"_fullCLs.out\n")
+              outputfile.write("hadd -f grid_mX"+str(mass)+"_" + chan + "_8TeV_"+bin+".root higgsCombine" + chan + str(bin)+".HybridNew.mH"+str(int(mass))+".10000*.root\n")
+              outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" &>CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_obs_fullCLs.out\n")
+              outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.5 &>CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_50_fullCLs.out\n")
+	      outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.16 &>CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_16_fullCLs.out\n")
+	      outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.84 &>CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_84_fullCLs.out\n")
+	      outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.025 &>CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_025_fullCLs.out\n")
+	      outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_8TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.975 &>CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_975_fullCLs.out\n")
             else:
-                outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".txt -M Asymptotic -v2 -m "+str(mass) + " -n "+chan+str(bin)+" --rMax 1000 --rMin 0.01 &>Xvv.mX"+str(mass)+"_" + chan + "_Asymptotic_8TeV_channel"+str(bin)+".out\n")
-                outputfile.write("mv higgsCombine"+chan+str(bin)+".Asymptotic.mH"+str(int(mass))+".root Limits/Xvv.mX"+str(mass)+"_" + chan + "_Asymptotic_8TeV_channel"+str(bin)+".root")
+                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M Asymptotic -v2 -m "+str(mass) + " -n "+chan+str(bin)+" --rMax 1000 --rMin 0.01 &>CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_asymptoticCLs.out\n")
+                outputfile.write("mv higgsCombine"+chan+str(bin)+".Asymptotic.mH"+str(int(mass))+".root Limits/CMS_jj_"+str(mass)+"_"+chan+"_8TeV_"+bin+"_asymptoticCLs.root")
             outputfile.close()
   
             command="rm "+logname

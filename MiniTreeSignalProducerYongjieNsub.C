@@ -39,8 +39,8 @@
    if (iSample == 2) inFile = string("RSGZZherwig");
    if (iSample == 3) inFile = string("QstarQW");
    if (iSample == 4) inFile = string("QstarQZ");
-   if (iSample == 5) inFile = string("Bulk");
-   if (iSample == 6) inFile = string("Bulk");
+   if (iSample == 5) inFile = string("BulkCombined");
+   if (iSample == 6) inFile = string("BulkCombined");
 
    string outFile("dijetWtag_Moriond_WZPy6");
    if (iSample == 1) outFile = string("dijetWtag_Moriond_WWHpp");
@@ -50,16 +50,16 @@
    if (iSample == 5) outFile = string("dijetWtag_Moriond_WWBulk");
    if (iSample == 6) outFile = string("dijetWtag_Moriond_ZZBulk");
    
-   int massrange=21;
-   if((iSample==3)||(iSample==4)) massrange=31;
+   int massrange=41;
+   if((iSample==3)||(iSample==4)) massrange=61;
 
    for (int iMass = 0; iMass<massrange; iMass++){
 
-     string sInFile = "~hinzmann/public/yxin/" + inFile + "" + Form("OUT%d.root", 1000+iMass*100);
+     string sInFile = "~hinzmann/public/yxin/" + inFile + "" + Form("OUT%d.root", 1000+iMass*50);
      cout << sInFile.c_str() << endl;
      TFile file0(sInFile.c_str(), "read");
 
-     string sOutFile = "MiniTrees/Signal_VV/" + outFile + Form("OUT%d_miniTree.root", 1000+iMass*100);
+     string sOutFile = "MiniTrees/Signal_VV/" + outFile + Form("OUT%d_miniTree.root", 1000+iMass*50);
      TFile f1(sOutFile.c_str(), "recreate");
      f1.cd();
 
@@ -72,7 +72,7 @@
      TCVARS->Branch("categories",&categories,"categories/I");
 
   
-     double dMass = 1000.+iMass*100.;
+     double dMass = 1000.+iMass*50.;
 
 
      
