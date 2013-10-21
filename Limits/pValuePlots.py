@@ -151,13 +151,10 @@ if __name__ == '__main__':
   for chan in channels:
     print "chan =",chan
     if "q" in chan:
-       masses =[m*100 for m in range(10,39+1)]
        cat="qV"
     elif "Bulk" in chan:
-       masses =[m*100 for m in range(10,25+1)]
        cat="VV"
     else:
-       masses =[m*100 for m in range(10,29+1)]
        cat="VV"
 
     HPplots="CMS_jj_"+chan+"_8TeV_CMS_jj_"+cat+"HP_pvalue.txt"
