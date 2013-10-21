@@ -5,18 +5,18 @@ kmax 8 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
 shapes *            CMS_jj_qVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_qVHP
 shapes bkg_fit_jj   CMS_jj_qVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_qVHP
-shapes sig_qW       CMS_jj_qVHP  datacards/../workspaces/CMS_jj_qW_2450_8TeV.root w_all:CMS_jj_qW_sig_CMS_jj_qVHP
-shapes sig_qZ       CMS_jj_qVHP  datacards/../workspaces/CMS_jj_qZ_2450_8TeV.root w_all:CMS_jj_qZ_sig_CMS_jj_qVHP
+shapes qW_jj        CMS_jj_qVHP  datacards/../workspaces/CMS_jj_qW_2450_8TeV.root w_all:CMS_jj_qW_sig_CMS_jj_qVHP
+shapes qZ_jj        CMS_jj_qVHP  datacards/../workspaces/CMS_jj_qZ_2450_8TeV.root w_all:CMS_jj_qZ_sig_CMS_jj_qVHP
 shapes *            CMS_jj_qVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_qVLP
 shapes bkg_fit_jj   CMS_jj_qVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_qVLP
-shapes sig_qW       CMS_jj_qVLP  datacards/../workspaces/CMS_jj_qW_2450_8TeV.root w_all:CMS_jj_qW_sig_CMS_jj_qVLP
-shapes sig_qZ       CMS_jj_qVLP  datacards/../workspaces/CMS_jj_qZ_2450_8TeV.root w_all:CMS_jj_qZ_sig_CMS_jj_qVLP
+shapes qW_jj        CMS_jj_qVLP  datacards/../workspaces/CMS_jj_qW_2450_8TeV.root w_all:CMS_jj_qW_sig_CMS_jj_qVLP
+shapes qZ_jj        CMS_jj_qVLP  datacards/../workspaces/CMS_jj_qZ_2450_8TeV.root w_all:CMS_jj_qZ_sig_CMS_jj_qVLP
 ----------------------------------------------------------------------------------------------------------------------------------
 bin          CMS_jj_qVHP  CMS_jj_qVLP
 observation  333854.0     552334.0   
 ----------------------------------------------------------------------------------------------------------------------------------
 bin                                      CMS_jj_qVHP  CMS_jj_qVHP  CMS_jj_qVHP  CMS_jj_qVLP  CMS_jj_qVLP  CMS_jj_qVLP
-process                                  sig_qZ       sig_qW       bkg_fit_jj   sig_qZ       sig_qW       bkg_fit_jj 
+process                                  qZ_jj        qW_jj        bkg_fit_jj   qZ_jj        qW_jj        bkg_fit_jj 
 process                                  -1           0            1            -1           0            1          
 rate                                     29.1958      0.0000       1.0000       10.6659      0.0000       1.0000     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -26,8 +26,8 @@ CMS_pu                  lnN              1.03         1.03         -            
 CMS_res_j               lnN              1.02         1.02         -            1.02         1.02         -          
 CMS_scale_j             lnN              1.06         1.06         -            1.06         1.06         -          
 lumi_8TeV               lnN              1.022        1.022        -            1.022        1.022        -          
-CMS_jj_sig_mjjScale  param  1 0.01
-CMS_jj_sig_mjjResolution  param  1 0.1
+CMS_sig_p1_jes  param  1 0.01
+CMS_sig_p2_jer  param  1 0.1
 CMS_bkg_fit_CMS_jj_qVHP_norm  flatParam
 CMS_bkg_fit_slope3_CMS_jj_qVHP  flatParam
 CMS_bkg_fit_slope1_CMS_jj_qVLP  flatParam

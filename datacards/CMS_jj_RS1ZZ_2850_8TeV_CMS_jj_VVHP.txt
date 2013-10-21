@@ -5,15 +5,15 @@ kmax *
 ---------------
 shapes *      * ../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_$CHANNEL
 shapes bkg_fit_jj * ../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_$CHANNEL
-shapes sig_RS1WW * ../workspaces/CMS_jj_RS1WW_2850_8TeV.root w_all:CMS_jj_RS1WW_sig_$CHANNEL
-shapes sig_RS1ZZ * ../workspaces/CMS_jj_RS1ZZ_2850_8TeV.root w_all:CMS_jj_RS1ZZ_sig_$CHANNEL
-shapes sig_WZ * ../workspaces/CMS_jj_WZ_2850_8TeV.root w_all:CMS_jj_WZ_sig_$CHANNEL
+shapes RS1WW_jj * ../workspaces/CMS_jj_RS1WW_2850_8TeV.root w_all:CMS_jj_RS1WW_sig_$CHANNEL
+shapes RS1ZZ_jj * ../workspaces/CMS_jj_RS1ZZ_2850_8TeV.root w_all:CMS_jj_RS1ZZ_sig_$CHANNEL
+shapes WZ_jj * ../workspaces/CMS_jj_WZ_2850_8TeV.root w_all:CMS_jj_WZ_sig_$CHANNEL
 ---------------
 bin          CMS_jj_VVHP
 observation   7128
 ------------------------------
 bin                      CMS_jj_VVHP       CMS_jj_VVHP      CMS_jj_VVHP      CMS_jj_VVHP      
-process                 sig_RS1WW sig_RS1ZZ sig_WZ     bkg_fit_jj     
+process                 RS1WW_jj RS1ZZ_jj WZ_jj     bkg_fit_jj     
 process                 -2 -1 0        1          
 rate                        0  4.23629  0  1
 --------------------------------
@@ -25,8 +25,8 @@ CMS_scale_j         lnN  1.120  1.120  1.120      - # jet energy scale
 CMS_res_j         lnN  1.040  1.040  1.040      - # jet energy resolution
 CMS_pu         lnN  1.030  1.030  1.030      - # pileup
 # Parametric shape uncertainties, entered by hand.
-CMS_jj_sig_mjjScale    param   1   0.01   # dijet mass shift due to JES uncertainty
-CMS_jj_sig_mjjResolution     param   1   0.1   # dijet mass resolution shift due to JER uncertainty
+CMS_sig_p1_jes    param   1   0.01   # dijet mass shift due to JES uncertainty
+CMS_sig_p2_jer     param   1   0.1   # dijet mass resolution shift due to JER uncertainty
 CMS_bkg_fit_CMS_jj_VVHP_norm           flatParam  # Normalization uncertainty on background slope
 CMS_bkg_fit_slope1_CMS_jj_VVHP         flatParam  # Mean and absolute uncertainty on background slope
 CMS_bkg_fit_slope2_CMS_jj_VVHP         flatParam  # Mean and absolute uncertainty on background slope

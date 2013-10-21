@@ -459,7 +459,7 @@ void SigModelFit(RooWorkspace* w, Float_t mass, TString signalname, std::vector<
   for (int c = 0; c < ncat; ++c) {
     cout << "---------- category = " << c << endl;
     sigToFit[c]   = (RooDataSet*) w->data(TString::Format("SigWeight_%s",cat_names.at(c).c_str()));
-    jjSig[c]     = (RooAbsPdf*)  w->pdf("sig_"+signalname+TString::Format("_%s",cat_names.at(c).c_str()));
+    jjSig[c]     = (RooAbsPdf*)  w->pdf(signalname+"_jj"+TString::Format("_%s",cat_names.at(c).c_str()));
 
     cerr << ("jj_"+signalname+TString::Format("_sig_m0_%s",cat_names.at(c).c_str())) << endl;
     ((RooRealVar*) w->var("jj_"+signalname+TString::Format("_sig_m0_%s",cat_names.at(c).c_str())))->setVal(MASS);
@@ -674,7 +674,7 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
     signal[c]       = (RooDataSet*) w->data(TString::Format("SigWeight_%s",cat_names.at(c).c_str()));
     jjGaussSig[c]  = (RooAbsPdf*)  w->pdf(TString::Format("jjGaussSig_%s",cat_names.at(c).c_str()));
     jjCBSig[c]     = (RooAbsPdf*)  w->pdf(TString::Format("jjCBSig_%s",cat_names.at(c).c_str()));
-    jjSig[c]       = (RooAbsPdf*)  w->pdf("sig_"+signalname+TString::Format("_%s",cat_names.at(c).c_str()));
+    jjSig[c]       = (RooAbsPdf*)  w->pdf(signalname+"_jj"+TString::Format("_%s",cat_names.at(c).c_str()));
     bkg_fit[c]       = (RooAbsPdf*)  w->pdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()));
 //    bkg_fit2[c]      = (RooAbsPdf*)  w->pdf(TString::Format("bkg_fit2_%s",cat_names.at(c).c_str()));
   }
@@ -688,7 +688,7 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
 
   RooAbsPdf* jjGaussSigAll  = w->pdf("jjGaussSig"+signalname);
   RooAbsPdf* jjCBSigAll     = w->pdf("jjCBSig"+signalname);
-  RooAbsPdf* jjSigAll       = w->pdf("sig_"+signalname);
+  RooAbsPdf* jjSigAll       = w->pdf(signalname+"_jj");
 
 //  RooAbsPdf* bkg_fitAll       = w->pdf("bkg_fit");
   RooAbsPdf* bkg_fitAll       = w->pdf("bkg_fitAll");
@@ -874,28 +874,28 @@ void MakeSigWS(RooWorkspace* w, const char* fileBaseName, TString signalname, st
 
 
   for (int c = 0; c < ncat; ++c) {
-    jjSigPdf[c] = (RooAbsPdf*)  w->pdf("sig_"+signalname+TString::Format("_%s",cat_names.at(c).c_str()));
-    wAll->import(*w->pdf("sig_"+signalname+TString::Format("_%s",cat_names.at(c).c_str())));
+    jjSigPdf[c] = (RooAbsPdf*)  w->pdf(signalname+"_jj"+TString::Format("_%s",cat_names.at(c).c_str()));
+    wAll->import(*w->pdf(signalname+"_jj"+TString::Format("_%s",cat_names.at(c).c_str())));
   }
 
 // (2) Systematics on energy scale and resolution
 
-  wAll->factory("CMS_jj_sig_mjjScale[1,1.0,1.0]");
+  wAll->factory("CMS_sig_p1_jes[1,1.0,1.0]");
     for (int c = 0; c < ncat; ++c) {
-wAll->factory("prod::CMS_jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_jj_sig_mjjScale)");
+wAll->factory("prod::CMS_jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_sig_p1_jes)");
     }
 
 // (3) Systematics on resolution: create new sigmas
 
 
-  wAll->factory("CMS_jj_sig_mjjResolution[1,1.0,1.0]");
+  wAll->factory("CMS_sig_p2_jer[1,1.0,1.0]");
 
     for (int c = 0; c < ncat; ++c) {
-wAll->factory("prod::CMS_jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_jj_sig_mjjResolution)");
+wAll->factory("prod::CMS_jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_sig_p2_jer)");
     }
 
     for (int c = 0; c < ncat; ++c) {
-wAll->factory("prod::CMS_jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_jj_sig_mjjResolution)");
+wAll->factory("prod::CMS_jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_sig_p2_jer)");
     }
 
 // (4) do reparametrization of signal
@@ -1166,15 +1166,15 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "shapes *      * " << wsDir+TString(fileBkgName)+".root" << " w_all:$PROCESS_$CHANNEL" << endl;
   outFile << "shapes bkg_fit_jj * "<<  wsDir+TString(fileBkgName)+".root" << " w_all:CMS_bkg_fit_$CHANNEL" << endl;
   if(signalsample<3){
-  outFile << "shapes sig_RS1WW * " << wsDir+TString::Format("CMS_jj_RS1WW_%.0f_8TeV.root", mass) << " w_all:CMS_jj_RS1WW_sig_$CHANNEL" << endl;
-  outFile << "shapes sig_RS1ZZ * " << wsDir+TString::Format("CMS_jj_RS1ZZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_RS1ZZ_sig_$CHANNEL" << endl;
-  outFile << "shapes sig_WZ * " << wsDir+TString::Format("CMS_jj_WZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_WZ_sig_$CHANNEL" << endl;
+  outFile << "shapes RS1WW_jj * " << wsDir+TString::Format("CMS_jj_RS1WW_%.0f_8TeV.root", mass) << " w_all:CMS_jj_RS1WW_sig_$CHANNEL" << endl;
+  outFile << "shapes RS1ZZ_jj * " << wsDir+TString::Format("CMS_jj_RS1ZZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_RS1ZZ_sig_$CHANNEL" << endl;
+  outFile << "shapes WZ_jj * " << wsDir+TString::Format("CMS_jj_WZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_WZ_sig_$CHANNEL" << endl;
   } else if(signalsample<5){
-  outFile << "shapes sig_qW * " << wsDir+TString::Format("CMS_jj_qW_%.0f_8TeV.root", mass) << " w_all:CMS_jj_qW_sig_$CHANNEL" << endl;
-  outFile << "shapes sig_qZ * " << wsDir+TString::Format("CMS_jj_qZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_qZ_sig_$CHANNEL" << endl;
+  outFile << "shapes qW_jj * " << wsDir+TString::Format("CMS_jj_qW_%.0f_8TeV.root", mass) << " w_all:CMS_jj_qW_sig_$CHANNEL" << endl;
+  outFile << "shapes qZ_jj * " << wsDir+TString::Format("CMS_jj_qZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_qZ_sig_$CHANNEL" << endl;
   } else {
-  outFile << "shapes sig_BulkWW * " << wsDir+TString::Format("CMS_jj_BulkWW_%.0f_8TeV.root", mass) << " w_all:CMS_jj_BulkWW_sig_$CHANNEL" << endl;
-  outFile << "shapes sig_BulkZZ * " << wsDir+TString::Format("CMS_jj_BulkZZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_BulkZZ_sig_$CHANNEL" << endl;
+  outFile << "shapes BulkWW_jj * " << wsDir+TString::Format("CMS_jj_BulkWW_%.0f_8TeV.root", mass) << " w_all:CMS_jj_BulkWW_sig_$CHANNEL" << endl;
+  outFile << "shapes BulkZZ_jj * " << wsDir+TString::Format("CMS_jj_BulkZZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_BulkZZ_sig_$CHANNEL" << endl;
   }
   outFile << "---------------" << endl;
   outFile << Form("bin          %s", cat_names[iChan].c_str()) << endl;
@@ -1182,7 +1182,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "------------------------------" << endl;
   if(signalsample<3){
   outFile << "bin                      "<< Form("%s       %s      %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
-  outFile << "process                 sig_RS1WW sig_RS1ZZ sig_WZ     bkg_fit_jj     " << endl;
+  outFile << "process                 RS1WW_jj RS1ZZ_jj WZ_jj     bkg_fit_jj     " << endl;
   outFile << "process                 -2 -1 0        1          " << endl;
   if(signalname=="RS1ZZ")
       outFile <<  "rate                      " 
@@ -1209,7 +1209,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "CMS_pu         lnN  1.030  1.030  1.030      - # pileup" << endl;
   } else if(signalsample<5) {
   outFile << "bin                      "<< Form("%s      %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
-  outFile << "process                 sig_qW sig_qZ     bkg_fit_jj     " << endl;
+  outFile << "process                 qW_jj qZ_jj     bkg_fit_jj     " << endl;
   outFile << "process                 -1 0        1          " << endl;
   if(signalname=="qZ")
       outFile <<  "rate                      " 
@@ -1233,7 +1233,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "CMS_pu         lnN  1.030  1.030      - # pileup" << endl;
   } else {
   outFile << "bin                      "<< Form("%s       %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
-  outFile << "process                 sig_BulkWW sig_BulkZZ     bkg_fit_jj     " << endl;
+  outFile << "process                 BulkWW_jj BulkZZ_jj     bkg_fit_jj     " << endl;
   outFile << "process                 -1 0        1          " << endl;
   if(signalname=="BulkZZ")
       outFile <<  "rate                      " 
@@ -1257,8 +1257,8 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "CMS_pu         lnN  1.030  1.030      - # pileup" << endl;
   } 
   outFile << "# Parametric shape uncertainties, entered by hand." << endl;
-  outFile << Form("CMS_jj_sig_mjjScale    param   1   0.01   # dijet mass shift due to JES uncertainty") << endl;
-  outFile << Form("CMS_jj_sig_mjjResolution     param   1   0.1   # dijet mass resolution shift due to JER uncertainty") << endl;
+  outFile << Form("CMS_sig_p1_jes    param   1   0.01   # dijet mass shift due to JES uncertainty") << endl;
+  outFile << Form("CMS_sig_p2_jer     param   1   0.1   # dijet mass resolution shift due to JER uncertainty") << endl;
  
   outFile << Form("CMS_bkg_fit_%s_norm           flatParam  # Normalization uncertainty on background slope",cat_names[iChan].c_str()) << endl;
 

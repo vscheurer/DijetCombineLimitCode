@@ -5,14 +5,14 @@ kmax *
 ---------------
 shapes *      * ../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_$CHANNEL
 shapes bkg_fit_jj * ../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_$CHANNEL
-shapes sig_qW * ../workspaces/CMS_jj_qW_1300_8TeV.root w_all:CMS_jj_qW_sig_$CHANNEL
-shapes sig_qZ * ../workspaces/CMS_jj_qZ_1300_8TeV.root w_all:CMS_jj_qZ_sig_$CHANNEL
+shapes qW_jj * ../workspaces/CMS_jj_qW_1300_8TeV.root w_all:CMS_jj_qW_sig_$CHANNEL
+shapes qZ_jj * ../workspaces/CMS_jj_qZ_1300_8TeV.root w_all:CMS_jj_qZ_sig_$CHANNEL
 ---------------
 bin          CMS_jj_qVLP
 observation   552334
 ------------------------------
 bin                      CMS_jj_qVLP      CMS_jj_qVLP      CMS_jj_qVLP      
-process                 sig_qW sig_qZ     bkg_fit_jj     
+process                 qW_jj qZ_jj     bkg_fit_jj     
 process                 -1 0        1          
 rate                        8.63208  0  1
 --------------------------------
@@ -24,8 +24,8 @@ CMS_scale_j         lnN  1.060  1.060      - # jet energy scale
 CMS_res_j         lnN  1.020  1.020      - # jet energy resolution
 CMS_pu         lnN  1.030  1.030      - # pileup
 # Parametric shape uncertainties, entered by hand.
-CMS_jj_sig_mjjScale    param   1   0.01   # dijet mass shift due to JES uncertainty
-CMS_jj_sig_mjjResolution     param   1   0.1   # dijet mass resolution shift due to JER uncertainty
+CMS_sig_p1_jes    param   1   0.01   # dijet mass shift due to JES uncertainty
+CMS_sig_p2_jer     param   1   0.1   # dijet mass resolution shift due to JER uncertainty
 CMS_bkg_fit_CMS_jj_qVLP_norm           flatParam  # Normalization uncertainty on background slope
 CMS_bkg_fit_slope1_CMS_jj_qVLP         flatParam  # Mean and absolute uncertainty on background slope
 CMS_bkg_fit_slope2_CMS_jj_qVLP         flatParam  # Mean and absolute uncertainty on background slope

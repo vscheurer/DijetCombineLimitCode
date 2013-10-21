@@ -1,0 +1,20 @@
+Combination of CMS_jj_VVHP=datacards/CMS_jj_BulkWW_2550_8TeV_CMS_jj_VVHP.txt  CMS_jj_VVLP=datacards/CMS_jj_BulkWW_2550_8TeV_CMS_jj_VVLP.txt
+imax 2 number of bins
+jmax 2 number of processes minus 1
+kmax 8 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes *            CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_VVHP
+shapes bkg_fit_jj   CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_VVHP
+shapes sig_BulkWW   CMS_jj_VVHP  datacards/../workspaces/CMS_jj_BulkWW_2550_8TeV.root w_all:CMS_jj_BulkWW_sig_CMS_jj_VVHP
+shapes sig_BulkZZ   CMS_jj_VVHP  datacards/../workspaces/CMS_jj_BulkZZ_2550_8TeV.root w_all:CMS_jj_BulkZZ_sig_CMS_jj_VVHP
+shapes *            CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_VVLP
+shapes bkg_fit_jj   CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_VVLP
+shapes sig_BulkWW   CMS_jj_VVLP  datacards/../workspaces/CMS_jj_BulkWW_2550_8TeV.root w_all:CMS_jj_BulkWW_sig_CMS_jj_VVLP
+shapes sig_BulkZZ   CMS_jj_VVLP  datacards/../workspaces/CMS_jj_BulkZZ_2550_8TeV.root w_all:CMS_jj_BulkZZ_sig_CMS_jj_VVLP
+----------------------------------------------------------------------------------------------------------------------------------
+bin          CMS_jj_VVHP  CMS_jj_VVLP
+observation  7128.0       22328.0    
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                      CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVLP  CMS_jj_VVLP  CMS_jj_VVLP
+process                                  sig_BulkZZ   sig_BulkWW   bkg_fit_jj   sig_BulkZZ   sig_BulkWW   bkg_fit_jj 
+process                                  -1           0            1            -1           0            1          
