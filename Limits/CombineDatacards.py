@@ -32,10 +32,10 @@ for chan in channels:
     for mass in masses:
         print "mass = ",mass
 
-        bin0="ch0=datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_CMS_jj_VVHP.txt "
-        bin1="ch1=datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_CMS_jj_VVLP.txt "
-        bin3="ch3=datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_CMS_jj_qVHP.txt "
-        bin4="ch4=datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_CMS_jj_qVLP.txt "
+        bin0="CMS_jj_VVHP=datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_CMS_jj_VVHP.txt "
+        bin1="CMS_jj_VVLP=datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_CMS_jj_VVLP.txt "
+        bin3="CMS_jj_qVHP=datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_CMS_jj_qVHP.txt "
+        bin4="CMS_jj_qVLP=datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_CMS_jj_qVLP.txt "
         
         bin01="datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_CMS_jj_VV.txt "
         bin34="datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_CMS_jj_qV.txt "

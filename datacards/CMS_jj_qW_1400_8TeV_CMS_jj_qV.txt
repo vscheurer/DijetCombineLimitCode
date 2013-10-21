@@ -1,31 +1,31 @@
-Combination of ch3=datacards/CMS_jj_qW_1400_8TeV_CMS_jj_qVHP.txt  ch4=datacards/CMS_jj_qW_1400_8TeV_CMS_jj_qVLP.txt
+Combination of CMS_jj_qVHP=datacards/CMS_jj_qW_1400_8TeV_CMS_jj_qVHP.txt  CMS_jj_qVLP=datacards/CMS_jj_qW_1400_8TeV_CMS_jj_qVLP.txt
 imax 2 number of bins
 jmax 2 number of processes minus 1
 kmax 8 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes *           ch3         datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_qVHP
-shapes bkg_fit_jj  ch3         datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_qVHP
-shapes sig_qW      ch3         datacards/../workspaces/CMS_jj_qW_1400_8TeV.root w_all:CMS_jj_qW_sig_CMS_jj_qVHP
-shapes sig_qZ      ch3         datacards/../workspaces/CMS_jj_qZ_1400_8TeV.root w_all:CMS_jj_qZ_sig_CMS_jj_qVHP
-shapes *           ch4         datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_qVLP
-shapes bkg_fit_jj  ch4         datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_qVLP
-shapes sig_qW      ch4         datacards/../workspaces/CMS_jj_qW_1400_8TeV.root w_all:CMS_jj_qW_sig_CMS_jj_qVLP
-shapes sig_qZ      ch4         datacards/../workspaces/CMS_jj_qZ_1400_8TeV.root w_all:CMS_jj_qZ_sig_CMS_jj_qVLP
+shapes *            CMS_jj_qVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_qVHP
+shapes bkg_fit_jj   CMS_jj_qVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_qVHP
+shapes sig_qW       CMS_jj_qVHP  datacards/../workspaces/CMS_jj_qW_1400_8TeV.root w_all:CMS_jj_qW_sig_CMS_jj_qVHP
+shapes sig_qZ       CMS_jj_qVHP  datacards/../workspaces/CMS_jj_qZ_1400_8TeV.root w_all:CMS_jj_qZ_sig_CMS_jj_qVHP
+shapes *            CMS_jj_qVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_qVLP
+shapes bkg_fit_jj   CMS_jj_qVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_qVLP
+shapes sig_qW       CMS_jj_qVLP  datacards/../workspaces/CMS_jj_qW_1400_8TeV.root w_all:CMS_jj_qW_sig_CMS_jj_qVLP
+shapes sig_qZ       CMS_jj_qVLP  datacards/../workspaces/CMS_jj_qZ_1400_8TeV.root w_all:CMS_jj_qZ_sig_CMS_jj_qVLP
 ----------------------------------------------------------------------------------------------------------------------------------
-bin          ch3       ch4     
-observation  333854.0  552334.0
+bin          CMS_jj_qVHP  CMS_jj_qVLP
+observation  333854.0     552334.0   
 ----------------------------------------------------------------------------------------------------------------------------------
-bin                                      ch3         ch3         ch3         ch4         ch4         ch4       
-process                                  sig_qZ      sig_qW      bkg_fit_jj  sig_qZ      sig_qW      bkg_fit_jj
-process                                  -1          0           1           -1          0           1         
-rate                                     0.0000      33.5416     1.0000      0.0000      8.9360      1.0000    
+bin                                      CMS_jj_qVHP  CMS_jj_qVHP  CMS_jj_qVHP  CMS_jj_qVLP  CMS_jj_qVLP  CMS_jj_qVLP
+process                                  sig_qZ       sig_qW       bkg_fit_jj   sig_qZ       sig_qW       bkg_fit_jj 
+process                                  -1           0            1            -1           0            1          
+rate                                     0.0000       33.5416      1.0000       0.0000       8.9360       1.0000     
 ----------------------------------------------------------------------------------------------------------------------------------
-CMS_eff_vtag_model      lnN              1.099       1.093       -           1.099       1.093       -         
-CMS_eff_vtag_tau21_sf   lnN              1.063       1.061       -           0.941       0.942       -         
-CMS_pu                  lnN              1.03        1.03        -           1.03        1.03        -         
-CMS_res_j               lnN              1.02        1.02        -           1.02        1.02        -         
-CMS_scale_j             lnN              1.06        1.06        -           1.06        1.06        -         
-lumi_8TeV               lnN              1.022       1.022       -           1.022       1.022       -         
+CMS_eff_vtag_model      lnN              1.099        1.093        -            1.099        1.093        -          
+CMS_eff_vtag_tau21_sf   lnN              1.063        1.061        -            0.941        0.942        -          
+CMS_pu                  lnN              1.03         1.03         -            1.03         1.03         -          
+CMS_res_j               lnN              1.02         1.02         -            1.02         1.02         -          
+CMS_scale_j             lnN              1.06         1.06         -            1.06         1.06         -          
+lumi_8TeV               lnN              1.022        1.022        -            1.022        1.022        -          
 CMS_jj_sig_mjjScale  param  1 0.01
 CMS_jj_sig_mjjResolution  param  1 0.1
 CMS_bkg_fit_CMS_jj_qVHP_norm  flatParam
