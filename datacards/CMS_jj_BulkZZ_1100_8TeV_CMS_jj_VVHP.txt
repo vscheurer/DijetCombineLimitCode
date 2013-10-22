@@ -3,10 +3,10 @@ imax 1
 jmax 2
 kmax *
 ---------------
-shapes *      * ../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_$CHANNEL
-shapes bkg_fit_jj * ../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_$CHANNEL
-shapes BulkWW_jj * ../workspaces/CMS_jj_BulkWW_1100_8TeV.root w_all:CMS_jj_BulkWW_sig_$CHANNEL
-shapes BulkZZ_jj * ../workspaces/CMS_jj_BulkZZ_1100_8TeV.root w_all:CMS_jj_BulkZZ_sig_$CHANNEL
+shapes data_obs CMS_jj_VVHP ../workspaces/CMS_jj_bkg_8TeV.root w_all:data_obs_CMS_jj_VVHP
+shapes bkg_fit_jj CMS_jj_VVHP ../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_VVHP
+shapes BulkWW_jj CMS_jj_VVHP ../workspaces/CMS_jj_BulkWW_1100_8TeV.root w_all:BulkWW_jj_CMS_jj_VVHP
+shapes BulkZZ_jj CMS_jj_VVHP ../workspaces/CMS_jj_BulkZZ_1100_8TeV.root w_all:BulkZZ_jj_CMS_jj_VVHP
 ---------------
 bin          CMS_jj_VVHP
 observation   7128

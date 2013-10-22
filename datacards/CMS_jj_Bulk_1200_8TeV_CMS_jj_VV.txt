@@ -3,14 +3,14 @@ imax 2 number of bins
 jmax 2 number of processes minus 1
 kmax 8 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes *            CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_VVHP
-shapes BulkWW_jj    CMS_jj_VVHP  datacards/../workspaces/CMS_jj_BulkWW_1200_8TeV.root w_all:CMS_jj_BulkWW_sig_CMS_jj_VVHP
-shapes BulkZZ_jj    CMS_jj_VVHP  datacards/../workspaces/CMS_jj_BulkZZ_1200_8TeV.root w_all:CMS_jj_BulkZZ_sig_CMS_jj_VVHP
+shapes BulkWW_jj    CMS_jj_VVHP  datacards/../workspaces/CMS_jj_BulkWW_1200_8TeV.root w_all:BulkWW_jj_CMS_jj_VVHP
+shapes BulkZZ_jj    CMS_jj_VVHP  datacards/../workspaces/CMS_jj_BulkZZ_1200_8TeV.root w_all:BulkZZ_jj_CMS_jj_VVHP
 shapes bkg_fit_jj   CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_VVHP
-shapes *            CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_VVLP
-shapes BulkWW_jj    CMS_jj_VVLP  datacards/../workspaces/CMS_jj_BulkWW_1200_8TeV.root w_all:CMS_jj_BulkWW_sig_CMS_jj_VVLP
-shapes BulkZZ_jj    CMS_jj_VVLP  datacards/../workspaces/CMS_jj_BulkZZ_1200_8TeV.root w_all:CMS_jj_BulkZZ_sig_CMS_jj_VVLP
+shapes data_obs     CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:data_obs_CMS_jj_VVHP
+shapes BulkWW_jj    CMS_jj_VVLP  datacards/../workspaces/CMS_jj_BulkWW_1200_8TeV.root w_all:BulkWW_jj_CMS_jj_VVLP
+shapes BulkZZ_jj    CMS_jj_VVLP  datacards/../workspaces/CMS_jj_BulkZZ_1200_8TeV.root w_all:BulkZZ_jj_CMS_jj_VVLP
 shapes bkg_fit_jj   CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_VVLP
+shapes data_obs     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:data_obs_CMS_jj_VVLP
 ----------------------------------------------------------------------------------------------------------------------------------
 bin          CMS_jj_VVHP  CMS_jj_VVLP
 observation  7128.0       22328.0    
@@ -18,7 +18,7 @@ observation  7128.0       22328.0
 bin                                      CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVLP  CMS_jj_VVLP  CMS_jj_VVLP
 process                                  BulkWW_jj    BulkZZ_jj    bkg_fit_jj   BulkWW_jj    BulkZZ_jj    bkg_fit_jj 
 process                                  -1           0            1            -1           0            1          
-rate                                     1.88022e+01  2.91782e+00  3.06260e-01  5.87060e+00  9.11029e-01  3.06260e-01  
+rate                                     5.75836e+00  2.91782e+00  1.00000e+00  1.79793e+00  9.11029e-01  1.00000e+00  
 ----------------------------------------------------------------------------------------------------------------------------------
 CMS_eff_vtag_model      lnN              1.185        1.197        -            1.185        1.197        -          
 CMS_eff_vtag_tau21_sf   lnN              1.122        1.126        -            0.891        0.888        -          

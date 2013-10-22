@@ -3,11 +3,11 @@ imax 1
 jmax 3
 kmax *
 ---------------
-shapes *      * ../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_$CHANNEL
-shapes bkg_fit_jj * ../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_$CHANNEL
-shapes RS1WW_jj * ../workspaces/CMS_jj_RS1WW_1700_8TeV.root w_all:CMS_jj_RS1WW_sig_$CHANNEL
-shapes RS1ZZ_jj * ../workspaces/CMS_jj_RS1ZZ_1700_8TeV.root w_all:CMS_jj_RS1ZZ_sig_$CHANNEL
-shapes WZ_jj * ../workspaces/CMS_jj_WZ_1700_8TeV.root w_all:CMS_jj_WZ_sig_$CHANNEL
+shapes data_obs CMS_jj_VVLP ../workspaces/CMS_jj_bkg_8TeV.root w_all:data_obs_CMS_jj_VVLP
+shapes bkg_fit_jj CMS_jj_VVLP ../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_VVLP
+shapes RS1WW_jj CMS_jj_VVLP ../workspaces/CMS_jj_RS1WW_1700_8TeV.root w_all:RS1WW_jj_CMS_jj_VVLP
+shapes RS1ZZ_jj CMS_jj_VVLP ../workspaces/CMS_jj_RS1ZZ_1700_8TeV.root w_all:RS1ZZ_jj_CMS_jj_VVLP
+shapes WZ_jj CMS_jj_VVLP ../workspaces/CMS_jj_WZ_1700_8TeV.root w_all:WZ_jj_CMS_jj_VVLP
 ---------------
 bin          CMS_jj_VVLP
 observation   22328

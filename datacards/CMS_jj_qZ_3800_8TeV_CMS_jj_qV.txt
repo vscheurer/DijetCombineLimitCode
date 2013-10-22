@@ -3,14 +3,14 @@ imax 2 number of bins
 jmax 2 number of processes minus 1
 kmax 8 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes *            CMS_jj_qVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_qVHP
 shapes bkg_fit_jj   CMS_jj_qVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_qVHP
-shapes qW_jj        CMS_jj_qVHP  datacards/../workspaces/CMS_jj_qW_3800_8TeV.root w_all:CMS_jj_qW_sig_CMS_jj_qVHP
-shapes qZ_jj        CMS_jj_qVHP  datacards/../workspaces/CMS_jj_qZ_3800_8TeV.root w_all:CMS_jj_qZ_sig_CMS_jj_qVHP
-shapes *            CMS_jj_qVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_qVLP
+shapes data_obs     CMS_jj_qVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:data_obs_CMS_jj_qVHP
+shapes qW_jj        CMS_jj_qVHP  datacards/../workspaces/CMS_jj_qW_3800_8TeV.root w_all:qW_jj_CMS_jj_qVHP
+shapes qZ_jj        CMS_jj_qVHP  datacards/../workspaces/CMS_jj_qZ_3800_8TeV.root w_all:qZ_jj_CMS_jj_qVHP
 shapes bkg_fit_jj   CMS_jj_qVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_qVLP
-shapes qW_jj        CMS_jj_qVLP  datacards/../workspaces/CMS_jj_qW_3800_8TeV.root w_all:CMS_jj_qW_sig_CMS_jj_qVLP
-shapes qZ_jj        CMS_jj_qVLP  datacards/../workspaces/CMS_jj_qZ_3800_8TeV.root w_all:CMS_jj_qZ_sig_CMS_jj_qVLP
+shapes data_obs     CMS_jj_qVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:data_obs_CMS_jj_qVLP
+shapes qW_jj        CMS_jj_qVLP  datacards/../workspaces/CMS_jj_qW_3800_8TeV.root w_all:qW_jj_CMS_jj_qVLP
+shapes qZ_jj        CMS_jj_qVLP  datacards/../workspaces/CMS_jj_qZ_3800_8TeV.root w_all:qZ_jj_CMS_jj_qVLP
 ----------------------------------------------------------------------------------------------------------------------------------
 bin          CMS_jj_qVHP  CMS_jj_qVLP
 observation  333854.0     552334.0   

@@ -3,16 +3,16 @@ imax 2 number of bins
 jmax 3 number of processes minus 1
 kmax 8 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes *            CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_VVHP
-shapes RS1WW_jj     CMS_jj_VVHP  datacards/../workspaces/CMS_jj_RS1WW_2300_8TeV.root w_all:CMS_jj_RS1WW_sig_CMS_jj_VVHP
-shapes RS1ZZ_jj     CMS_jj_VVHP  datacards/../workspaces/CMS_jj_RS1ZZ_2300_8TeV.root w_all:CMS_jj_RS1ZZ_sig_CMS_jj_VVHP
-shapes WZ_jj        CMS_jj_VVHP  datacards/../workspaces/CMS_jj_WZ_2300_8TeV.root w_all:CMS_jj_WZ_sig_CMS_jj_VVHP
+shapes RS1WW_jj     CMS_jj_VVHP  datacards/../workspaces/CMS_jj_RS1WW_2300_8TeV.root w_all:RS1WW_jj_CMS_jj_VVHP
+shapes RS1ZZ_jj     CMS_jj_VVHP  datacards/../workspaces/CMS_jj_RS1ZZ_2300_8TeV.root w_all:RS1ZZ_jj_CMS_jj_VVHP
+shapes WZ_jj        CMS_jj_VVHP  datacards/../workspaces/CMS_jj_WZ_2300_8TeV.root w_all:WZ_jj_CMS_jj_VVHP
 shapes bkg_fit_jj   CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_VVHP
-shapes *            CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:$PROCESS_CMS_jj_VVLP
-shapes RS1WW_jj     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_RS1WW_2300_8TeV.root w_all:CMS_jj_RS1WW_sig_CMS_jj_VVLP
-shapes RS1ZZ_jj     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_RS1ZZ_2300_8TeV.root w_all:CMS_jj_RS1ZZ_sig_CMS_jj_VVLP
-shapes WZ_jj        CMS_jj_VVLP  datacards/../workspaces/CMS_jj_WZ_2300_8TeV.root w_all:CMS_jj_WZ_sig_CMS_jj_VVLP
+shapes data_obs     CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:data_obs_CMS_jj_VVHP
+shapes RS1WW_jj     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_RS1WW_2300_8TeV.root w_all:RS1WW_jj_CMS_jj_VVLP
+shapes RS1ZZ_jj     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_RS1ZZ_2300_8TeV.root w_all:RS1ZZ_jj_CMS_jj_VVLP
+shapes WZ_jj        CMS_jj_VVLP  datacards/../workspaces/CMS_jj_WZ_2300_8TeV.root w_all:WZ_jj_CMS_jj_VVLP
 shapes bkg_fit_jj   CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_VVLP
+shapes data_obs     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:data_obs_CMS_jj_VVLP
 ----------------------------------------------------------------------------------------------------------------------------------
 bin          CMS_jj_VVHP  CMS_jj_VVLP
 observation  7128.0       22328.0    

@@ -558,7 +558,7 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
     TCanvas* ctmp = new TCanvas("ctmp","jj Background Categories",0,0,500,500);
     Int_t nBinsMass(80);
     plotbkg_fit[c] = mgg->frame(nBinsMass);
-    data[c]->plotOn(plotbkg_fit[c],LineColor(kWhite),MarkerColor(kWhite),PrintEvalErrors(-1));    
+    data[c]->plotOn(plotbkg_fit[c],LineColor(kWhite),MarkerColor(kWhite));    
 
     bkg_fitTmp.plotOn(plotbkg_fit[c],LineColor(kBlue),Range("fitrange"),NormRange("fitrange"),PrintEvalErrors(-1)); 
     data[c]->plotOn(plotbkg_fit[c]);    
@@ -901,7 +901,7 @@ wAll->factory("prod::CMS_jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat
 // (4) do reparametrization of signal
   for (int c = 0; c < ncat; ++c) {
     wAll->factory(
-		  "EDIT::CMS_jj_"+signalname+TString::Format("_sig_%s(sig_",cat_names.at(c).c_str())+signalname+TString::Format("_%s,",cat_names.at(c).c_str()) +
+		  "EDIT::"+signalname+"_jj"+TString::Format("_sig_%s(",cat_names.at(c).c_str())+signalname+"_jj"+TString::Format("_%s,",cat_names.at(c).c_str()) +
 		  " jj_"+signalname+TString::Format("_sig_m0_%s=CMS_jj_",cat_names.at(c).c_str())+signalname+TString::Format("_sig_m0_%s, ", cat_names.at(c).c_str()) +
 		  " jj_"+signalname+TString::Format("_sig_sigma_%s=CMS_jj_",cat_names.at(c).c_str())+signalname+TString::Format("_sig_sigma_%s, ", cat_names.at(c).c_str()) +
 		  " jj_"+signalname+TString::Format("_sig_gsigma_%s=CMS_jj_",cat_names.at(c).c_str())+signalname+TString::Format("_sig_gsigma_%s)", cat_names.at(c).c_str())
@@ -1163,18 +1163,18 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "kmax *" << endl;
   outFile << "---------------" << endl;
 
-  outFile << "shapes *      * " << wsDir+TString(fileBkgName)+".root" << " w_all:$PROCESS_$CHANNEL" << endl;
-  outFile << "shapes bkg_fit_jj * "<<  wsDir+TString(fileBkgName)+".root" << " w_all:CMS_bkg_fit_$CHANNEL" << endl;
+  outFile << Form("shapes data_obs %s ", cat_names[iChan].c_str()) << wsDir+TString(fileBkgName)+".root" << Form(" w_all:data_obs_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes bkg_fit_jj %s ", cat_names[iChan].c_str()) <<  wsDir+TString(fileBkgName)+".root" << Form(" w_all:CMS_bkg_fit_%s", cat_names[iChan].c_str()) << endl;
   if(signalsample<3){
-  outFile << "shapes RS1WW_jj * " << wsDir+TString::Format("CMS_jj_RS1WW_%.0f_8TeV.root", mass) << " w_all:CMS_jj_RS1WW_sig_$CHANNEL" << endl;
-  outFile << "shapes RS1ZZ_jj * " << wsDir+TString::Format("CMS_jj_RS1ZZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_RS1ZZ_sig_$CHANNEL" << endl;
-  outFile << "shapes WZ_jj * " << wsDir+TString::Format("CMS_jj_WZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_WZ_sig_$CHANNEL" << endl;
+  outFile << Form("shapes RS1WW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1WW_%.0f_8TeV.root", mass) << Form(" w_all:RS1WW_jj_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes RS1ZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1ZZ_%.0f_8TeV.root", mass) << Form(" w_all:RS1ZZ_jj_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes WZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_WZ_%.0f_8TeV.root", mass) << Form(" w_all:WZ_jj_%s", cat_names[iChan].c_str()) << endl;
   } else if(signalsample<5){
-  outFile << "shapes qW_jj * " << wsDir+TString::Format("CMS_jj_qW_%.0f_8TeV.root", mass) << " w_all:CMS_jj_qW_sig_$CHANNEL" << endl;
-  outFile << "shapes qZ_jj * " << wsDir+TString::Format("CMS_jj_qZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_qZ_sig_$CHANNEL" << endl;
+  outFile << Form("shapes qW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_qW_%.0f_8TeV.root", mass) << Form(" w_all:qW_jj_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes qZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_qZ_%.0f_8TeV.root", mass) << Form(" w_all:qZ_jj_%s", cat_names[iChan].c_str()) << endl;
   } else {
-  outFile << "shapes BulkWW_jj * " << wsDir+TString::Format("CMS_jj_BulkWW_%.0f_8TeV.root", mass) << " w_all:CMS_jj_BulkWW_sig_$CHANNEL" << endl;
-  outFile << "shapes BulkZZ_jj * " << wsDir+TString::Format("CMS_jj_BulkZZ_%.0f_8TeV.root", mass) << " w_all:CMS_jj_BulkZZ_sig_$CHANNEL" << endl;
+  outFile << Form("shapes BulkWW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_BulkWW_%.0f_8TeV.root", mass) << Form(" w_all:BulkWW_jj_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes BulkZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_BulkZZ_%.0f_8TeV.root", mass) << Form(" w_all:BulkZZ_jj_%s", cat_names[iChan].c_str()) << endl;
   }
   outFile << "---------------" << endl;
   outFile << Form("bin          %s", cat_names[iChan].c_str()) << endl;

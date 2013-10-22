@@ -48,14 +48,14 @@ for mass in masses:
 	      if "." in fWWsplit[s]:
 	        numberWW=float(fWWsplit[s])
 	        numberZZ=float(fZZsplit[count+1])
-		if count==1:
+		if count==0:
+		    number=numberWW*100.*theoryWW[mass]
+		elif count==1:
 		    number=numberZZ*100.*theoryZZ[mass]
-		elif count==2:
+		elif count==3:
 		    number=numberWW*100.*theoryWW[mass]
 		elif count==4:
 		    number=numberZZ*100.*theoryZZ[mass]
-		elif count==5:
-		    number=numberWW*100.*theoryWW[mass]
 		else:
 		    number=numberWW
 		count+=1
