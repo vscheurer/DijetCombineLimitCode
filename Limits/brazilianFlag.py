@@ -179,13 +179,13 @@ def Plot(files, label, obs):
     elif "qZ" in label.split("_")[0]:
         ltheory="q* #rightarrow qZ"
     elif "BulkWW" in label.split("_")[0]:
-        ltheory="G_{Bulk} #rightarrow WW"
+        ltheory="G_{Bulk} #rightarrow WW (k/#bar{M}_{Pl}=0.2)"
     elif "RS1WW" in label.split("_")[0]:
-        ltheory="G_{RS} #rightarrow WW"
+        ltheory="G_{RS} #rightarrow WW (k/#bar{M}_{Pl}=0.1)"
     elif "BulkZZ" in label.split("_")[0]:
-        ltheory="G_{Bulk} #rightarrow ZZ"
+        ltheory="G_{Bulk} #rightarrow ZZ (k/#bar{M}_{Pl}=0.2)"
     elif "RS1ZZ" in label.split("_")[0]:
-        ltheory="G_{RS} #rightarrow ZZ"
+        ltheory="G_{RS} #rightarrow ZZ (k/#bar{M}_{Pl}=0.1)"
     elif "WZ" in label.split("_")[0]:
         ltheory="W' #rightarrow WZ"
     
@@ -206,7 +206,10 @@ def Plot(files, label, obs):
 	    print label,"obs crossing",mass
 	    crossing=1
     
-    leg = rt.TLegend(0.60,0.65,0.95,0.89)
+    if "WW" in label.split("_")[0] or "ZZ" in label.split("_")[0]:
+       leg = rt.TLegend(0.43,0.65,0.95,0.89)
+    else:
+       leg = rt.TLegend(0.60,0.65,0.95,0.89)
     leg.SetFillColor(rt.kWhite)
     leg.SetFillStyle(0)
     leg.SetTextSize(0.04)
