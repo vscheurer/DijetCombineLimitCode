@@ -881,21 +881,23 @@ void MakeSigWS(RooWorkspace* w, const char* fileBaseName, TString signalname, st
 // (2) Systematics on energy scale and resolution
 
   wAll->factory("CMS_sig_p1_jes[1,1.0,1.0]");
+  wAll->factory("CMS_jj_sig_p1_jes[0.01,0.01,0.01]");
     for (int c = 0; c < ncat; ++c) {
-wAll->factory("prod::CMS_jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_sig_p1_jes)");
+wAll->factory("prod::CMS_jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+", sum::CMS_sig_p1_jes_sum(1.0,prod::CMS_sig_p1_jes_prod(CMS_sig_p1_jes, CMS_jj_sig_p1_jes)))");
     }
 
 // (3) Systematics on resolution: create new sigmas
 
 
   wAll->factory("CMS_sig_p2_jer[1,1.0,1.0]");
+  wAll->factory("CMS_jj_sig_p2_jer[0.1,0.1,0.1]");
 
     for (int c = 0; c < ncat; ++c) {
-wAll->factory("prod::CMS_jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_sig_p2_jer)");
+wAll->factory("prod::CMS_jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+", sum::CMS_sig_p2_jer_sum(1.0,prod::CMS_sig_p2_jer_prod(CMS_sig_p2_jer, CMS_jj_sig_p2_jer)))");
     }
 
     for (int c = 0; c < ncat; ++c) {
-wAll->factory("prod::CMS_jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_sig_p2_jer)");
+wAll->factory("prod::CMS_jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+", sum::CMS_sig_p2_jer_sum(1.0,prod::CMS_sig_p2_jer_prod(CMS_sig_p2_jer, CMS_jj_sig_p2_jer)))");
     }
 
 // (4) do reparametrization of signal
@@ -1257,8 +1259,8 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "CMS_pu         lnN  1.030  1.030      - # pileup" << endl;
   } 
   outFile << "# Parametric shape uncertainties, entered by hand." << endl;
-  outFile << Form("CMS_sig_p1_jes    param   1   0.01   # dijet mass shift due to JES uncertainty") << endl;
-  outFile << Form("CMS_sig_p2_jer     param   1   0.1   # dijet mass resolution shift due to JER uncertainty") << endl;
+  outFile << Form("CMS_sig_p1_jes    param   1   1   # dijet mass shift due to JES uncertainty") << endl;
+  outFile << Form("CMS_sig_p2_jer     param   1   1   # dijet mass resolution shift due to JER uncertainty") << endl;
  
   outFile << Form("CMS_bkg_fit_%s_norm           flatParam  # Normalization uncertainty on background slope",cat_names[iChan].c_str()) << endl;
 
