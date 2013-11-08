@@ -50,11 +50,16 @@ ngenevents=[30000,30000,30000,30000,30000,30000,30000,30000]
 
 if "Qstar" in inputRoot:
   masses=[1000,1500,2000,3000,4000]
-elif "Bulk" in inputRoot:
-  masses=[1000,1100,1200,1300,1400,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500]
-  ngenevents=[49992,50824,50654,50653,50479,50481,50824,36807,47995,48995,50822,49745,50318,50994,46612]
+elif "BulkWW" in inputRoot:
+  masses=[1000,1100,1200,1300,1400,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,3000]
+  ngenevents=[49992,50824,50654,50653,50479,50481,50824,36807,47995,48995,50822,49745,50318,50994,46612,49890]
   for i in range(len(ngenevents)):
       ngenevents[i]=ngenevents[i]*(0.86/0.676)*(0.86/0.676)
+elif "BulkZZ" in inputRoot:
+  masses=[1000,1500,1700,1800,1900,2000,2500,3000]
+  ngenevents=[49998,49998,49993,49893,49992,49996,49197,49992]
+  for i in range(len(ngenevents)):
+      ngenevents[i]=ngenevents[i]*(0.8512/0.692)*(0.8512/0.692)
 elif "pythia" in inputRoot or "Wprime" in inputRoot:
   masses=[1000,1500,1800,2000,2200,2500,3000]
 elif "HH" in inputRoot:

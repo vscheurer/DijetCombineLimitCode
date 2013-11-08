@@ -14,7 +14,7 @@ observation   7128
 bin                      CMS_jj_VVHP       CMS_jj_VVHP      CMS_jj_VVHP      
 process                 BulkWW_jj BulkZZ_jj     bkg_fit_jj     
 process                 -1 0        1          
-rate                        0  17.5338  1
+rate                        0  21.7037  1
 --------------------------------
 # signal scaled by 0.00656667 to a cross section of 10/fb
 lumi_8TeV       lnN  1.022  1.022    - 

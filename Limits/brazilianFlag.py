@@ -246,7 +246,7 @@ if __name__ == '__main__':
        masses =[m*100 for m in range(10,39+1)]
        cat="qV"
     elif "Bulk" in chan:
-       masses =[m*100 for m in range(10,25+1)]
+       masses =[m*100 for m in range(10,29+1)]
        cat="VV"
     else:
        masses =[m*100 for m in range(10,29+1)]

@@ -39,8 +39,8 @@
    if (iSample == 2) inFile = string("RSGZZherwig");
    if (iSample == 3) inFile = string("QstarQW");
    if (iSample == 4) inFile = string("QstarQZ");
-   if (iSample == 5) inFile = string("BulkCombined");
-   if (iSample == 6) inFile = string("BulkCombined");
+   if (iSample == 5) inFile = string("BulkWWCombined");
+   if (iSample == 6) inFile = string("BulkZZCombined");
 
    string outFile("dijetWtag_Moriond_WZPy6");
    if (iSample == 1) outFile = string("dijetWtag_Moriond_WWHpp");

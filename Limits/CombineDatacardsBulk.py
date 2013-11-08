@@ -20,7 +20,7 @@ gStyle.SetLabelSize(0.05, "XYZ")
 gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
-masses =[m*100/2 for m in range(2*10,2*25+1)]
+masses =[m*100/2 for m in range(2*10,2*29+1)]
 
 for mass in masses:
         print "mass = ",mass
