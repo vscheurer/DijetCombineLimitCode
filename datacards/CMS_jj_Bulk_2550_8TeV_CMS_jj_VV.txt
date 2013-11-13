@@ -1,7 +1,7 @@
 Combination of CMS_jj_VVHP=datacards/CMS_jj_BulkWW_2550_8TeV_CMS_jj_VVHP.txt  CMS_jj_VVLP=datacards/CMS_jj_BulkWW_2550_8TeV_CMS_jj_VVLP.txt
 imax 2 number of bins
 jmax 2 number of processes minus 1
-kmax 8 number of nuisance parameters
+kmax 7 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
 shapes BulkWW_jj    CMS_jj_VVHP  datacards/../workspaces/CMS_jj_BulkWW_2550_8TeV.root w_all:BulkWW_jj_CMS_jj_VVHP
 shapes BulkZZ_jj    CMS_jj_VVHP  datacards/../workspaces/CMS_jj_BulkZZ_2550_8TeV.root w_all:BulkZZ_jj_CMS_jj_VVHP

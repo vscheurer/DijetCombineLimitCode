@@ -119,8 +119,8 @@ Double_t MMIN = 890;
 Double_t MMAX = 5000;
 std::string filePOSTfix="";
 double signalScaler=19700.0/30000./100.; // assume signal cross section on 10/fb
-double scaleFactorHP=0.89;
-double scaleFactorLP=1./0.89;
+double scaleFactorHP=0.927*0.946; // tau21 and jet mass scale factors
+double scaleFactorLP=1.52*0.961; // tau21 and jet mass scale factors
 
 void AddSigData(RooWorkspace*, Float_t);
 void AddBkgData(RooWorkspace*);
@@ -1198,14 +1198,15 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb" << endl;
   
-  outFile << "lumi_8TeV       lnN  1.022  1.022  1.022    - " << endl;
+  outFile << "lumi_8TeV       lnN  1.026  1.026  1.026    - " << endl;
   if((iChan==0)||(iChan==3)){
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.122  1.126  1.124      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.08  1.08  1.08      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
-  // anti-correlated the high purity and medium purity categories
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.891  0.888  0.890      - # tau21 efficiency" << endl;
+  // anti-correlated the high purity (1.04*1.04) and low purity (0.71*1.04) categories
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.74  0.74  0.74      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
-  outFile << "CMS_eff_vtag_model         lnN  1.185  1.197  1.191      - # jet mass efficiency" << endl;
   outFile << "CMS_scale_j         lnN  1.120  1.120  1.120      - # jet energy scale" << endl;
   outFile << "CMS_res_j         lnN  1.040  1.040  1.040      - # jet energy resolution" << endl;
   outFile << "CMS_pu         lnN  1.030  1.030  1.030      - # pileup" << endl;
@@ -1222,14 +1223,15 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb" << endl;
   
-  outFile << "lumi_8TeV       lnN  1.022  1.022    - " << endl;
+  outFile << "lumi_8TeV       lnN  1.026  1.026    - " << endl;
   if((iChan==0)||(iChan==3)){
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.061  1.063      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.04  1.04      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.093  1.099      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
-  // anti-correlated the high purity and medium purity categories
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.942  0.941      - # tau21 efficiency" << endl;
+  // anti-correlated the high purity (1.04) and low purity (0.71) categories
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.71  0.71      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.093  1.099      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
-  outFile << "CMS_eff_vtag_model         lnN  1.093  1.099      - # jet mass efficiency" << endl;
   outFile << "CMS_scale_j         lnN  1.060  1.060      - # jet energy scale" << endl;
   outFile << "CMS_res_j         lnN  1.020  1.020      - # jet energy resolution" << endl;
   outFile << "CMS_pu         lnN  1.030  1.030      - # pileup" << endl;
@@ -1246,21 +1248,22 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb" << endl;
   
-  outFile << "lumi_8TeV       lnN  1.022  1.022    - " << endl;
+  outFile << "lumi_8TeV       lnN  1.026  1.026    - " << endl;
   if((iChan==0)||(iChan==3)){
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.122  1.126      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.08  1.08      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
-  // anti-correlated the high purity and medium purity categories
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.891  0.888      - # tau21 efficiency" << endl;
+  // anti-correlated the high purity (1.04*1.04) and low purity (0.71*1.04) categories
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.74  0.74      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
-  outFile << "CMS_eff_vtag_model         lnN  1.185  1.197      - # jet mass efficiency" << endl;
   outFile << "CMS_scale_j         lnN  1.120  1.120      - # jet energy scale" << endl;
   outFile << "CMS_res_j         lnN  1.040  1.040      - # jet energy resolution" << endl;
   outFile << "CMS_pu         lnN  1.030  1.030      - # pileup" << endl;
   } 
   outFile << "# Parametric shape uncertainties, entered by hand." << endl;
-  outFile << Form("CMS_sig_p1_jes    param   1   1   # dijet mass shift due to JES uncertainty") << endl;
-  outFile << Form("CMS_sig_p2_jer     param   1   1   # dijet mass resolution shift due to JER uncertainty") << endl;
+  outFile << Form("CMS_sig_p1_jes    param   0.0   1.0   # dijet mass shift due to JES uncertainty") << endl;
+  outFile << Form("CMS_sig_p2_jer     param   0.0   1.0   # dijet mass resolution shift due to JER uncertainty") << endl;
  
   outFile << Form("CMS_bkg_fit_%s_norm           flatParam  # Normalization uncertainty on background slope",cat_names[iChan].c_str()) << endl;
 

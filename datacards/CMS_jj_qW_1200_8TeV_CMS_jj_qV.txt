@@ -1,7 +1,7 @@
 Combination of CMS_jj_qVHP=datacards/CMS_jj_qW_1200_8TeV_CMS_jj_qVHP.txt  CMS_jj_qVLP=datacards/CMS_jj_qW_1200_8TeV_CMS_jj_qVLP.txt
 imax 2 number of bins
 jmax 2 number of processes minus 1
-kmax 8 number of nuisance parameters
+kmax 7 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
 shapes bkg_fit_jj   CMS_jj_qVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:CMS_bkg_fit_CMS_jj_qVHP
 shapes data_obs     CMS_jj_qVHP  datacards/../workspaces/CMS_jj_bkg_8TeV.root w_all:data_obs_CMS_jj_qVHP
@@ -18,16 +18,15 @@ observation  333854.0     552334.0
 bin                                      CMS_jj_qVHP  CMS_jj_qVHP  CMS_jj_qVHP  CMS_jj_qVLP  CMS_jj_qVLP  CMS_jj_qVLP
 process                                  qZ_jj        qW_jj        bkg_fit_jj   qZ_jj        qW_jj        bkg_fit_jj 
 process                                  -1           0            1            -1           0            1          
-rate                                     0.0000       34.3828      1.0000       0.0000       8.5444       1.0000     
+rate                                     0.0000       34.8947      1.0000       0.0000       6.5724       1.0000     
 ----------------------------------------------------------------------------------------------------------------------------------
-CMS_eff_vtag_model      lnN              1.099        1.093        -            1.099        1.093        -          
-CMS_eff_vtag_tau21_sf   lnN              1.063        1.061        -            0.941        0.942        -          
+CMS_eff_vtag_tau21_sf   lnN              1.04         1.04         -            0.71         0.71         -          
 CMS_pu                  lnN              1.03         1.03         -            1.03         1.03         -          
 CMS_res_j               lnN              1.02         1.02         -            1.02         1.02         -          
 CMS_scale_j             lnN              1.06         1.06         -            1.06         1.06         -          
-lumi_8TeV               lnN              1.022        1.022        -            1.022        1.022        -          
-CMS_sig_p1_jes  param  1 1
-CMS_sig_p2_jer  param  1 1
+lumi_8TeV               lnN              1.026        1.026        -            1.026        1.026        -          
+CMS_sig_p1_jes  param  0.0 1.0
+CMS_sig_p2_jer  param  0.0 1.0
 CMS_bkg_fit_CMS_jj_qVHP_norm  flatParam
 CMS_bkg_fit_slope3_CMS_jj_qVHP  flatParam
 CMS_bkg_fit_slope1_CMS_jj_qVLP  flatParam

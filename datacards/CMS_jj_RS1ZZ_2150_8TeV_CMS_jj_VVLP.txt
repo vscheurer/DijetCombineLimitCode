@@ -15,18 +15,17 @@ observation   22328
 bin                      CMS_jj_VVLP       CMS_jj_VVLP      CMS_jj_VVLP      CMS_jj_VVLP      
 process                 RS1WW_jj RS1ZZ_jj WZ_jj     bkg_fit_jj     
 process                 -2 -1 0        1          
-rate                        0  5.84433  0  1
+rate                        0  4.56244  0  1
 --------------------------------
 # signal scaled by 0.00656667 to a cross section of 10/fb
-lumi_8TeV       lnN  1.022  1.022  1.022    - 
-CMS_eff_vtag_tau21_sf         lnN  0.891  0.888  0.890      - # tau21 efficiency
-CMS_eff_vtag_model         lnN  1.185  1.197  1.191      - # jet mass efficiency
+lumi_8TeV       lnN  1.026  1.026  1.026    - 
+CMS_eff_vtag_tau21_sf         lnN  0.74  0.74  0.74      - # tau21 efficiency
 CMS_scale_j         lnN  1.120  1.120  1.120      - # jet energy scale
 CMS_res_j         lnN  1.040  1.040  1.040      - # jet energy resolution
 CMS_pu         lnN  1.030  1.030  1.030      - # pileup
 # Parametric shape uncertainties, entered by hand.
-CMS_sig_p1_jes    param   1   1   # dijet mass shift due to JES uncertainty
-CMS_sig_p2_jer     param   1   1   # dijet mass resolution shift due to JER uncertainty
+CMS_sig_p1_jes    param   0.0   1.0   # dijet mass shift due to JES uncertainty
+CMS_sig_p2_jer     param   0.0   1.0   # dijet mass resolution shift due to JER uncertainty
 CMS_bkg_fit_CMS_jj_VVLP_norm           flatParam  # Normalization uncertainty on background slope
 CMS_bkg_fit_slope1_CMS_jj_VVLP         flatParam  # Mean and absolute uncertainty on background slope
 CMS_bkg_fit_slope2_CMS_jj_VVLP         flatParam  # Mean and absolute uncertainty on background slope
