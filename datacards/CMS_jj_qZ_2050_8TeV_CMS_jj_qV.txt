@@ -18,7 +18,7 @@ observation  333854.0     552334.0
 bin                                      CMS_jj_qVHP  CMS_jj_qVHP  CMS_jj_qVHP  CMS_jj_qVLP  CMS_jj_qVLP  CMS_jj_qVLP
 process                                  qZ_jj        qW_jj        bkg_fit_jj   qZ_jj        qW_jj        bkg_fit_jj 
 process                                  -1           0            1            -1           0            1          
-rate                                     34.6851      0.0000       1.0000       7.9885       0.0000       1.0000     
+rate                                     26.6738      0.0000       1.0000       17.0451      0.0000       1.0000     
 ----------------------------------------------------------------------------------------------------------------------------------
 CMS_eff_vtag_tau21_sf   lnN              1.04         1.04         -            0.71         0.71         -          
 CMS_pu                  lnN              1.03         1.03         -            1.03         1.03         -          

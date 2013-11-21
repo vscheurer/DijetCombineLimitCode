@@ -18,7 +18,7 @@ observation  7128.0       22328.0
 bin                                      CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVLP  CMS_jj_VVLP  CMS_jj_VVLP
 process                                  BulkWW_jj    BulkZZ_jj    bkg_fit_jj   BulkWW_jj    BulkZZ_jj    bkg_fit_jj 
 process                                  -1           0            1            -1           0            1          
-rate                                     6.17562e-03  6.13034e-03  1.00000e+00  2.44521e-03  2.25885e-03  1.00000e+00  
+rate                                     3.65232e-03  3.62552e-03  1.00000e+00  4.01230e-03  3.70649e-03  1.00000e+00  
 ----------------------------------------------------------------------------------------------------------------------------------
 CMS_eff_vtag_tau21_sf   lnN              1.08         1.08         -            0.74         0.74         -          
 CMS_pu                  lnN              1.03         1.03         -            1.03         1.03         -          

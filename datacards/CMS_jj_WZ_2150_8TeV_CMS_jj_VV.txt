@@ -20,7 +20,7 @@ observation  7128.0       22328.0
 bin                                      CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVLP  CMS_jj_VVLP  CMS_jj_VVLP  CMS_jj_VVLP
 process                                  RS1ZZ_jj     WZ_jj        RS1WW_jj     bkg_fit_jj   RS1ZZ_jj     WZ_jj        RS1WW_jj     bkg_fit_jj 
 process                                  -2           -1           0            1            -2           -1           0            1          
-rate                                     0.0000       16.0959      0.0000       1.0000       0.0000       5.3878       0.0000       1.0000     
+rate                                     0.0000       9.5191       0.0000       1.0000       0.0000       8.8407       0.0000       1.0000     
 ----------------------------------------------------------------------------------------------------------------------------------
 CMS_eff_vtag_tau21_sf   lnN              1.08         1.08         1.08         -            0.74         0.74         0.74         -          
 CMS_pu                  lnN              1.03         1.03         1.03         -            1.03         1.03         1.03         -          

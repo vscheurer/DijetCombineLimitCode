@@ -119,8 +119,10 @@ Double_t MMIN = 890;
 Double_t MMAX = 5000;
 std::string filePOSTfix="";
 double signalScaler=19700.0/30000./100.; // assume signal cross section on 10/fb
-double scaleFactorHP=0.927*0.946; // tau21 and jet mass scale factors
-double scaleFactorLP=1.52*0.961; // tau21 and jet mass scale factors
+double scaleFactorHP=0.927*0.946; // tau21 and jet mass scale factors data/MC
+double scaleFactorLP=1.52*0.961; // tau21 and jet mass scale factors data/MC
+double scaleFactorHPherwig=1.0; // tau21 and jet mass scale factors Herwig/Pythia
+double scaleFactorLPherwig=1.3; // tau21 and jet mass scale factors Herwig/Pythia
 
 void AddSigData(RooWorkspace*, Float_t);
 void AddBkgData(RooWorkspace*);
@@ -1144,14 +1146,24 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   ofstream outFile(filename);
 
   double scaleFactor=signalScaler;
-  if(iChan==0)
-      scaleFactor/=(scaleFactorHP*scaleFactorHP);
-  if(iChan==1)
-      scaleFactor/=(scaleFactorHP*scaleFactorLP);
-  if(iChan==3)
-      scaleFactor/=scaleFactorHP;
-  if(iChan==4)
-      scaleFactor/=scaleFactorLP;
+  // Herwig HP+HP
+  if(((signalsample==0)||(signalsample==1))&&(iChan==0))
+      scaleFactor*=(scaleFactorHP*scaleFactorHP/scaleFactorHPherwig/scaleFactorHPherwig);
+  // Herwig HP+LP
+  if(((signalsample==0)||(signalsample==1))&&(iChan==1))
+      scaleFactor*=(scaleFactorHP*scaleFactorLP/scaleFactorHPherwig/scaleFactorLPherwig);
+  // Pythia HP+HP
+  if(((signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==0))
+      scaleFactor*=(scaleFactorHP*scaleFactorHP);
+  // Pythia HP+LP
+  if(((signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==1))
+      scaleFactor*=(scaleFactorHP*scaleFactorLP);
+  // Pythia HP
+  if(((signalsample==3)||(signalsample==4))&&(iChan==3))
+      scaleFactor*=(scaleFactorHP);
+  // Pythia LP
+  if(((signalsample==3)||(signalsample==4))&&(iChan==4))
+      scaleFactor*=(scaleFactorLP);
 
   outFile << "# Fully Hadronic VV analysis" << endl;
   outFile << "imax 1" << endl;
@@ -1196,7 +1208,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
       outFile <<  "rate                      " 
 	  << "  0  0  " << signal[iChan]->sumEntries()*scaleFactor << "  " << 1 << endl;
   outFile << "--------------------------------" << endl;
-  outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb" << endl;
+  outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
   outFile << "lumi_8TeV       lnN  1.026  1.026  1.026    - " << endl;
   if((iChan==0)||(iChan==3)){
@@ -1221,7 +1233,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
       outFile <<  "rate                      " 
 	  << "  " << signal[iChan]->sumEntries()*scaleFactor << "  0  " << 1 << endl;
   outFile << "--------------------------------" << endl;
-  outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb" << endl;
+  outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
   outFile << "lumi_8TeV       lnN  1.026  1.026    - " << endl;
   if((iChan==0)||(iChan==3)){
@@ -1246,7 +1258,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
       outFile <<  "rate                      " 
 	  << "  " << signal[iChan]->sumEntries()*scaleFactor << "  0  " << 1 << endl;
   outFile << "--------------------------------" << endl;
-  outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb" << endl;
+  outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
   outFile << "lumi_8TeV       lnN  1.026  1.026    - " << endl;
   if((iChan==0)||(iChan==3)){

@@ -14,9 +14,9 @@ observation   552334
 bin                      CMS_jj_qVLP      CMS_jj_qVLP      CMS_jj_qVLP      
 process                 qW_jj qZ_jj     bkg_fit_jj     
 process                 -1 0        1          
-rate                        0  6.36563  1
+rate                        0  13.5824  1
 --------------------------------
-# signal scaled by 0.00656667 to a cross section of 10/fb
+# signal scaled by 0.00656667 to a cross section of 10/fb and also scale factor of 1.46072 are applied.
 lumi_8TeV       lnN  1.026  1.026    - 
 CMS_eff_vtag_tau21_sf         lnN  0.71  0.71      - # tau21 efficiency
 CMS_scale_j         lnN  1.060  1.060      - # jet energy scale
