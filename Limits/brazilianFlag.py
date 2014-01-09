@@ -35,7 +35,7 @@ def Plot(files, label, obs):
 
     fChain = []
     for onefile in files:
-        #print onefile
+        print onefile
         fileIN = rt.TFile.Open(onefile)
         fChain.append(fileIN.Get("limit;1"))  
 
@@ -110,16 +110,24 @@ def Plot(files, label, obs):
     mg.Add(grmean,"L")#.Draw("same,AC*")
     mg.Add(gr1down)#.Draw("same,AC*")
     mg.Add(gr2down)#.Draw("same,AC*")
-    if obs: mg.Add(grobs,"L,P")#.Draw("AC*")
+    if obs: mg.Add(grobs,"L")#.Draw("AC*")
  
     c1.SetLogy(1)
     mg.SetTitle("")
     mg.Draw("AP")
     mg.GetXaxis().SetTitle("Resonance mass (TeV)")
+    if "qW" in label.split("_")[0] or "qZ" in label.split("_")[0]:
+        resonance="q*"
+    if "RS1" in label.split("_")[0]:
+        resonance="G_{RS}"
+    if "Bulk" in label.split("_")[0]:
+        resonance="G_{Bulk}"
+    if "WZ" in label.split("_")[0]:
+        resonance="W'"
     if withAcceptance:
-        mg.GetYaxis().SetTitle("#sigma #times BR(X #rightarrow "+label.split("_")[0].replace("RS1","").replace("Bulk","")+") #times A (pb)")
+        mg.GetYaxis().SetTitle("#sigma #times B("+resonance+" #rightarrow "+label.split("_")[0].replace("RS1","").replace("Bulk","")+") #times A (pb)")
     else:
-        mg.GetYaxis().SetTitle("#sigma #times BR(X #rightarrow "+label.split("_")[0].replace("RS1","").replace("Bulk","")+") (pb)")
+        mg.GetYaxis().SetTitle("#sigma #times B("+resonance+" #rightarrow "+label.split("_")[0].replace("RS1","").replace("Bulk","")+") (pb)")
     mg.GetYaxis().SetTitleSize(0.06)
     mg.GetXaxis().SetTitleSize(0.06)
     mg.GetXaxis().SetLabelSize(0.045)
@@ -157,11 +165,11 @@ def Plot(files, label, obs):
     gryellow.Draw("f,same") 
 
     grmean.Draw("L")
-    if obs: grobs.Draw("L,P,E")
+    if obs: grobs.Draw("L")
 
     gtheory = rt.TGraphErrors(1)
     gtheory.SetLineColor(rt.kBlue)
-    gtheory.SetLineWidth(3)
+    gtheory.SetLineWidth(4)
     ftheory=open("signalcrosssections.txt")
     j=0
     glogtheory = rt.TGraphErrors(1)
@@ -208,20 +216,31 @@ def Plot(files, label, obs):
     
     if "WW" in label.split("_")[0] or "ZZ" in label.split("_")[0]:
        leg = rt.TLegend(0.43,0.65,0.95,0.89)
+       leg2 = rt.TLegend(0.43,0.65,0.95,0.89)
     else:
-       leg = rt.TLegend(0.60,0.65,0.95,0.89)
+       leg = rt.TLegend(0.59,0.65,0.95,0.89)
+       leg2 = rt.TLegend(0.59,0.65,0.95,0.89)
     leg.SetFillColor(rt.kWhite)
     leg.SetFillStyle(0)
     leg.SetTextSize(0.04)
     leg.SetBorderSize(0)
+    leg2.SetFillColor(rt.kWhite)
+    leg2.SetFillStyle(0)
+    leg2.SetTextSize(0.04)
+    leg2.SetBorderSize(0)
 
-    if obs: leg.AddEntry(grobs, "Observed", "L,P")
-    leg.AddEntry(grmean, "Expected", "L")
-    leg.AddEntry(gryellow, "#pm 1 #sigma Expected", "f")
-    leg.AddEntry(grgreen, "#pm 2 #sigma Expected", "f")
+    if obs: leg.AddEntry(grobs, "Observed", "L")
+    leg.AddEntry(gryellow, "Expected (68%)", "f")
+    leg.AddEntry(grgreen, "Expected (95%)", "f")
     leg.AddEntry(gtheory, ltheory, "L")
 
+    if obs: leg2.AddEntry(grobs, " ", "")
+    leg2.AddEntry(grmean, " ", "L")
+    leg2.AddEntry(grmean, " ", "L")
+    leg2.AddEntry(gtheory, " ", "")
+
     leg.Draw()
+    leg2.Draw("same")
 
     banner = TLatex(0.22,0.93,"CMS Preliminary, 19.7 fb^{-1}, #sqrt{s} = 8TeV");
     banner.SetNDC()

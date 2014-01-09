@@ -28,10 +28,10 @@ for chan in channels:
     print "chan =",chan
 
     if "q" in chan:
-       masses =[m*100/2 for m in range(2*10,2*40+1)]
+       masses =[m*100 for m in range(10,40+1)]
        bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
-       masses =[m*100/2 for m in range(2*10,2*29+1)]
+       masses =[m*100 for m in range(10,29+1)]
        bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
 
     for bin in bins:
@@ -45,10 +45,14 @@ for chan in channels:
             outputfile = open(outputname,'w')
             outputfile.write('#!/bin/bash\n')
             outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
+	    if "CMS_jj_qV" in bin:
+                freeze=" --freezeNuisances CMS_bkg_fit_slope3_CMS_jj_qVHP,CMS_bkg_fit_slope3_CMS_jj_qVLP"
+	    if "CMS_jj_VV" in bin:
+                freeze=" --freezeNuisances CMS_bkg_fit_slope3_CMS_jj_VVHP,CMS_bkg_fit_slope3_CMS_jj_VVLP"
 	    if fullToys:
-                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M HybridNew --frequentist -T 1000 --fork 0 -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
+                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M HybridNew "+freeze+" --frequentist --fullBToys -T 3000 --fork 0 -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
             else:
-                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M ProfileLikelihood -v2  -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
+                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M ProfileLikelihood -v2 "+freeze+" -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
             outputfile.close()
   
             command="rm "+outfile

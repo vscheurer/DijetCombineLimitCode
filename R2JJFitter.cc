@@ -119,8 +119,8 @@ Double_t MMIN = 890;
 Double_t MMAX = 5000;
 std::string filePOSTfix="";
 double signalScaler=19700.0/30000./100.; // assume signal cross section on 10/fb
-double scaleFactorHP=0.927*0.946; // tau21 and jet mass scale factors data/MC
-double scaleFactorLP=1.52*0.961; // tau21 and jet mass scale factors data/MC
+double scaleFactorHP=0.860; // tau21 and jet mass scale factors data/MC
+double scaleFactorLP=1.385; // tau21 and jet mass scale factors data/MC
 double scaleFactorHPherwig=1.0; // tau21 and jet mass scale factors Herwig/Pythia
 double scaleFactorLPherwig=1.3; // tau21 and jet mass scale factors Herwig/Pythia
 
@@ -882,24 +882,26 @@ void MakeSigWS(RooWorkspace* w, const char* fileBaseName, TString signalname, st
 
 // (2) Systematics on energy scale and resolution
 
-  wAll->factory("CMS_sig_p1_jes[1,1.0,1.0]");
+  wAll->factory("CMS_sig_p1_jes[0.0,-5.0,5.0]");
   wAll->factory("CMS_jj_sig_p1_jes[0.01,0.01,0.01]");
+  wAll->factory("sum::CMS_sig_p1_jes_sum(1.0,prod::CMS_sig_p1_jes_prod(CMS_sig_p1_jes, CMS_jj_sig_p1_jes))");
     for (int c = 0; c < ncat; ++c) {
-wAll->factory("prod::CMS_jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+", sum::CMS_sig_p1_jes_sum(1.0,prod::CMS_sig_p1_jes_prod(CMS_sig_p1_jes, CMS_jj_sig_p1_jes)))");
+wAll->factory("prod::CMS_jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_sig_p1_jes_sum)");
     }
 
 // (3) Systematics on resolution: create new sigmas
 
 
-  wAll->factory("CMS_sig_p2_jer[1,1.0,1.0]");
+  wAll->factory("CMS_sig_p2_jer[0.0,-5.0,5.0]");
   wAll->factory("CMS_jj_sig_p2_jer[0.1,0.1,0.1]");
+  wAll->factory("sum::CMS_sig_p2_jer_sum(1.0,prod::CMS_sig_p2_jer_prod(CMS_sig_p2_jer, CMS_jj_sig_p2_jer))");
 
     for (int c = 0; c < ncat; ++c) {
-wAll->factory("prod::CMS_jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+", sum::CMS_sig_p2_jer_sum(1.0,prod::CMS_sig_p2_jer_prod(CMS_sig_p2_jer, CMS_jj_sig_p2_jer)))");
+wAll->factory("prod::CMS_jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_sigma_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_sig_p2_jer_sum)");
     }
 
     for (int c = 0; c < ncat; ++c) {
-wAll->factory("prod::CMS_jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+", sum::CMS_sig_p2_jer_sum(1.0,prod::CMS_sig_p2_jer_prod(CMS_sig_p2_jer, CMS_jj_sig_p2_jer)))");
+wAll->factory("prod::CMS_jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_gsigma_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_sig_p2_jer_sum)");
     }
 
 // (4) do reparametrization of signal
@@ -1180,15 +1182,15 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << Form("shapes data_obs %s ", cat_names[iChan].c_str()) << wsDir+TString(fileBkgName)+".root" << Form(" w_all:data_obs_%s", cat_names[iChan].c_str()) << endl;
   outFile << Form("shapes bkg_fit_jj %s ", cat_names[iChan].c_str()) <<  wsDir+TString(fileBkgName)+".root" << Form(" w_all:CMS_bkg_fit_%s", cat_names[iChan].c_str()) << endl;
   if(signalsample<3){
-  outFile << Form("shapes RS1WW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1WW_%.0f_8TeV.root", mass) << Form(" w_all:RS1WW_jj_%s", cat_names[iChan].c_str()) << endl;
-  outFile << Form("shapes RS1ZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1ZZ_%.0f_8TeV.root", mass) << Form(" w_all:RS1ZZ_jj_%s", cat_names[iChan].c_str()) << endl;
-  outFile << Form("shapes WZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_WZ_%.0f_8TeV.root", mass) << Form(" w_all:WZ_jj_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes RS1WW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1WW_%.0f_8TeV.root", mass) << Form(" w_all:RS1WW_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes RS1ZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1ZZ_%.0f_8TeV.root", mass) << Form(" w_all:RS1ZZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes WZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_WZ_%.0f_8TeV.root", mass) << Form(" w_all:WZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   } else if(signalsample<5){
-  outFile << Form("shapes qW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_qW_%.0f_8TeV.root", mass) << Form(" w_all:qW_jj_%s", cat_names[iChan].c_str()) << endl;
-  outFile << Form("shapes qZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_qZ_%.0f_8TeV.root", mass) << Form(" w_all:qZ_jj_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes qW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_qW_%.0f_8TeV.root", mass) << Form(" w_all:qW_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes qZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_qZ_%.0f_8TeV.root", mass) << Form(" w_all:qZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   } else {
-  outFile << Form("shapes BulkWW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_BulkWW_%.0f_8TeV.root", mass) << Form(" w_all:BulkWW_jj_%s", cat_names[iChan].c_str()) << endl;
-  outFile << Form("shapes BulkZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_BulkZZ_%.0f_8TeV.root", mass) << Form(" w_all:BulkZZ_jj_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes BulkWW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_BulkWW_%.0f_8TeV.root", mass) << Form(" w_all:BulkWW_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes BulkZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_BulkZZ_%.0f_8TeV.root", mass) << Form(" w_all:BulkZZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   }
   outFile << "---------------" << endl;
   outFile << Form("bin          %s", cat_names[iChan].c_str()) << endl;
@@ -1212,11 +1214,11 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   
   outFile << "lumi_8TeV       lnN  1.026  1.026  1.026    - " << endl;
   if((iChan==0)||(iChan==3)){
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.08  1.08  1.08      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.15  1.15  1.15      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
-  // anti-correlated the high purity (1.04*1.04) and low purity (0.71*1.04) categories
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.74  0.74  0.74      - # tau21 efficiency" << endl;
+  // anti-correlated the high purity (1.076*1.076) and low purity (0.54*1.076) categories
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.58  0.58  0.58      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
   outFile << "CMS_scale_j         lnN  1.120  1.120  1.120      - # jet energy scale" << endl;
@@ -1237,11 +1239,11 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   
   outFile << "lumi_8TeV       lnN  1.026  1.026    - " << endl;
   if((iChan==0)||(iChan==3)){
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.04  1.04      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.076  1.076      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.093  1.099      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
-  // anti-correlated the high purity (1.04) and low purity (0.71) categories
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.71  0.71      - # tau21 efficiency" << endl;
+  // anti-correlated the high purity (1.076) and low purity (0.54) categories
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.54  0.54      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.093  1.099      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
   outFile << "CMS_scale_j         lnN  1.060  1.060      - # jet energy scale" << endl;
@@ -1262,11 +1264,11 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   
   outFile << "lumi_8TeV       lnN  1.026  1.026    - " << endl;
   if((iChan==0)||(iChan==3)){
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.08  1.08      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.15  1.15      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
-  // anti-correlated the high purity (1.04*1.04) and low purity (0.71*1.04) categories
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.74  0.74      - # tau21 efficiency" << endl;
+  // anti-correlated the high purity (1.076*1.076) and low purity (0.54*1.076) categories
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.58  0.58      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
   outFile << "CMS_scale_j         lnN  1.120  1.120      - # jet energy scale" << endl;

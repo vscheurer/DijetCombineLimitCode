@@ -41,17 +41,15 @@ for chan in channels:
             f_fit=file("Limits/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_pvalue.out")
             print "we look inside the fit output for bin "+str(bin)
 	    s=0
-	    p=0
+	    p=1.0
             for line in f_fit.readlines():
-                #            print line
                 if "Significance:" in line:
-                    #                limits+=[float(line.split(":")[2])]
-                    print float(line.split(":")[1])
-                    s=float(line.split(":")[1])
+                    print float(line.split(":")[1].strip(" ").split(" ")[0])
+                    s=float(line.split(":")[1].strip(" ").split(" ")[0])
                 if "(p-value " in line:
                     print float(line.split("=")[1].split(")")[0])
                     p=float(line.split("=")[1].split(")")[0])
-                if "Null p-value " in line:
+                if "Null p-value" in line:
                     print float(line.split(":")[1].strip().split(" ")[0])
                     p=float(line.split(":")[1].strip().split(" ")[0])
             f_fit.close()

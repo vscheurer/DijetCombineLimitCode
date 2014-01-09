@@ -29,10 +29,10 @@ for chan in channels:
     print "chan =",chan
 
     if "q" in chan:
-       masses =[m*100/2 for m in range(2*10,2*40+1)]
+       masses =[m*100 for m in range(10,40+1)]
        bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
-       masses =[m*100/2 for m in range(2*10,2*29+1)]
+       masses =[m*100 for m in range(10,29+1)]
        bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
        #masses = [1000]
 
