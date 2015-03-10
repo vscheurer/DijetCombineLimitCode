@@ -114,13 +114,15 @@
 using namespace RooFit;
 using namespace RooStats ;
 
-static const Int_t NCAT = 1;
-Double_t MMIN = 1000;
+static const Int_t NCAT = 6;
+Double_t MMIN = 890;
 Double_t MMAX = 5000;
 std::string filePOSTfix="";
-double signalScaler=19700.0/20000./100.; // assume signal cross section on 10/fb
+double signalScaler=19700.0/30000./100.; // assume signal cross section on 10/fb
 double scaleFactorHP=0.860; // tau21 and jet mass scale factors data/MC
 double scaleFactorLP=1.385; // tau21 and jet mass scale factors data/MC
+double scaleFactorHPherwig=1.0; // tau21 and jet mass scale factors Herwig/Pythia
+double scaleFactorLPherwig=1.3; // tau21 and jet mass scale factors Herwig/Pythia
 
 void AddSigData(RooWorkspace*, Float_t);
 void AddBkgData(RooWorkspace*);
@@ -151,7 +153,7 @@ RooArgSet* defineVariables()
 
 
 
-void runfits(const Float_t mass=2000, int signalsample = 0, Bool_t dobands = false)
+void runfits(const Float_t mass=2000, int signalsample = 1, Bool_t dobands = false)
 {
 
 //******************************************************************//
@@ -167,7 +169,7 @@ void runfits(const Float_t mass=2000, int signalsample = 0, Bool_t dobands = fal
 
   TString signalname;
   if (signalsample==0)
-  { signalname="HH";
+  { signalname="RS1ZZ";
   }
   if (signalsample==1)
   { signalname="RS1WW";
@@ -187,7 +189,7 @@ void runfits(const Float_t mass=2000, int signalsample = 0, Bool_t dobands = fal
   if (signalsample==6)
   { signalname="BulkZZ";
   }
-  TString fileBaseName("CMS_jj_"+signalname+TString::Format("_%.0f_8TeV", mass));
+  TString fileBaseName("CMS_jj_"+signalname+TString::Format("_%.0f_13TeV", mass));
 
   vector<string> cat_names;
   cat_names.push_back("CMS_jj_VVHP");
@@ -198,8 +200,8 @@ void runfits(const Float_t mass=2000, int signalsample = 0, Bool_t dobands = fal
   cat_names.push_back("CMS_jj_qVNP");
 
 
-  TString fileBkgName(TString::Format("CMS_jj_bkg_HH_8TeV", mass));
-  TString card_name("Xvv_models_Bkg_8TeV_HHangelo.rs");
+  TString fileBkgName(TString::Format("CMS_jj_bkg_13TeV", mass));
+  TString card_name("Xvv_models_Bkg_13TeV.rs");
   HLFactory hlf("HLFactory", card_name, false);
   RooWorkspace* w = hlf.GetWs();
   RooFitResult* fitresults;
@@ -245,7 +247,7 @@ void runfits(const Float_t mass=2000, int signalsample = 0, Bool_t dobands = fal
   if((signalsample==0)||(signalsample==1)||(signalsample==2)||(signalsample==5)||(signalsample==6))
   {
     MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 0, signalname, signalsample, cat_names, mass);
-    //MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 1, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 1, signalname, signalsample, cat_names, mass);
   }
   if((signalsample==3)||(signalsample==4))
   {
@@ -271,7 +273,7 @@ void runfits(const Float_t mass=2000, int signalsample = 0, Bool_t dobands = fal
 void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<string> cat_names) {
 
   Int_t ncat = NCAT;
-  TString inDir   = "./MiniTrees/Signal_HH/";
+  TString inDir   = "./MiniTrees/Signal_VV/";
 
   Float_t MASS(mass);
   Float_t sqrts(8);
@@ -287,7 +289,7 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
 
 //signal300_tree_radcut.root
   int iMass = abs(mass);       
-  TFile sigFile1(inDir+TString(Form("dijetHtag_RadionHH_miniTree_RadionMx%d_noPurityCut.root", iMass)));
+  TFile sigFile1(inDir+TString(Form("dijetWtag_Moriond_ZZHppOUT%d_miniTree.root", iMass)));  
   if (signalsample==1) {
     sigFile1.Close();
     TFile sigFile1(inDir+TString(Form("dijetWtag_Moriond_WWHppOUT%d_miniTree.root", iMass)));
@@ -330,7 +332,7 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
 // Create non scaled signal dataset composed with  different productions 
 // according to their cross sections
 
-  RooDataSet sigScaled("sigScaled","dataset",sigTree1,*ntplVars,mainCut,"evWeight*normWeight");
+  RooDataSet sigScaled("sigScaled","dataset",sigTree1,*ntplVars,mainCut,"evWeight");
 
 //  RooRealVar *scaleWeightVar1 = (RooRealVar*) (*ntplVars)["evWeight"] ;
 //  RooRealVar *scaleWeightVar2 = (RooRealVar*) (*ntplVars)["normWeight"] ;
@@ -359,7 +361,7 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
   RooFormulaVar *weightVar3 = new RooFormulaVar( "weight3", "", "@0*@1", RooArgList(*weightVar1, *weightVar2));
 
   weightVar.setVal(1.);
-  //ntplVars->setRealValue("normWeight", 1.);
+  ntplVars->setRealValue("normWeight", 1.);
   RooDataSet sigWeightedTmp1("sigData","dataset",sigTree1,*ntplVars,mainCut,"weightVar");
   RooRealVar *weightX = (RooRealVar*) sigWeightedTmp1.addColumn(*weightVar3) ;
   RooDataSet sigWeighted("sigData","dataset",
@@ -394,7 +396,7 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
 void AddBkgData(RooWorkspace* w, std::vector<string> cat_names) {
 
   Int_t ncat = NCAT;
-  TString inDir   = "./MiniTrees/Signal_HH/";
+  TString inDir   = "./MiniTrees/Data_VV/";
 
 // common preselection cut
   TString mainCut("1");
@@ -408,7 +410,7 @@ void AddBkgData(RooWorkspace* w, std::vector<string> cat_names) {
 // retrieve the data tree;
 // no common preselection cut applied yet; 
 
-  TFile dataFile(inDir+"dijetHtag_RadionHH_miniTree_Data_noPurityCut.root");   
+  TFile dataFile(inDir+"dijetWtag_Moriond_Mar6_miniTree.root");   
   TTree* dataTree     = (TTree*) dataFile.Get("TCVARS");
 
   // Variables
@@ -1152,49 +1154,133 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   ofstream outFile(filename);
 
   double scaleFactor=signalScaler;
+  // Herwig HP+HP
+  if(((signalsample==0)||(signalsample==1))&&(iChan==0))
+      scaleFactor*=(scaleFactorHP*scaleFactorHP/scaleFactorHPherwig/scaleFactorHPherwig);
+  // Herwig HP+LP
+  if(((signalsample==0)||(signalsample==1))&&(iChan==1))
+      scaleFactor*=(scaleFactorHP*scaleFactorLP/scaleFactorHPherwig/scaleFactorLPherwig);
   // Pythia HP+HP
-  //if(((signalsample==0))&&(iChan==0))
-  //    scaleFactor*=(scaleFactorHP*scaleFactorHP);
+  if(((signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==0))
+      scaleFactor*=(scaleFactorHP*scaleFactorHP);
   // Pythia HP+LP
-  //if(((signalsample==0))&&(iChan==1))
-  //    scaleFactor*=(scaleFactorHP*scaleFactorLP);
+  if(((signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==1))
+      scaleFactor*=(scaleFactorHP*scaleFactorLP);
+  // Pythia HP
+  if(((signalsample==3)||(signalsample==4))&&(iChan==3))
+      scaleFactor*=(scaleFactorHP);
+  // Pythia LP
+  if(((signalsample==3)||(signalsample==4))&&(iChan==4))
+      scaleFactor*=(scaleFactorLP);
 
-  outFile << "# Fully Hadronic HH analysis" << endl;
+  outFile << "# Fully Hadronic VV analysis" << endl;
   outFile << "imax 1" << endl;
+  if(signalsample<3){
+  outFile << "jmax 3" << endl;
+  } else if(signalsample<5){
+  outFile << "jmax 2" << endl;
+  } else {
+  outFile << "jmax 2" << endl;
+  }
   outFile << "kmax *" << endl;
   outFile << "---------------" << endl;
 
   outFile << Form("shapes data_obs %s ", cat_names[iChan].c_str()) << wsDir+TString(fileBkgName)+".root" << Form(" w_all:data_obs_%s", cat_names[iChan].c_str()) << endl;
   outFile << Form("shapes bkg_fit_jj %s ", cat_names[iChan].c_str()) <<  wsDir+TString(fileBkgName)+".root" << Form(" w_all:CMS_bkg_fit_%s", cat_names[iChan].c_str()) << endl;
-  outFile << Form("shapes HH_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_HH_%.0f_8TeV.root", mass) << Form(" w_all:HH_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  if(signalsample<3){
+  outFile << Form("shapes RS1WW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1WW_%.0f_13TeV.root", mass) << Form(" w_all:RS1WW_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes RS1ZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1ZZ_%.0f_13TeV.root", mass) << Form(" w_all:RS1ZZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes WZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_WZ_%.0f_13TeV.root", mass) << Form(" w_all:WZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  } else if(signalsample<5){
+  outFile << Form("shapes qW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_qW_%.0f_13TeV.root", mass) << Form(" w_all:qW_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes qZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_qZ_%.0f_13TeV.root", mass) << Form(" w_all:qZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  } else {
+  outFile << Form("shapes BulkWW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_BulkWW_%.0f_13TeV.root", mass) << Form(" w_all:BulkWW_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  outFile << Form("shapes BulkZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_BulkZZ_%.0f_13TeV.root", mass) << Form(" w_all:BulkZZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
+  }
   outFile << "---------------" << endl;
   outFile << Form("bin          %s", cat_names[iChan].c_str()) << endl;
   outFile <<  "observation   "  <<  Form("%.10lg",data[iChan]->sumEntries()) << endl;
   outFile << "------------------------------" << endl;
-
-  outFile << "bin                      "<< Form("%s       %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
-  outFile << "process                 HH_jj     bkg_fit_jj     " << endl;
-  outFile << "process                 0        1          " << endl;
-  if(signalname=="HH")
+  if(signalsample<3){
+  outFile << "bin                      "<< Form("%s       %s      %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
+  outFile << "process                 RS1WW_jj RS1ZZ_jj WZ_jj     bkg_fit_jj     " << endl;
+  outFile << "process                 -2 -1 0        1          " << endl;
+  if(signalname=="RS1ZZ")
       outFile <<  "rate                      " 
-	  << " " << signal[iChan]->sumEntries()*scaleFactor << " " << 1 << endl;
+	  << "  0  " << signal[iChan]->sumEntries()*scaleFactor << "  0  " << 1 << endl;
+  if(signalname=="RS1WW")
+      outFile <<  "rate                      " 
+	  << "  " << signal[iChan]->sumEntries()*scaleFactor << "  0  0  " << 1 << endl;
+  if(signalname=="WZ")
+      outFile <<  "rate                      " 
+	  << "  0  0  " << signal[iChan]->sumEntries()*scaleFactor << "  " << 1 << endl;
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
-  outFile << "lumi_8TeV       lnN  1.026    - " << endl;
-  outFile << "CMS_eff_vtag_sf         lnN  1.056       - # mass cut efficiency" << endl;
-  /*  
+  outFile << "lumi_13TeV       lnN  1.026  1.026  1.026    - " << endl;
   if((iChan==0)||(iChan==3)){
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.15       - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.15  1.15  1.15      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
   // anti-correlated the high purity (1.076*1.076) and low purity (0.54*1.076) categories
-  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.58      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.58  0.58  0.58      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
-  */
-  outFile << "CMS_scale_j         lnN  1.120 	   - # jet energy scale" << endl;
-  outFile << "CMS_res_j         lnN  1.040	- # jet energy resolution" << endl;
-  outFile << "CMS_pu         lnN  1.030       - # pileup" << endl;
-
+  outFile << "CMS_scale_j         lnN  1.120  1.120  1.120      - # jet energy scale" << endl;
+  outFile << "CMS_res_j         lnN  1.040  1.040  1.040      - # jet energy resolution" << endl;
+  outFile << "CMS_pu         lnN  1.030  1.030  1.030      - # pileup" << endl;
+  } else if(signalsample<5) {
+  outFile << "bin                      "<< Form("%s      %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
+  outFile << "process                 qW_jj qZ_jj     bkg_fit_jj     " << endl;
+  outFile << "process                 -1 0        1          " << endl;
+  if(signalname=="qZ")
+      outFile <<  "rate                      " 
+	  << "  0  " << signal[iChan]->sumEntries()*scaleFactor << "  " << 1 << endl;
+  if(signalname=="qW")
+      outFile <<  "rate                      " 
+	  << "  " << signal[iChan]->sumEntries()*scaleFactor << "  0  " << 1 << endl;
+  outFile << "--------------------------------" << endl;
+  outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
+  
+  outFile << "lumi_13TeV       lnN  1.026  1.026    - " << endl;
+  if((iChan==0)||(iChan==3)){
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.076  1.076      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.093  1.099      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
+  } else {
+  // anti-correlated the high purity (1.076) and low purity (0.54) categories
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.54  0.54      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.093  1.099      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
+  }
+  outFile << "CMS_scale_j         lnN  1.060  1.060      - # jet energy scale" << endl;
+  outFile << "CMS_res_j         lnN  1.020  1.020      - # jet energy resolution" << endl;
+  outFile << "CMS_pu         lnN  1.030  1.030      - # pileup" << endl;
+  } else {
+  outFile << "bin                      "<< Form("%s       %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
+  outFile << "process                 BulkWW_jj BulkZZ_jj     bkg_fit_jj     " << endl;
+  outFile << "process                 -1 0        1          " << endl;
+  if(signalname=="BulkZZ")
+      outFile <<  "rate                      " 
+	  << "  0  " << signal[iChan]->sumEntries()*scaleFactor << "  " << 1 << endl;
+  if(signalname=="BulkWW")
+      outFile <<  "rate                      " 
+	  << "  " << signal[iChan]->sumEntries()*scaleFactor << "  0  " << 1 << endl;
+  outFile << "--------------------------------" << endl;
+  outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
+  
+  outFile << "lumi_13TeV       lnN  1.026  1.026    - " << endl;
+  if((iChan==0)||(iChan==3)){
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  1.15  1.15      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
+  } else {
+  // anti-correlated the high purity (1.076*1.076) and low purity (0.54*1.076) categories
+  outFile << "CMS_eff_vtag_tau21_sf         lnN  0.58  0.58      - # tau21 efficiency" << endl;
+//  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
+  }
+  outFile << "CMS_scale_j         lnN  1.120  1.120      - # jet energy scale" << endl;
+  outFile << "CMS_res_j         lnN  1.040  1.040      - # jet energy resolution" << endl;
+  outFile << "CMS_pu         lnN  1.030  1.030      - # pileup" << endl;
+  } 
   outFile << "# Parametric shape uncertainties, entered by hand." << endl;
   outFile << Form("CMS_sig_p1_jes    param   0.0   1.0   # dijet mass shift due to JES uncertainty") << endl;
   outFile << Form("CMS_sig_p2_jer     param   0.0   1.0   # dijet mass resolution shift due to JER uncertainty") << endl;
@@ -1290,8 +1376,20 @@ Double_t effSigma(TH1 *hist) {
   return widmin;
 }
 
-void R2JJFitterHHangelo(double mass, std::string postfix="", int signalsamples=0)
+void R2JJFitter13TeV(double mass, std::string postfix="", int signalsamples=0)
 {
     filePOSTfix=postfix;
+    if(signalsamples==0)
+    {
     runfits(mass, 0);
+    runfits(mass, 1);
+    runfits(mass, 2);
+    } else if(signalsamples==1)
+    {
+    runfits(mass, 3);
+    runfits(mass, 4);
+    } else {
+    runfits(mass, 5);
+    runfits(mass, 6);
+    }
 }
