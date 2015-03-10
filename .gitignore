@@ -1,0 +1,8 @@
+*.root
+roostats*
+submit*
+plots/*
+Limits/*.root
+Limits/*.pdf
+*.src
+*.out
