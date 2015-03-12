@@ -545,7 +545,10 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
     //w->import(bkg_fitTmp);
 
     // FOR COMBINE IN CMSSW_7_1
-    RooAbsPdf* bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "pow(1-@0, @1)/pow(@0, @2+@3*log(@0))", RooArgList(*x, *p1mod, *p2mod, *p3mod));
+    // EXO-12-024 2-parameter function
+    //RooAbsPdf* bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "pow(1-@0, @1)/pow(@0, @2+@3*log(@0))", RooArgList(*x, *p1mod, *p2mod, *p3mod));
+    // EXO-12-053 1-parameter function
+    RooAbsPdf* bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "exp(@1*@0)+0*@2*@3", RooArgList(*x, *p1mod, *p2mod, *p3mod));
     // alternative 3-parameter function
 //    //RooAbsPdf* bkg_fitTmp1 = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "exp(-(@0-@1)/(1+@2*(@0-@1)+@3*(@0-@1)*(@0-@1)))", RooArgList(*x, *p1mod, *p2mod, *p3mod));
     //w->factory(TString::Format("bkg_fit_%s_norm[4000.0,0.0,10000000]",cat_names.at(c).c_str()));
