@@ -5,3 +5,4 @@ Limits/*.root
 Limits/*.pdf
 *.src
 *.out
+*.log

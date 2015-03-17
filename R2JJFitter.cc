@@ -537,18 +537,18 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
 
 
     
-    RooAbsPdf* bkg_fitTmp0 = new RooGenericPdf(TString::Format("DijetBackground_%d",c), "pow(1-@0, @1)/pow(@0, @2+@3*log(@0))", RooArgList(*x, *p1mod, *p2mod, *p3mod));
+    RooAbsPdf* bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "pow(1-@0, @1)/pow(@0, @2+@3*log(@0))", RooArgList(*x, *p1mod, *p2mod, *p3mod));
     // alternative 3-parameter function
-//    RooAbsPdf* bkg_fitTmp0 = new RooGenericPdf(TString::Format("DijetBackground_%d",c), "exp(-(@0-@1)/(1+@2*(@0-@1)+@3*(@0-@1)*(@0-@1)))", RooArgList(*x, *p1mod, *p2mod, *p3mod));
+//    RooAbsPdf* bkg_fitTmp = new RooGenericPdf(TString::Format("DijetBackground_%d",c), "exp(-(@0-@1)/(1+@2*(@0-@1)+@3*(@0-@1)*(@0-@1)))", RooArgList(*x, *p1mod, *p2mod, *p3mod));
     
+    //w->factory(TString::Format("bkg_fit_norm_%s[4000.0,0.0,10000000]",cat_names.at(c).c_str()));
+    //RooExtendPdf bkg_fitTmp(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()),"",*bkg_fitTmp0,*w->var(TString::Format("bkg_fit_norm_%s",cat_names.at(c).c_str())));
+
+    RooAbsReal* bkg_fitTmp2  = new RooRealVar(TString::Format("bkg_fit_%s_norm",cat_names.at(c).c_str()),"",4000.0,0.0,10000000);
     
-    w->factory(TString::Format("bkg_fit_norm_%s[4000.0,0.0,10000000]",cat_names.at(c).c_str()));
-    
-    RooExtendPdf bkg_fitTmp(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()),"",*bkg_fitTmp0,*w->var(TString::Format("bkg_fit_norm_%s",cat_names.at(c).c_str())));
-    
-    
-    fitresult[c] = bkg_fitTmp.fitTo(*data[c], Strategy(1),Minos(kFALSE), Range(minMassFit,maxMassFit),SumW2Error(kTRUE), Save(kTRUE),PrintEvalErrors(-1));
-    w->import(bkg_fitTmp);
+    //fitresult[c] = bkg_fitTmp.fitTo(*data[c], Strategy(1),Minos(kFALSE), Range(minMassFit,maxMassFit),SumW2Error(kTRUE), Save(kTRUE),PrintEvalErrors(-1));
+    w->import(*bkg_fitTmp);
+    w->import(*bkg_fitTmp2);
 
 
 //************************************************//
@@ -962,10 +962,11 @@ void MakeBkgWS(RooWorkspace* w, const char* fileBaseName, std::vector<string> ca
     //   wAll->import(*data[c], Rename(TString::Format("data_obs_%s",cat_names.at(c).c_str())));
     wAll->import(*dataBinned, Rename(TString::Format("data_obs_%s",cat_names.at(c).c_str())));
    wAll->import(*w->pdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str())));
+   wAll->import(*w->function(TString::Format("bkg_fit_%s_norm",cat_names.at(c).c_str())));
 
-   double mean = (wAll->var(TString::Format("bkg_fit_norm_%s",cat_names.at(c).c_str())))->getVal();
-   double min = (wAll->var(TString::Format("bkg_fit_norm_%s",cat_names.at(c).c_str())))->getMin();
-   double max = (wAll->var(TString::Format("bkg_fit_norm_%s",cat_names.at(c).c_str())))->getMax();
+   double mean = (wAll->var(TString::Format("bkg_fit_%s_norm",cat_names.at(c).c_str())))->getVal();
+   double min = (wAll->var(TString::Format("bkg_fit_%s_norm",cat_names.at(c).c_str())))->getMin();
+   double max = (wAll->var(TString::Format("bkg_fit_%s_norm",cat_names.at(c).c_str())))->getMax();
    wAll->factory(TString::Format("CMS_bkg_fit_%s_norm[%g,%g,%g]", cat_names.at(c).c_str(), mean, min, max));
 
    double mean = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getVal();
@@ -998,7 +999,7 @@ void MakeBkgWS(RooWorkspace* w, const char* fileBaseName, std::vector<string> ca
   for (int c = 0; c < ncat; ++c) {
       wAll->factory(
 		    TString::Format("EDIT::CMS_bkg_fit_%s(bkg_fit_%s,",cat_names.at(c).c_str(),cat_names.at(c).c_str()) +
-		    TString::Format(" bkg_fit_norm_%s=CMS_bkg_fit_%s_norm,", cat_names.at(c).c_str(),cat_names.at(c).c_str())+
+		    TString::Format(" bkg_fit_%s_norm=CMS_bkg_fit_%s_norm,", cat_names.at(c).c_str(),cat_names.at(c).c_str())+
 		    TString::Format(" bkg_fit_slope1_%s=CMS_bkg_fit_slope1_%s,", cat_names.at(c).c_str(),cat_names.at(c).c_str())+
 		    TString::Format(" bkg_fit_slope2_%s=CMS_bkg_fit_slope2_%s,", cat_names.at(c).c_str(),cat_names.at(c).c_str())+
 		    TString::Format(" bkg_fit_slope3_%s=CMS_bkg_fit_slope3_%s)", cat_names.at(c).c_str(),cat_names.at(c).c_str())
