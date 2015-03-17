@@ -1,11 +1,10 @@
 import os
 
-masses =[m*100/2 for m in range(2*10,2*29+1)]
-masses = [1000,2000]
+masses =[m*100 for m in range(10,40+1)]
 
 for mass in masses:
-  outputname = "submit_VV_"+str(mass)+".src"
-  logname = "submit_VV_"+str(mass)+".log"
+  outputname = "submit_RS1VV_"+str(mass)+".src"
+  logname = "submit_RS1VV_"+str(mass)+".log"
   outputfile = open(outputname,'w')
   outputfile.write('#!/bin/bash\n')
   outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
@@ -20,8 +19,9 @@ for mass in masses:
   print command
   os.system(command)
 
-masses =[m*100/2 for m in range(2*10,2*40+1)]
-masses = [1000,2000]
+
+masses =[m*100 for m in range(10,60+1)]
+masses = []
 
 for mass in masses:
   outputname = "submit_qV_"+str(mass)+".src"
@@ -40,8 +40,8 @@ for mass in masses:
   print command
   os.system(command)
 
-masses =[m*100/2 for m in range(2*10,2*29+1)]
-masses = [1000,2000]
+masses =[m*100 for m in range(10,40+1)]
+masses = []
 
 for mass in masses:
   outputname = "submit_BulkVV_"+str(mass)+".src"

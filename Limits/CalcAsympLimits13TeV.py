@@ -21,6 +21,7 @@ gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
 channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
+channels=["RS1WW"]
 
 fullToys=False
 
@@ -28,13 +29,13 @@ for chan in channels:
     print "chan =",chan
 
     if "q" in chan:
-       masses =[m*100 for m in range(10,40+1)]
-       masses = [1000,2000]
+       masses =[m*100 for m in range(10,60+1)]
        bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
-       masses =[m*100 for m in range(10,29+1)]
-       masses = [1000,2000]
-       bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
+       masses =[m*100 for m in range(10,40+1)]
+       #bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
+       bins=["CMS_jj_VVHP"]
+       #masses=[3900]
 
     if fullToys:
       points=[]

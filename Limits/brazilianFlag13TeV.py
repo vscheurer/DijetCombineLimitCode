@@ -2,8 +2,7 @@ import ROOT as rt
 from ROOT import *
 
 withAcceptance=False
-unblind=True
-number_of_mc_events=30000.
+unblind=False
 
 gROOT.Reset()
 gROOT.SetStyle("Plain")
@@ -140,9 +139,9 @@ def Plot(files, label, obs):
     mg.GetXaxis().SetNdivisions(508)
 
     if "qW" in label.split("_")[0] or "qZ" in label.split("_")[0]:
-        mg.GetXaxis().SetLimits(0.9,4.1)
+        mg.GetXaxis().SetLimits(0.9,6.1)
     else:
-        mg.GetXaxis().SetLimits(0.9,3.1)
+        mg.GetXaxis().SetLimits(0.9,4.1)
 
     # histo to shade
     n=len(fChain)
@@ -170,32 +169,20 @@ def Plot(files, label, obs):
     gtheory = rt.TGraphErrors(1)
     gtheory.SetLineColor(rt.kBlue)
     gtheory.SetLineWidth(4)
-    ftheory=open("signalcrosssections.txt")
+    ftheory=open("signalcrosssections13TeV.txt")
     j=0
     glogtheory = rt.TGraphErrors(1)
     for lines in ftheory.readlines():
      for line in lines.split("\r"):
-      if label.split("_")[0] in line and line.count("Bulk")==label.split("_")[0].count("Bulk"):
+      if label.split("_")[0] in line:
         split=line.split(":")
-        gtheory.SetPoint(j, float(split[0][-4:])/1000., float(split[1]))
-        glogtheory.SetPoint(j, float(split[0][-4:])/1000., log(float(split[1])))
+        gtheory.SetPoint(j, float(split[0][-4:])/1000., float(split[1])*1000.)
+        glogtheory.SetPoint(j, float(split[0][-4:])/1000., log(float(split[1])*1000.))
 	j+=1
     mg.Add(gtheory,"L")
     gtheory.Draw("L")
-    if "qW" in label.split("_")[0]:
-        ltheory="q* #rightarrow qW"
-    elif "qZ" in label.split("_")[0]:
-        ltheory="q* #rightarrow qZ"
-    elif "BulkWW" in label.split("_")[0]:
-        ltheory="G_{Bulk} #rightarrow WW (k/#bar{M}_{Pl}=0.2)"
-    elif "RS1WW" in label.split("_")[0]:
-        ltheory="G_{RS} #rightarrow WW (k/#bar{M}_{Pl}=0.1)"
-    elif "BulkZZ" in label.split("_")[0]:
-        ltheory="G_{Bulk} #rightarrow ZZ (k/#bar{M}_{Pl}=0.2)"
-    elif "RS1ZZ" in label.split("_")[0]:
-        ltheory="G_{RS} #rightarrow ZZ (k/#bar{M}_{Pl}=0.1)"
-    elif "WZ" in label.split("_")[0]:
-        ltheory="W' #rightarrow WZ"
+    if "RS1WW" in label.split("_")[0]:
+        ltheory="G_{RS1} #rightarrow WW (k/#bar{M}_{Pl}=0.1)"
     
     crossing=0
     for mass in range(int(radmasses[0]*1000.),int(radmasses[-1]*1000.)):
@@ -242,46 +229,37 @@ def Plot(files, label, obs):
     leg.Draw()
     leg2.Draw("same")
 
-    banner = TLatex(0.22,0.93,"CMS Preliminary, 19.7 fb^{-1}, #sqrt{s} = 13TeV");
+    banner = TLatex(0.22,0.93,"CMS Preliminary, 1 fb^{-1}, #sqrt{s} = 13TeV");
     banner.SetNDC()
     banner.SetTextSize(0.045)
     banner.Draw();  
 
     if withAcceptance:
-        c1.SaveAs("brazilianFlag_acc_%s.root" %label)
-        c1.SaveAs("brazilianFlag_acc_%s.pdf" %label)
+        c1.SaveAs("brazilianFlag_acc_%s_13TeV.root" %label)
+        c1.SaveAs("brazilianFlag_acc_%s_13TeV.pdf" %label)
     else:
-        c1.SaveAs("brazilianFlag_%s.root" %label)
-        c1.SaveAs("brazilianFlag_%s.pdf" %label)
+        c1.SaveAs("brazilianFlag_%s_13TeV.root" %label)
+        c1.SaveAs("brazilianFlag_%s_13TeV.pdf" %label)
 
 
 if __name__ == '__main__':
 
   channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
+  channels=["RS1WW"]
 
   for chan in channels:
     print "chan =",chan
-    if "q" in chan:
-       masses =[m*100 for m in range(10,39+1)]
-       masses = [1000,2000]
-       cat="qV"
-    elif "Bulk" in chan:
-       masses =[m*100 for m in range(10,29+1)]
-       masses = [1000,2000]
-       cat="VV"
-    else:
-       masses =[m*100 for m in range(10,29+1)]
-       masses = [1000,2000]
-       cat="VV"
+    masses =[m*100 for m in range(10,40+1)]
+    cat="VV"
 
     HPplots=[]
     LPplots=[]
     combinedplots=[]
     for mass in masses:
        HPplots+=["CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_"+cat+"HP_asymptoticCLs.root"]
-       LPplots+=["CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_"+cat+"LP_asymptoticCLs.root"]
-       combinedplots+=["CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_"+cat+"_asymptoticCLs.root"]
+       #LPplots+=["CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_"+cat+"LP_asymptoticCLs.root"]
+       #combinedplots+=["CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_"+cat+"_asymptoticCLs.root"]
 
     Plot(HPplots,chan+"_high_purity", unblind)
-    Plot(LPplots,chan+"_low_purity", unblind)
-    Plot(combinedplots,chan+"_combined", unblind)
+    #Plot(LPplots,chan+"_low_purity", unblind)
+    #Plot(combinedplots,chan+"_combined", unblind)
