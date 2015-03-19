@@ -83,5 +83,5 @@ for chan in channels:
             else:
 	        command="bsub -q 1nh -o "+logname+" source "+outputname
 	    print command
-            #os.system(command)
-	    os.system("chmod 755 ./"+outputname+";./"+outputname)
+            os.system(command)
+	    #os.system("chmod 755 ./"+outputname+";./"+outputname)

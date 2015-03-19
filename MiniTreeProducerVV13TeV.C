@@ -41,8 +41,7 @@
 
    TAxis* Axis =   hMass->GetXaxis();
    for (int i = 1 ; i < hMass->GetNbinsX()+1; i++){
-     //////// TEMPORARILY ADD MISSING FACTOR 1000 from FB to PB
-     int N = abs(hMass->GetBinContent(i)*1000.);
+     int N = abs(hMass->GetBinContent(i));
  
      if (i%10 == 0) cout << "i = " << i << "N = " << N << " binCenter = " << hMass->GetBinCenter(i) << endl;
      

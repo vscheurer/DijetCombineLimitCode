@@ -45,7 +45,11 @@ for mass in masses:
 	    fZZsplit=fZZ[l].replace("  "," ").replace("  "," ").replace("  "," ").replace("  "," ").replace("  "," ").replace("  "," ").split(" ")
 	    count=0
 	    for s in range(len(fWWsplit)):
-	      if "." in fWWsplit[s]:
+	      try:
+	        float(fWWsplit[s])
+		number=True
+	      except: number=False
+	      if number:
 	        numberWW=float(fWWsplit[s])
 	        numberZZ=float(fZZsplit[count+1])
 		if count==0:

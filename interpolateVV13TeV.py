@@ -111,7 +111,7 @@ for histname in histnames:
      inputf = TFile( inputRoot + str(x) + suffix + '.root' )
      f = inputf.Get( histname )
      xvalues.push_back(x)
-     yvalues.push_back(f.Integral(f.FindBin(x*0.8),f.FindBin(x*1.2))/ngenevents[masses.index(x)]*10.)
+     yvalues.push_back(f.Integral(f.FindBin(x*0.8),f.FindBin(x*1.2))/ngenevents[masses.index(x)]*30000.)
    interpolator=r.Math.Interpolator(xvalues,yvalues)
    integral=interpolator.Eval(outmjj)
    foutmjj.Scale( integral/foutmjj.Integral(foutmjj.FindBin(outmjj*0.8),foutmjj.FindBin(outmjj*1.2)) )
@@ -129,7 +129,7 @@ for histname in histnames:
      xvalues.push_back(m)
      for i in range(npoints+1):
        x=0.0 + i/float(npoints)*2.0
-       yvalues[i].push_back(f.Integral(f.FindBin(m*x)-rebin+1,f.FindBin(m*x)+rebin-1)/float(2*rebin-1)/ngenevents[masses.index(m)]*10.)
+       yvalues[i].push_back(f.Integral(f.FindBin(m*x)-rebin+1,f.FindBin(m*x)+rebin-1)/float(2*rebin-1)/ngenevents[masses.index(m)]*30000.)
    for i in range(npoints+1):
      x=0.0 + i/float(npoints)*2.0
      inter=r.Math.Interpolator(xvalues,yvalues[i])
