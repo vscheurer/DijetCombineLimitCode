@@ -15,9 +15,9 @@ observation   658
 bin                      CMS_jj_VVHP       CMS_jj_VVHP      CMS_jj_VVHP      CMS_jj_VVHP      
 process                 RS1WW_jj RS1ZZ_jj WZ_jj     bkg_fit_jj     
 process                 -2 -1 0        1          
-rate                        0.0468413  0  0  1
+rate                        0.140524  0  0  1
 --------------------------------
-# signal scaled by 0.000333333 to a cross section of 10/fb and also scale factor of 0.7396 are applied.
+# signal scaled by 0.001 to a cross section of 10/fb and also scale factor of 0.7396 are applied.
 lumi_13TeV       lnN  1.026  1.026  1.026    - 
 CMS_eff_vtag_tau21_sf_13TeV         lnN  1.15  1.15  1.15      - # tau21 efficiency
 CMS_scale_j_13TeV         lnN  1.120  1.120  1.120      - # jet energy scale
