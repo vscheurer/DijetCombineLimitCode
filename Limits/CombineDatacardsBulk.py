@@ -22,6 +22,15 @@ gStyle.SetLegendBorderSize(0)
 
 masses =[m*100/2 for m in range(2*10,2*29+1)]
 
+theoryWW={}
+for line in open("Limits/xsect_BulkG_WW_c0p5_xsect_in_pb.txt").readlines():
+   split=line.replace(" ","").replace(" ","").replace(" ","").replace("\n","").split("\t")
+   theoryWW[int(split[0])]=float(split[1])
+theoryZZ={}
+for line in open("Limits/xsect_BulkG_ZZ_c0p5_xsect_in_pb.txt").readlines():
+   split=line.replace(" ","").replace(" ","").replace(" ","").replace("\n","").split("\t")
+   theoryZZ[int(split[0])]=float(split[1])
+
 for mass in masses:
         print "mass = ",mass
 
@@ -30,14 +39,6 @@ for mass in masses:
 	outfile="datacards/CMS_jj_Bulk_"+str(mass)+"_8TeV_CMS_jj_VV.txt"
 	print outfile
         f=open(outfile,"w")
-	theoryWW={}
-	for line in open("Limits/xsect_BulkG_WW_c0p5_xsect_in_pb.txt").readlines():
-	   split=line.replace(" ","").replace(" ","").replace(" ","").replace("\n","").split("\t")
-	   theoryWW[int(split[0])]=float(split[1])
-	theoryZZ={}
-	for line in open("Limits/xsect_BulkG_ZZ_c0p5_xsect_in_pb.txt").readlines():
-	   split=line.replace(" ","").replace(" ","").replace(" ","").replace("\n","").split("\t")
-	   theoryZZ[int(split[0])]=float(split[1])
 	for l in range(len(fWW)):
 	  if "rate" in fWW[l]:
 	    line="rate                                     "
