@@ -30,7 +30,7 @@
  
  
  
- for (int iCat = 0; iCat < 1; iCat++){
+ for (int iCat = 0; iCat < 2; iCat++){
    TH1D* hMass = (TH1D*) file0.Get("DijetMassHighPuriVV"); // VV high purity
    if (iCat == 1) hMass = (TH1D*) file0.Get("DijetMassMediumPuriVV"); // VV medium purity
    if (iCat == 2) hMass = (TH1D*) file0.Get("DijetMassLowPuriVV"); // not used

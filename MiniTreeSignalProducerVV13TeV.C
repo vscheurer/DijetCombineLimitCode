@@ -1,7 +1,6 @@
 {
 
-
-  double mgg, mjj,evWeight, mtot, normWeight;
+double mgg, mjj,evWeight, mtot, normWeight;
  int categories;
 
  evWeight = 1.0;
@@ -51,7 +50,7 @@
 
 
      
-     for (int iCat = 0; iCat < 1; iCat++){
+     for (int iCat = 0; iCat < 2; iCat++){
       
        TH1D* hMass = (TH1D*) file0.Get("DijetMassHighPuriVV;1");
        if (iCat == 1) hMass = (TH1D*) file0.Get("DijetMassMediumPuriVV;1");
@@ -75,9 +74,7 @@
 	 }
        }
      }
-   
-
-     TCVARS->Write();
+		 TCVARS->Write();
      f1.Close();
      file0.Close();
      
