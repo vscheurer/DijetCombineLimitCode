@@ -38,7 +38,7 @@ double mgg, mjj,evWeight, mtot, normWeight;
      f1.cd();
 
      TTree *TCVARS = new TTree("TCVARS", "VV selection");
-     TCVARS->Branch("mgg",&mgg,"mgg/D");
+     TCVARS->Branch("mgg13TeV",&mgg,"mgg/D");
 
      TCVARS->Branch("evWeight",&evWeight,"evWeight/D");
      TCVARS->Branch("normWeight",&normWeight,"normWeight/D");

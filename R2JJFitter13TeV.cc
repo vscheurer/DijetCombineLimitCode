@@ -114,8 +114,9 @@
 using namespace RooFit;
 using namespace RooStats ;
 
+
 static const Int_t NCAT = 2; //for VV and qV analysis together this should be 6
-Double_t MMIN = 1000;
+Double_t MMIN = 1050;
 Double_t MMAX = 5000;
 std::string filePOSTfix="";
 double signalScaler=3000.0*0.01/10000.; // assume signal cross section of 0.01pb=10fb and 3000/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
@@ -136,7 +137,7 @@ void SetConstantParams(const RooArgSet* params);
 RooArgSet* defineVariables()
 {
   // define variables of the input ntuple
-  RooRealVar* mgg  = new RooRealVar("mgg","M(jet-jet)",MMIN,MMAX,"GeV");
+  RooRealVar* mgg  = new RooRealVar("mgg13TeV","M(jet-jet)",MMIN,MMAX,"GeV");
   RooRealVar* evWeight   = new RooRealVar("evWeight","Reweightings",0,100,"");
   RooRealVar* normWeight  = new RooRealVar("normWeight","Additionnal Weight",0,10000000,"");
   RooCategory* categories = new RooCategory("categories","event category NCAT") ;
@@ -206,8 +207,8 @@ void runfits(const Float_t mass=2000, int signalsample = 1, Bool_t dobands = fal
   RooWorkspace* w = hlf.GetWs();
   RooFitResult* fitresults;
 
-  w->var("mgg")->setMin(MMIN);
-  w->var("mgg")->setMax(MMAX);
+  w->var("mgg13TeV")->setMin(MMIN);
+  w->var("mgg13TeV")->setMax(MMAX);
 
 // Add data to the workspace
 
@@ -345,13 +346,13 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
 
   RooDataSet* sigToFit[NCAT];
   for (int c = 0; c < ncat; ++c) {
-    sigToFit[c] =  (RooDataSet*) sigScaled.reduce(*w->var("mgg"),mainCut+TString::Format(" && categories==%d",c));
+    sigToFit[c] =  (RooDataSet*) sigScaled.reduce(*w->var("mgg13TeV"),mainCut+TString::Format(" && categories==%d",c));
     w->import(*sigToFit[c],Rename(TString::Format("Sig_%s",cat_names.at(c).c_str())));
   }
 
           
 // Create full signal data set without categorization
-  RooDataSet* sigToFitAll  = (RooDataSet*) sigScaled.reduce(*w->var("mgg"),mainCut);
+  RooDataSet* sigToFitAll  = (RooDataSet*) sigScaled.reduce(*w->var("mgg13TeV"),mainCut);
   w->import(*sigToFitAll,Rename("Sig"));
 
 // Create weighted signal dataset composed with  different 
@@ -367,13 +368,13 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
   RooDataSet sigWeightedTmp1("sigData","dataset",sigTree1,*ntplVars,mainCut,"weightVar");
   RooRealVar *weightX = (RooRealVar*) sigWeightedTmp1.addColumn(*weightVar3) ;
   RooDataSet sigWeighted("sigData","dataset",
-			 RooArgList((*ntplVars)["mgg"],
+			 RooArgList((*ntplVars)["mgg13TeV"],
 				    (*ntplVars)["categories"],*weightX),
 			 Import(sigWeightedTmp1),WeightVar(*weightX));
 
   cout << "---- nX:  " << sigWeighted.sumEntries() << endl; 
   for (int c = 0; c < ncat; ++c) {
-    Float_t nExpEvt = sigWeighted.reduce(*w->var("mgg"),TString::Format("categories==%d",c))->sumEntries();
+    Float_t nExpEvt = sigWeighted.reduce(*w->var("mgg13TeV"),TString::Format("categories==%d",c))->sumEntries();
     cout << TString::Format("nEvt exp.  %s : ",cat_names.at(c).c_str()) << nExpEvt << endl; 
   }
 
@@ -385,11 +386,11 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
 
   RooDataSet* signal[NCAT];
   for (int c = 0; c < ncat; ++c) {
-    signal[c] =  (RooDataSet*) sigWeighted.reduce(*w->var("mgg"),mainCut+TString::Format(" && categories==%d",c));
+    signal[c] =  (RooDataSet*) sigWeighted.reduce(*w->var("mgg13TeV"),mainCut+TString::Format(" && categories==%d",c));
     w->import(*signal[c],Rename(TString::Format("SigWeight_%s",cat_names.at(c).c_str())));
   }
 // Create full weighted signal data set without categorization
-  RooDataSet* signalAll  = (RooDataSet*) sigWeighted.reduce(*w->var("mgg"),mainCut);
+  RooDataSet* signalAll  = (RooDataSet*) sigWeighted.reduce(*w->var("mgg13TeV"),mainCut);
   w->import(*signalAll, Rename("SigWeight"));
 
 }
@@ -427,12 +428,12 @@ void AddBkgData(RooWorkspace* w, std::vector<string> cat_names) {
   RooDataSet* dataToFit[NCAT];
   for (int c = 0; c < ncat; ++c) {
 // Real data
-    dataToFit[c]   = (RooDataSet*) Data.reduce(*w->var("mgg"),mainCut+TString::Format(" && categories==%d",c));
+    dataToFit[c]   = (RooDataSet*) Data.reduce(*w->var("mgg13TeV"),mainCut+TString::Format(" && categories==%d",c));
     w->import(*dataToFit[c],Rename(TString::Format("Data_%s",cat_names.at(c).c_str())));
   }
 
 // Create full data set without categorization
-  RooDataSet* data    = (RooDataSet*) Data.reduce(*w->var("mgg"),mainCut);
+  RooDataSet* data    = (RooDataSet*) Data.reduce(*w->var("mgg13TeV"),mainCut);
   w->import(*data, Rename("Data"));
   data->Print("v");
 
@@ -513,7 +514,7 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
 
 // Fit data with background pdf for data limit
 
-  RooRealVar* mgg     = w->var("mgg");  
+  RooRealVar* mgg     = w->var("mgg13TeV");  
   mgg->setUnit("GeV");
   
   TLatex *text = new TLatex();
@@ -689,7 +690,7 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
   }
 
 // retrieve mass observable from the workspace
-  RooRealVar* mgg     = w->var("mgg");  
+  RooRealVar* mgg     = w->var("mgg13TeV");  
   mgg->setUnit("GeV");
 
 // retrieve pdfs after the fits
@@ -963,7 +964,7 @@ void MakeBkgWS(RooWorkspace* w, const char* fileBaseName, std::vector<string> ca
  
     cout << "For category " << c << endl;
     data[c]      = (RooDataSet*) w->data(TString::Format("Data_%s",cat_names.at(c).c_str()));
-    ((RooRealVar*) data[c]->get()->find("mgg"))->setBins(MMAX-MMIN) ;
+    ((RooRealVar*) data[c]->get()->find("mgg13TeV"))->setBins(MMAX-MMIN) ;
     RooDataHist* dataBinned = data[c]->binnedClone();
     bkg_fitPdf[c] = (RooExtendPdf*)  w->pdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()));
     //   wAll->import(*data[c], Rename(TString::Format("data_obs_%s",cat_names.at(c).c_str())));
