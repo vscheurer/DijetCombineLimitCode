@@ -8,7 +8,7 @@
  normWeight = 1;
 
 
- string sInFile = "input/QCD_13TeV_1fb.root";
+ string sInFile = "input/QCD_13TeV_3fb.root";
  cout << sInFile.c_str() << endl;
  TFile file0(sInFile.c_str(), "read");
  

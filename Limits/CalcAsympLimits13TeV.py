@@ -32,10 +32,11 @@ for chan in channels:
        masses =[m*100 for m in range(10,60+1)]
        bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
-       masses =[m*100 for m in range(10,40+1)]
-       #bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
-       bins=["CMS_jj_VVHP"]
-       #masses=[3900]
+       # masses =[m*100 for m in range(10,40+1)]
+       bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
+       # bins=["CMS_jj_VVHP"]
+       masses=[1000,1200,2000,3000,4000]
+       
 
     if fullToys:
       points=[]
@@ -81,7 +82,7 @@ for chan in channels:
 	    if fullToys:
                 command="""bsub -q 8nh -o """+logname+" source "+outputname
             else:
-	        command="bsub -q 1nh -o "+logname+" source "+outputname
+	        command="chmod 755 ./"+outputname+";./"+outputname
 	    print command
-            os.system(command)
-	    #os.system("chmod 755 ./"+outputname+";./"+outputname)
+            # os.system(command)
+            os.system("chmod 755 ./"+outputname+";./"+outputname)
