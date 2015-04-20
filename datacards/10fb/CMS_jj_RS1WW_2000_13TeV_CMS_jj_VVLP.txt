@@ -10,7 +10,7 @@ shapes RS1ZZ_jj CMS_jj_VVLP ../workspaces/CMS_jj_RS1ZZ_2000_13TeV.root w_all:RS1
 shapes WZ_jj CMS_jj_VVLP ../workspaces/CMS_jj_WZ_2000_13TeV.root w_all:WZ_jj_sig_CMS_jj_VVLP
 ---------------
 bin          CMS_jj_VVLP
-observation   40241
+observation   37252
 ------------------------------
 bin                      CMS_jj_VVLP       CMS_jj_VVLP      CMS_jj_VVLP      CMS_jj_VVLP      
 process                 RS1WW_jj RS1ZZ_jj WZ_jj     bkg_fit_jj     

@@ -15,7 +15,7 @@ shapes bkg_fit_jj   CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_13TeV.root w
 shapes data_obs     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_13TeV.root w_all:data_obs_CMS_jj_VVLP
 ----------------------------------------------------------------------------------------------------------------------------------
 bin          CMS_jj_VVHP  CMS_jj_VVLP
-observation  4200.0       11981.0    
+observation  3783.0       11086.0    
 ----------------------------------------------------------------------------------------------------------------------------------
 bin                                            CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVHP  CMS_jj_VVLP  CMS_jj_VVLP  CMS_jj_VVLP  CMS_jj_VVLP
 process                                        RS1ZZ_jj     WZ_jj        RS1WW_jj     bkg_fit_jj   RS1ZZ_jj     WZ_jj        RS1WW_jj     bkg_fit_jj 
