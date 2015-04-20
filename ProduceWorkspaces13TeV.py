@@ -1,6 +1,7 @@
 import os
 
-masses =[m*100 for m in range(10,40+1)]
+# masses =[m*100 for m in range(10,40+1)]
+masses =[1000,1200,2000,3000,4000]
 
 for mass in masses:
   outputname = "submit_RS1VV_"+str(mass)+".src"
@@ -20,7 +21,7 @@ for mass in masses:
   os.system(command)
 
 
-masses =[m*100 for m in range(10,60+1)]
+# masses =[m*100 for m in range(10,60+1)]
 masses = []
 
 for mass in masses:
@@ -40,7 +41,8 @@ for mass in masses:
   print command
   os.system(command)
 
-masses =[m*100 for m in range(10,40+1)]
+# masses =[m*100 for m in range(10,40+1)]
+# masses =[1000,2000,3000,4000]
 masses = []
 
 for mass in masses:
