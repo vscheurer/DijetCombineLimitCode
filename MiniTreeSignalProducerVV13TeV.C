@@ -6,9 +6,9 @@ double mgg, mjj,evWeight, mtot, normWeight;
  evWeight = 1.0;
  normWeight = 1;
 
- for (int iSample = 1; iSample < 3; iSample++){
+ for (int iSample = 0; iSample < 1; iSample++){
    
-   string inFile("Wprime");
+   string inFile("WprimeToWZ");
    if (iSample == 1) inFile = string("RS1WW");
    if (iSample == 2) inFile = string("RS1ZZ");
    // if (iSample == 2) inFile = string("RS1WW"); // Fake ZZ signal
@@ -29,7 +29,7 @@ double mgg, mjj,evWeight, mtot, normWeight;
 
    for (int iMass = 0; iMass<massrange; iMass++){
 
-     string sInFile = "input/" + inFile + "_13TeV_" + Form("OUT%dGeV.root", 1000+iMass*50);
+     string sInFile = "input/" + inFile + "_" + Form("OUT%dGeV.root", 1000+iMass*50);
      cout << sInFile.c_str() << endl;
      TFile file0(sInFile.c_str(), "read");
 

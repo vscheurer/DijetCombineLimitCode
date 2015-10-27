@@ -1,8 +1,6 @@
 #!/bin/sh
 
-for resonance in `seq  1000 50 4000`
+for resonance in `seq  1000 50 4500`
 do
-    python interpolateVV13TeV.py input/RS1WW_13TeV_ $resonance GeV &
-    python interpolateVV13TeV.py input/RS1ZZ_13TeV_ $resonance GeV &
-    python interpolateVV13TeV.py input/BulkWW_13TeV_ $resonance GeV &
+    python interpolateVV13TeV.py input/WprimeToWZ_ $resonance GeV &
 done

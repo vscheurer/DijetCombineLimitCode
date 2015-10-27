@@ -61,9 +61,9 @@ histnames= [#"DijetMassHighPuriVV", # VV high purity
             "DijetMassNoPuriqZ", # qZ no purity
             ]
 
-if "RS1WW" in inputRoot:
-  masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.]
+if "WprimeToWZ" in inputRoot:
+  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
 
 if "RS1ZZ" in inputRoot:
   masses=[1000,2000,3000,4000]
