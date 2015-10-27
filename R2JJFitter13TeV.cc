@@ -115,7 +115,7 @@ using namespace RooFit;
 using namespace RooStats ;
 
 
-static const Int_t NCAT = 2; //for VV and qV analysis together this should be 6
+static const Int_t NCAT = 21; //for VV and qV analysis together this should be 6
 Double_t MMIN = 1000;
 Double_t MMAX = 7000;
 std::string filePOSTfix="";
@@ -159,9 +159,9 @@ RooArgSet* defineVariables()
   categories->defineType("highPureZZ",9);
   categories->defineType("lowPureZZ",10);
   categories->defineType("noPureZZ",11);
-  categories->defineType("highPureqW",12);
-  categories->defineType("lowPureqW",13);
-  categories->defineType("noPureqW",14);
+  categories->defineType("highPureqV",12);
+  categories->defineType("lowPureqV",13);
+  categories->defineType("noPureqV",14);
   categories->defineType("highPureqW",15);
   categories->defineType("lowPureqW",16);
   categories->defineType("noPureqW",17);
@@ -1421,15 +1421,19 @@ void R2JJFitter13TeV(double mass, std::string postfix="", int signalsamples=0)
     filePOSTfix=postfix;
     if(signalsamples==0)
     {
-    //runfits(mass, 0);
+    runfits(mass, 0);
     runfits(mass, 1);
     //runfits(mass, 2);
     } else if(signalsamples==1)
     {
     runfits(mass, 3);
     runfits(mass, 4);
-    } else {
+    } else if(signalsamples==5)
+    {
     runfits(mass, 5);
-    runfits(mass, 6);
+    // runfits(mass, 6);
+    }
+    else {
+    runfits(mass, 2);
     }
 }
