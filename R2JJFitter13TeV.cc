@@ -116,10 +116,10 @@ using namespace RooStats ;
 
 
 static const Int_t NCAT = 2; //for VV and qV analysis together this should be 6
-Double_t MMIN = 1050;
-Double_t MMAX = 5000;
+Double_t MMIN = 1000;
+Double_t MMAX = 7000;
 std::string filePOSTfix="";
-double signalScaler=3000.0*0.01/10000.; // assume signal cross section of 0.01pb=10fb and 3000/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
+double signalScaler=1263.890*0.01/10000.; // assume signal cross section of 0.01pb=10fb and 3000/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
 double scaleFactorHP=0.860; // tau21 and jet mass scale factors data/MC
 double scaleFactorLP=1.385; // tau21 and jet mass scale factors data/MC
 double scaleFactorHPherwig=1.0; // tau21 and jet mass scale factors Herwig/Pythia
@@ -141,12 +141,33 @@ RooArgSet* defineVariables()
   RooRealVar* evWeight   = new RooRealVar("evWeight","Reweightings",0,100,"");
   RooRealVar* normWeight  = new RooRealVar("normWeight","Additionnal Weight",0,10000000,"");
   RooCategory* categories = new RooCategory("categories","event category NCAT") ;
+  // categories->defineType("highPureVV",0);
+//   categories->defineType("mediumPureVV",1);
+//   categories->defineType("lowPureVV",2);
+//   categories->defineType("highPureqV",3);
+//   categories->defineType("mediumPureqV",4);
+//   categories->defineType("lowPureqV",5);
   categories->defineType("highPureVV",0);
-  categories->defineType("mediumPureVV",1);
-  categories->defineType("lowPureVV",2);
-  categories->defineType("highPureqV",3);
-  categories->defineType("mediumPureqV",4);
-  categories->defineType("lowPureqV",5);
+  categories->defineType("lowPureVV",1);
+  categories->defineType("noPureVV",2);
+  categories->defineType("highPureWW",3);
+  categories->defineType("lowPureWW",4);
+  categories->defineType("noPureWW",5);
+  categories->defineType("highPureWZ",6);
+  categories->defineType("lowPureWZ",7);
+  categories->defineType("noPureWZ",8);
+  categories->defineType("highPureZZ",9);
+  categories->defineType("lowPureZZ",10);
+  categories->defineType("noPureZZ",11);
+  categories->defineType("highPureqW",12);
+  categories->defineType("lowPureqW",13);
+  categories->defineType("noPureqW",14);
+  categories->defineType("highPureqW",15);
+  categories->defineType("lowPureqW",16);
+  categories->defineType("noPureqW",17);
+  categories->defineType("highPureqZ",18);
+  categories->defineType("lowPureqZ",19);
+  categories->defineType("noPureqZ",20);
   RooArgSet* ntplVars = new RooArgSet(*mgg, *categories, *evWeight, *normWeight);
  
   return ntplVars;
@@ -196,9 +217,24 @@ void runfits(const Float_t mass=2000, int signalsample = 1, Bool_t dobands = fal
   cat_names.push_back("CMS_jj_VVHP");
   cat_names.push_back("CMS_jj_VVLP");
   cat_names.push_back("CMS_jj_VVNP");
+  cat_names.push_back("CMS_jj_WWHP");
+  cat_names.push_back("CMS_jj_WWLP");
+  cat_names.push_back("CMS_jj_WWNP");
+  cat_names.push_back("CMS_jj_WZHP");
+  cat_names.push_back("CMS_jj_WZLP");
+  cat_names.push_back("CMS_jj_WZNP");
+  cat_names.push_back("CMS_jj_ZZHP");
+  cat_names.push_back("CMS_jj_ZZLP");
+  cat_names.push_back("CMS_jj_ZZNP");
   cat_names.push_back("CMS_jj_qVHP");
   cat_names.push_back("CMS_jj_qVLP");
   cat_names.push_back("CMS_jj_qVNP");
+  cat_names.push_back("CMS_jj_qWHP");
+  cat_names.push_back("CMS_jj_qWLP");
+  cat_names.push_back("CMS_jj_qWNP");
+  cat_names.push_back("CMS_jj_qZHP");
+  cat_names.push_back("CMS_jj_qZLP");
+  cat_names.push_back("CMS_jj_qZNP");
 
 
   TString fileBkgName(TString::Format("CMS_jj_bkg_13TeV", mass));

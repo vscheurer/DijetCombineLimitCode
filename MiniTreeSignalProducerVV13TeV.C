@@ -10,8 +10,8 @@ double mgg, mjj,evWeight, mtot, normWeight;
    
    string inFile("Wprime");
    if (iSample == 1) inFile = string("RS1WW");
-   //if (iSample == 2) inFile = string("RS1ZZ");
-   if (iSample == 2) inFile = string("RS1WW"); // Fake ZZ signal
+   if (iSample == 2) inFile = string("RS1ZZ");
+   // if (iSample == 2) inFile = string("RS1WW"); // Fake ZZ signal
    if (iSample == 3) inFile = string("QstarQW");
    if (iSample == 4) inFile = string("QstarQZ");
    if (iSample == 5) inFile = string("BulkWW");
@@ -50,14 +50,28 @@ double mgg, mjj,evWeight, mtot, normWeight;
 
 
      
-     for (int iCat = 0; iCat < 2; iCat++){
-      
+     for (int iCat = 0; iCat < 21; iCat++){
        TH1D* hMass = (TH1D*) file0.Get("DijetMassHighPuriVV;1");
-       if (iCat == 1) hMass = (TH1D*) file0.Get("DijetMassMediumPuriVV;1");
-       if (iCat == 2) hMass = (TH1D*) file0.Get("DijetMassLowPuriVV;1");
-       if (iCat == 3) hMass = (TH1D*) file0.Get("DijetMassHighPuriqV;1");
-       if (iCat == 4) hMass = (TH1D*) file0.Get("DijetMassMediumPuriqV;1");
-       if (iCat == 5) hMass = (TH1D*) file0.Get("DijetMassLowPuriqV;1");
+       if (iCat == 1) hMass = (TH1D*) file0.Get("DijetMassLowPuriVV;1");
+       if (iCat == 2) hMass = (TH1D*) file0.Get("DijetMassNoPuriVV;1");
+       if (iCat == 3) hMass = (TH1D*) file0.Get("DijetMassHighPuriWW;1");
+       if (iCat == 4) hMass = (TH1D*) file0.Get("DijetMassLowPuriWW;1");
+       if (iCat == 5) hMass = (TH1D*) file0.Get("DijetMassNoPuriWW;1");
+       if (iCat == 6) hMass = (TH1D*) file0.Get("DijetMassHighPuriWZ;1");
+       if (iCat == 7) hMass = (TH1D*) file0.Get("DijetMassLowPuriWZ;1");
+       if (iCat == 8) hMass = (TH1D*) file0.Get("DijetMassNoPuriWZ;1");
+       if (iCat == 9) hMass = (TH1D*) file0.Get("DijetMassHighPuriZZ;1");
+       if (iCat == 10) hMass = (TH1D*) file0.Get("DijetMassLowPuriZZ;1");
+       if (iCat == 11) hMass = (TH1D*) file0.Get("DijetMassNoPuriZZ;1");
+       if (iCat == 12) hMass = (TH1D*) file0.Get("DijetMassHighPuriqV;1");
+       if (iCat == 13) hMass = (TH1D*) file0.Get("DijetMassLowPuriqV;1");
+       if (iCat == 14) hMass = (TH1D*) file0.Get("DijetMassNoPuriqV;1");
+       if (iCat == 15) hMass = (TH1D*) file0.Get("DijetMassHighPuriqW;1");
+       if (iCat == 16) hMass = (TH1D*) file0.Get("DijetMassLowPuriqW;1");
+       if (iCat == 17) hMass = (TH1D*) file0.Get("DijetMassNoPuriqW;1");
+       if (iCat == 18) hMass = (TH1D*) file0.Get("DijetMassHighPuriqZ;1");
+       if (iCat == 19) hMass = (TH1D*) file0.Get("DijetMassLowPuriqZ;1");
+       if (iCat == 20) hMass = (TH1D*) file0.Get("DijetMassNoPuriqZ;1");
        if(!hMass) continue;
        
        TAxis* Axis =   hMass->GetXaxis();

@@ -38,18 +38,41 @@ if len(sys.argv)>3:
 else:
    suffix=""
 
-histnames= ["DijetMassHighPuriVV", # VV high purity
+histnames= [#"DijetMassHighPuriVV", # VV high purity
             #"DijetMassMediumPuriVV", # VV medium purity
             #"DijetMassLowPuriVV", # not used
             #"DijetMassHighPuriqV", # qV high purity
             #"DijetMassMediumPuriqV", # qV medium purity
             #"DijetMassLowPuriqV", # not used
+            "DijetMassHighPuriWW", # WW high purity
+            "DijetMassLowPuriWW", # WW low purity
+            "DijetMassNoPuriWW", # WW no purity
+            "DijetMassHighPuriWZ", # WZ high purity
+            "DijetMassLowPuriWZ", # WZ low purity
+            "DijetMassNoPuriWZ", # WZ no purity
+            "DijetMassHighPuriZZ", # ZZ high purity
+            "DijetMassLowPuriZZ", # ZZ low purity
+            "DijetMassNoPuriZZ", # ZZ no purity
+            "DijetMassHighPuriqW", # qV high purity
+            "DijetMassLowPuriqW", # qW low purity
+            "DijetMassNoPuriqW", # qW no purity
+            "DijetMassHighPuriqZ", # qZ high purity
+            "DijetMassLowPuriqZ", # qZ low purity
+            "DijetMassNoPuriqZ", # qZ no purity
             ]
 
 if "RS1WW" in inputRoot:
   masses=[1000,2000,3000,4000]
   ngenevents=[1.,1.,1.,1.]
 
+if "RS1ZZ" in inputRoot:
+  masses=[1000,2000,3000,4000]
+  ngenevents=[1.,1.,1.,1.]
+
+if "BulkWW" in inputRoot:
+  masses=[1000,2000,3000,4000]
+  ngenevents=[1.,1.,1.,1.]
+    
 for i in range(len(masses)-1):
    if outmjj>=masses[i] and outmjj<masses[i+1]:
        mjjlow = masses[i]
