@@ -10,63 +10,50 @@ from array import *
 import CMS_lumi, tdrstyle
 # from ROOT import Math/QuantFuncMathCore
 
+
+#Remember to have a version of CMS_lumi.C/h and tdrstyle.C/py in your folder!!
+
 tdrstyle.setTDRStyle()
-gStyle.SetOptFit(0) 
+gStyle.SetOptFit(1) 
 CMS_lumi.lumi_13TeV = "1.26 fb^{-1}"
 CMS_lumi.writeExtraText = 1
-CMS_lumi.extraText = "Preliminary"
+CMS_lumi.extraText = "Simulation"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
 iPos = 11
 if( iPos==0 ): CMS_lumi.relPosX = 0.12
-iPeriod = 4
+iPeriod = 0
 
-# ---------------------------------------------------------------------------------------------------------------------------
+
 sqrtS = 13000.
 lumi = 1263.89
 
-
-def bkgFit3par(m, p):
-  x=m[0]/sqrtS
-  return p[0]*pow(1.-x,p[1])/pow(x,p[2])
-  return bkgFit4par
-  
-def bkgFit4par(m, p):
-  x=m[0]/sqrtS
-  return p[0]*pow(1.-x,p[1])/pow(x,p[2]+p[3]*TMath.Log(x))
-  return bkgFit4par
-
-def AltbkgFit4par(m, p):
-  x=m[0]/sqrtS
-  return p[0]*pow(1.-x +p[3]*x*x,p[1])/pow(x,p[2])
-  return AltbkgFit4par
-# ---------------------------------------------------------------------------------------------------------------------------  
 def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOutputFile):
   
   fits = []
   residuals = []
   
-  # TVirtualFitter.SetMaxIterations(30000)
-  bins = sorted(fBins)
-  xbins = array('d',bins)
+  xbins = array('d',fBins)
   
 # --------------------------------------- Rebinning-->hMass_rebinned ---------------------------------------
   file =TFile(fInputFile,"READ")
   hMass = file.Get(fPlot)
   # hMass.Scale(1/lumi)
   # hMass.SetBinErrorOption(TH1.kPoisson)
-  
+
   hMass_rebinned = hMass.Rebin(fNbins,"hMass_rebinned",xbins)
-  # hMass_rebinned = hMass.Rebin(2)
-  # hMass_rebinned.GetXaxis().SetRangeUser(fFitXmin,fFitXmax)
   
+
   hMassNEW = TH1F("hist_mass","",fNbins,xbins)
 
-# --------------------------------------- Filling new h with Poisson errors-->hMassNEW -------------------
+# --------------------------------------- Filling new h dividing by binwidth ---------------------------------------
   for i in range (1,fNbins):
     bincontent = hMass_rebinned.GetBinContent(i)
     binwidth = hMass_rebinned.GetBinWidth(i)
     hMassNEW.SetBinContent(i,bincontent/(binwidth))
-    # hMassNEW.GetXaxis().SetRangeUser(fFitXmin,fFitXmax)
+    # hMassNEW.SetBinError(i,(hMass_rebinned.GetBinError(i)/(binwidth)))
+
+
+# ---------------------------- Create graph from data with Poisson error bars (for data) ----------------------------    
   x=[]
   y=[]
   exl=[]
@@ -84,13 +71,17 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
     exl.append( dm/2.)
     exh.append( dm/2.)
     y.append( n / (dm))
-    # l = 0.5*TMath.ChisquareQuantile(alpha/2,2*n)
+    # l = 0.5*TMath.ChisquareQuantile(alpha/2,2*n) #as used in dijet analysis
     # h = 0.5*TMath.ChisquareQuantile(1-alpha/2,2*(n+1))
     if(n==0): l = 0
-    else: l = Math.gamma_quantile(alpha/2,n,1.)
+    else: l = Math.gamma_quantile(alpha/2,n,1.) #as recommended in https://twiki.cern.ch/twiki/bin/view/CMS/PoissonErrorBars
     h = Math.gamma_quantile_c(alpha/2,n+1,1) 
-    eyl.append( (n-l)/(dm) )
-    eyh.append( (h-n)/(dm) )
+    if (fInputFile.find("DATA")!=-1):
+      eyl.append( (n-l)/(dm) )
+      eyh.append( (h-n)/(dm) )
+    if (fInputFile.find("QCD")!=-1):
+      eyl.append(hMass_rebinned.GetBinError(i+1)/dm)
+      eyh.append(hMass_rebinned.GetBinError(i+1)/dm )
     #print "%f   %f    %f    %f    %f     %f" % (x[i],y[i],exl[i],exh[i],eyl[i],eyh[i])
   
   vx = array("f",x)
@@ -103,101 +94,218 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   #data in TGraph format
   g = TGraphAsymmErrors(fNbins,vx,vy,vexl,vexh,veyl,veyh)
   g.SetName("g_data")
-  # g.GetXaxis().SetRangeUser(fFitXmin,fFitXmax)
+ 
+
+  nBins_fit1 = hMassNEW.FindBin(fFitXmax)- hMassNEW.FindBin(fFitXmin)
   
-  nBins_fit = hMassNEW.FindBin(fFitXmax)- hMassNEW.FindBin(fFitXmin)
   zeroBins = 0
-  for i in range(0,nBins_fit):
+  for i in range(0,nBins_fit1):
       if hMassNEW.GetBinContent(hMassNEW.FindBin(fFitXmin)+i)==0: 
         zeroBins +=1        
-  nBins_fit = nBins_fit - zeroBins
+  nBins_fit = nBins_fit1 - zeroBins
+  
   rss = []
   chi2 = []
   dof = []
   fisher = []
   ConfidenceLevel = []
   fpdfs = []
-  if(fLabel.find("q")!=-1 or (fLabel.find("VV")!=-1 and fLabel.find("NP")!=-1)):
-    FunctionTypes = [0,1]
-  else:
-    FunctionTypes = [0,1,2]
+  
+  #For alternate F-test inspired by Yongjie (not skipping empty bins)
+  Altfisher = []
+  AltConfidenceLevel = []
+  rssALL = []
+  chi2ALL = []
+  dofALL = []
+  
+# --------------------------------------- Do fits ---------------------------------------
+  f = 0
+  FunctionTypes = [-2,0,1,2,3]
   for FunctionType in FunctionTypes:
-    print "######################################################################################################################################" 
+    print "######################################################################################################################################"
     print "########################################  Do fit for function type %i :###############################################################" %FunctionType
-    print "######################################################################################################################################" 
-    fitresult = doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins) 
+    print "######################################################################################################################################"
+    fitresult = doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins)
     M1Bkg = fitresult[3]
     hist_fit_residual_vsMass = fitresult[4]
     nPar = nBins_fit - fitresult[1] - 1
+    # if FunctionType != -2:fits.append(M1Bkg)
+    # if FunctionType != -2:residuals.append(hist_fit_residual_vsMass) \\if skipping 2 paramter fit
     fits.append(M1Bkg)
     residuals.append(hist_fit_residual_vsMass)
     rss.append(fitresult[0])
     chi2.append(fitresult[2])
     dof.append(fitresult[1])
+    rssALL.append(fitresult[7])
+    chi2ALL.append(fitresult[6])
+    dofALL.append(fitresult[5])
     print "chi2 / dof for f%d = %f / %d" % (FunctionType,fitresult[2],fitresult[1])
-    print "######################################################################################################################################" 
+    if (f>0):
+      result = FisherTest(rss[f-1],rss[f],dof[f-1],dof[f],nBins_fit)
+      if (f>3):
+        print f
+        result = FisherTest(rss[f-3],rss[f],dof[f-3],dof[f],nBins_fit) #now comparing alternate four paramter fit to 3 paramter fit
+      F = result[0]
+      CL = result[1]
+      fisher.append(F)
+      ConfidenceLevel.append(CL)
+      fpdfs.append(result[2])
+      Altresult = AltFisherTest(rssALL[f-1],rss[f],dofALL[f-1],dofALL[f],nBins_fit1) #alternative Fisher test using TMath.FDistI
+      if (f>3):
+        print f
+        Altresult = AltFisherTest(rssALL[f-3],rss[f],dofALL[f-3],dofALL[f],nBins_fit1)
+      AltF = Altresult[0]
+      AltCL = Altresult[1]
+      Altfisher.append(AltF)
+      AltConfidenceLevel.append(AltCL)
+    f += 1
+# --------------------------------------- Print some results ---------------------------------------  
+  print "################################################################################################################################################"
+  print ""
+  print ""
+  print "FOR CATEGORY: %s" %fLabel
+  print ""
+  print ""
+  print "#############################################            ALTERNATIVE METHOD (from Yong)            #############################################"  
+  print ""
+  print "Summary:"   
+  print "Residuals = "+str(rssALL)
+  print "$\chi^2$ = "+str(chi2ALL)
+  print "D.O.F ="+str(dofALL)
+  print "Fishers F = "+str(Altfisher)
+  print "ConfidenceLevel = "+str(AltConfidenceLevel)  
+  print "-----------------------------------------"
+  print ""
+  print "For Latex table:"
+  print ""
+  print "\multicolumn{4}{|c|}{%s}\\"%fLabel
+  print "\hline"
+  print "Function & Residuals & $\chi^2$ & ndof \\"
+  print "\hline"
+  print "2 par & %.3f & %.3f & %i \\"%(rssALL[0],chi2ALL[0],dofALL[0])
+  print "3 par & %.3f & %.3f & %i \\"%(rssALL[1],chi2ALL[1],dofALL[1])
+  print "4 par & %.3f & %.3f & %i \\"%(rssALL[2],chi2ALL[2],dofALL[2])
+  print "5 par & %.3f & %.3f & %i \\"%(rssALL[3],chi2ALL[3],dofALL[3])
+  print "Alt. 4 par & %.3f & %.3f & %i \\"%(rssALL[4],chi2ALL[4],dofALL[4])
+  print "\hline"
+  print "Fishers23 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(Altfisher[0],AltConfidenceLevel[0])
+  print "Fishers34 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(Altfisher[1],AltConfidenceLevel[1])
+  print "Fishers45 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(Altfisher[2],AltConfidenceLevel[2])
+  print "Fishers3Alt4 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(Altfisher[3],AltConfidenceLevel[3])
+  print "\hline"
+  print ""
+  print ""
+  print ""
+  print "#############################################            DIJET METHOD           #############################################"
+  print ""
+  print "Summary:" 
+  print "Residuals = "+str(rss)
+  print "$\chi^2$ = "+str(chi2)
+  print "D.O.F ="+str(dof)
+  print "Fishers F = "+str(fisher)
+  print "ConfidenceLevel = "+str(ConfidenceLevel)
+  print "Functions = "+str(FunctionTypes)
+  print "Nr. bins in fit = "+str(nBins_fit)
+  print "-----------------------------------------"
+  print ""
+  print "For Latex table:"
+  print ""
+  print "\multicolumn{4}{|c|}{%s}\\"%fLabel
+  print "\hline"
+  print "Function & Residuals & $\chi^2$ & ndof \\"
+  print "\hline"
+  print "2 par & %.3f & %.3f & %i \\"%(rss[0],chi2[0],dof[0])
+  print "3 par & %.3f & %.3f & %i \\"%(rss[1],chi2[1],dof[1])
+  print "4 par & %.3f & %.3f & %i \\"%(rss[2],chi2[2],dof[2])
+  print "5 par & %.3f & %.3f & %i \\"%(rss[3],chi2[3],dof[3])
+  print "Alt. 4 par& %.3f & %.3f & %i \\"%(rss[4],chi2[4],dof[4])
+  print "\hline"
+  print "Fishers23 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(fisher[0],ConfidenceLevel[0])
+  print "Fishers34 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(fisher[1],ConfidenceLevel[1])
+  print "Fishers45 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(fisher[2],ConfidenceLevel[2])
+  print "Fishers3Alt4 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(fisher[3],ConfidenceLevel[3])
+  print "\hline"
 
-  
-  print "######################################################################################################################################" 
-  print "################ Do F-test comparing null hypothesis function %i, with alternate hypothesis %i ::#####################################" %(0,1)
-  print "######################################################################################################################################" 
-  result = FisherTest(rss[0],rss[1],dof[0],dof[1],nBins_fit)
-  F = result[0]
-  CL = result[1]
-  fisher.append(F)
-  ConfidenceLevel.append(CL)
-  fpdfs.append(result[2])
-  if not (fLabel.find("q")!=-1 or (fLabel.find("VV")!=-1 and fLabel.find("NP")!=-1)):
-    print "######################################################################################################################################" 
-    print "################ Do F-test comparing null hypothesis function %i, with alternate hypothesis %i ::#####################################" %(0,2)
-    print "######################################################################################################################################" 
-    result = FisherTest(rss[0],rss[2],dof[0],dof[2],nBins_fit)
-    F = result[0]
-    CL = result[1]
-    fisher.append(F)
-    ConfidenceLevel.append(CL)
-    fpdfs.append(result[2])
-  print "######################################################################################################################################" 
-  print "######################################################################################################################################"
-  print "Functions = "+str(FunctionTypes) 
-  print "nBins_Fit = "+str(nBins_fit)
-  print "rss = "+str(rss)
-  print "chi2 = "+str(chi2)
-  print "dof ="+str(dof)
-  print "fisher = "+str(fisher)
-  print "ConfidenceLevel = "+str(ConfidenceLevel)  
-  print "##############################################################################################################" 
-  DrawFit(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile)
-  FitComparisons(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile)
+  print "##############################################################################################################"
+  print "##############################################################################################################"
+  alpha = 0.1
+  print  " F - test results using alternate method: " 
+  print "-----------------------------------------"
+  if (AltConfidenceLevel[0]>alpha):
+    print  "A linear fit is sufficient to describe these data" 
+  elif (AltConfidenceLevel[1]>alpha):
+    print  " A three parameter fit is sufficient to describe these data." 
+  elif (AltConfidenceLevel[2]>alpha):
+    print  " A four paramter fit appears adequate to describe these data." 
+  elif (AltConfidenceLevel[3]>alpha):
+    print  " The alternate fit is better than the 3 parameter default fit" 
+  else:
+    print  " A better fit is needed for these data. " 
+    print  " You should check for higher-order polynomials. "
+  print "-----------------------------------------"
+  print ""
+  print ""
+  print ""
+  print ""
+  print ""
+  print ""
+
+
+# --------------------------------------- Make plots ---------------------------------------
+    
+  # DrawFit(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile) #when final fit is decided, plots only one
+  FitComparisons(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof) #draw all fit functions with residuals
   
   del file
-# ---------------------------------------------------------------------------------------------------------------------------    
+  
+  
+  
+  
+# ------------------------------------------------------------------------------------------    
 def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
+  
+  if( FunctionType==-2 ):    
+      nPar=2
+      BKGfit = TF1("BKGfit%i"%FunctionType," [0] / ( TMath::Power(x/13000,[1]) )",fFitXmin,fFitXmax)
+      BKGfit.SetParameter(0,1.59778e-08)
+      BKGfit.SetParameter(1,7.78922e+00)
 
   if( FunctionType==0 ):
     print "Fitting three parameter default function!"
     nPar=3
     BKGfit = TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)
+    BKGfit.SetParameter(0,4.98767e-07)
+
 
   elif( FunctionType==1 ):
     print "Fitting four parameter default function!"
     nPar=4
     BKGfit = TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )",fFitXmin,fFitXmax)
-
-    # BKGfit.SetParLimits(0,0.,10)
+    BKGfit.SetParameter(0,2.01354e-07)
+    BKGfit.SetParameter(1,0.224623)
+    # BKGfit.SetParameter(2,7.31499e+00)
+    # BKGfit.SetParameter(3,8.63532e-02)
+    
   elif( FunctionType==2 ):
+    print "Fitting five parameter  function!"
+    nPar=5
+    # BKGfit =  TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)+[4]*TMath::Power(log(x/13000),2)) )",fFitXmin,fFitXmax)
+    BKGfit =  TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1])*(1+[4]*x/13000) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )",fFitXmin,fFitXmax)
+    BKGfit.SetParameter(0,4.98767e-07)
+
+    #
+  elif( FunctionType==3 ):
     print "Fitting four parameter alternate function!"
     nPar=4
     BKGfit =  TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000 + [3]*TMath::Power(x/13000,2),[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)
- #
-  # elif( FunctionType==3 ):
-  #   print "Fitting three parameter alternate function!"
-  #   nPar=3
-  #   BKGfit =  TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000 + TMath::Power(x/13000,2),[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)   
+    BKGfit.SetParameter(0,4.98767e-07)
+
+    
+  
   
   stopProgram=1;
   for loop in range (0,10):
-    r = hMassNEW.Fit("BKGfit%i"%FunctionType,"ELSR","",fFitXmin,fFitXmax)          
+    r = hMassNEW.Fit("BKGfit%i"%FunctionType,"SR","",fFitXmin,fFitXmax)          
     fitStatus = int(r)
     print "fit status : %d" % fitStatus
     if(fitStatus==0):
@@ -212,14 +320,12 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
     print "######################" 
     print "######################"
   
-  
   NumberOfVarBins = 0
   NumberOfObservations_VarBin = 0
   chi2_VarBin = 0.
+  chi2_VarBin_ALL = 0.
   chi2_VarBin_notNorm = 0.
-  
-  print hMassNEW.GetBinWidth(20)
-  print hMassNEW.GetNbinsX()
+  chi2_VarBin_notNorm_ALL = 0.
   
   
   
@@ -228,18 +334,21 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
   for bin in range (1,hMassNEW.GetNbinsX()):
     if( hMassNEW.GetXaxis().GetBinLowEdge(bin)>=fFitXmin and hMassNEW.GetXaxis().GetBinUpEdge(bin)<=fFitXmax ):
        NumberOfVarBins += 1
-       #print "bin content = " + str(hMassNEW.GetBinContent(bin)) + "   graph y = " + str(vy[bin-1]) + "  error y low = " + str(g.GetErrorYlow(bin-1))
        data = hMassNEW.GetBinContent(bin)
        err_data_low = g.GetErrorYlow(bin-1) 
        err_data_high= g.GetErrorYhigh(bin-1)
        fit = BKGfit.Integral(hMassNEW.GetXaxis().GetBinLowEdge(bin) , hMassNEW.GetXaxis().GetBinUpEdge(bin) )
        fit = fit / ( hMassNEW.GetBinWidth(bin) )
+       # fit = BKGfit.Eval(hMassNEW.GetBinCenter(bin)) #yields same results
        if(fit > data):
          err_tot = err_data_high
        else:
          err_tot = err_data_low
+       # if(err_tot==0):continue
        fit_residual = (data - fit) / err_tot
        err_fit_residual = 1
+       chi2_VarBin_notNorm_ALL += pow( (data - fit) , 2 )
+       chi2_VarBin_ALL += pow( (data - fit) , 2 ) / pow( err_tot , 2 )
        if (hMassNEW.GetBinContent(bin)>0):
          NumberOfObservations_VarBin+=1
          chi2_VarBin += pow( (data - fit) , 2 ) / pow( err_tot , 2 )	 
@@ -250,29 +359,26 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
   
   ndf_VarBin = NumberOfObservations_VarBin - nPar -1
 
-  print "============================" 
-  print "NumberOfObservations_VarBin: %d" %  NumberOfObservations_VarBin
-  print "ndf_VarBin: %d" % ndf_VarBin 
-  print "chi2_VarBin: %f" % chi2_VarBin
-  print "chi2_VarBin_notNorm: %f" % chi2_VarBin_notNorm
-  print "============================"   
+  
+  print "Chi2 Minuit = %f"%BKGfit.GetChisquare()
+  print "NDF Minuit = %i"%BKGfit.GetNDF()
 
   
-  return [chi2_VarBin_notNorm,ndf_VarBin,chi2_VarBin,BKGfit,hist_fit_residual_vsMass]   
+  return [chi2_VarBin_notNorm,ndf_VarBin,chi2_VarBin,BKGfit,hist_fit_residual_vsMass,nPar,chi2_VarBin_ALL,chi2_VarBin_notNorm_ALL]   
 
 def FisherTest(RSS_1,RSS_2,dof_1,dof_2,N):
   RSS1 = RSS_1
   RSS2 = RSS_2
   n1 = N - dof_1 - 1
   n2 = N - dof_2 - 1
-  print "Residuals function 1 = %f" % RSS_1
-  print "Residuals function 2 = %f" % RSS_2
-  print "DOF function 1 = %i" % n1
-  print "DOF function 2 = %i" % n2
-  print "DOF TOT = %i" % N
-  print "n1 = %d    n2 = %d" % (n1,n2)
-  print "((RSS1-RSS2)/(n2-n1)) = %f" %((RSS1-RSS2)/(n2-n1))
-  print "(RSS2/(N-n2) = %f" %(RSS2/(N-n2))
+  # print "Residuals function 1 = %f" % RSS_1
+  # print "Residuals function 2 = %f" % RSS_2
+  # print "DOF function 1 = %i" % n1
+  # print "DOF function 2 = %i" % n2
+  # print "DOF TOT = %i" % N
+  # print "n1 = %d    n2 = %d" % (n1,n2)
+  # print "((RSS1-RSS2)/(n2-n1)) = %f" %((RSS1-RSS2)/(n2-n1))
+  # print "(RSS2/(N-n2) = %f" %(RSS2/(N-n2))
   F = ((RSS1-RSS2)/(n2-n1)) / (RSS2/(N-n2))
   print "F = %f" % F
   F_dist = TF1("F_distr","TMath::Sqrt( (TMath::Power([0]*x,[0]) * TMath::Power([1],[1])) / (TMath::Power([0]*x + [1],[0]+[1])) ) / (x*TMath::Beta([0]/2,[1]/2))",0,1000)
@@ -282,7 +388,17 @@ def FisherTest(RSS_1,RSS_2,dof_1,dof_2,N):
   CL = 1 - F_distr.Integral(0.00000001,F)
   print "CL == %f" %CL
   return [F,CL,F_dist]
-  
+
+def AltFisherTest(RSS_0,RSS_1,dof_0,dof_1,N):
+  p1_10 = dof_1-dof_0;
+  p2_10 = N-dof_1;
+  rss0 = RSS_0
+  rss1 = RSS_1
+  Ftest_10 = (rss0-rss1)/p1_10 / (rss1/p2_10)
+  good_CL10 =  1.-TMath.FDistI(Ftest_10,p1_10,p2_10)
+  print "Ftest10 = %f" %(1.-TMath.FDistI(Ftest_10,p1_10,p2_10))
+  return [Ftest_10,good_CL10]
+    
      
 # ---------------------------------------------------------------------------------------------------------------------------
 def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile):
@@ -295,15 +411,15 @@ def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin
   L = 0.12*W_ref
   R = 0.04*W_ref
 
-  c = TCanvas("c","VV mass fit",W,H)
-  c.GetWindowHeight()
-  c.GetWindowWidth()
-  c.SetLogy()
-  c.Divide(1,2,0,0,0)
+  c1 = TCanvas("c1","VV mass fit",W,H)
+  c1.GetWindowHeight()
+  c1.GetWindowWidth()
+  c1.SetLogy()
+  c1.Divide(1,2,0,0,0)
 
   #------------ pad 1  ----------------
-  c.cd(1)
-  p11_1 = c.GetPad(1)
+  c1.cd(1)
+  p11_1 = c1.GetPad(1)
   p11_1.SetPad(0.01,0.26,0.99,0.98)
   p11_1.SetLogy()
   p11_1.SetRightMargin(0.05)
@@ -340,10 +456,6 @@ def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin
   #vFrame.GetYaxis().SetTitleOffset(1.0)
   vFrame.GetYaxis().SetLabelSize(0.05)
 
-  # hMassNEW.GetXaxis().SetNdivisions(405)
-  # hMassNEW.SetMarkerSize(0.9)
-  # hMassNEW.SetMarkerStyle(20)
-  # g.GetXaxis().SetNdivisions(405)
   g.SetMarkerSize(0.9)
   g.SetMarkerStyle(20)
   g.GetXaxis().SetNdivisions(405)
@@ -373,8 +485,8 @@ def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin
   p11_1.GetFrame().Draw()
   CMS_lumi.CMS_lumi(p11_1, iPeriod, iPos)
   
-  c.cd(2)
-  p11_2 = c.GetPad(2)
+  c1.cd(2)
+  p11_2 = c1.GetPad(2)
   p11_2.SetPad(0.01,0.02,0.99,0.27)
   p11_2.SetBottomMargin(0.35)
   p11_2.SetRightMargin(0.05)
@@ -394,12 +506,6 @@ def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin
   vFrame2.GetXaxis().SetLabelSize(0.12)
 
   hist_fit_residual_vsMass[0].GetXaxis().SetNdivisions(405)
-  # hist_fit_residual_vsMass[0].GetXaxis().SetRangeUser(fFitXmin,fFitXmax)
-  # hist_fit_residual_vsMass[0].GetYaxis().SetRangeUser(-3.5,3.5)
-  # hist_fit_residual_vsMass[0].SetLineWidth(0)
-  # hist_fit_residual_vsMass[0].SetFillColor(2)
-  # hist_fit_residual_vsMass[0].SetLineColor(1)
-  # hist_fit_residual_vsMass[0].SetLineColor( kBlack)   
   hist_fit_residual_vsMass[0].SetLineColor( kBlack)
   hist_fit_residual_vsMass[0].SetMarkerColor(kBlack)
   hist_fit_residual_vsMass[0].SetMarkerStyle(20)
@@ -413,12 +519,12 @@ def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin
   line2.DrawLine(p11_2.GetUxmax(), p11_2.GetUymin(), p11_2.GetUxmax(), p11_2.GetUymax())
 
   # time.sleep(10)
-  cname = fOutputFile+"_fit.png"
-  c.SaveAs(cname)
+  cname = fOutputFile+"_fit.pdf"
+  c1.SaveAs(cname)
 
-  del c
+  # del c1
 # ---------------------------------------------------------------------------------------------------------------------------    
-def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,):
+def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof):
   W = 600
   H = 700
   H_ref = 700 
@@ -428,15 +534,15 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   L = 0.12*W_ref
   R = 0.04*W_ref
 
-  c = TCanvas("c","VV mass fit",W,H)
-  c.GetWindowHeight()
-  c.GetWindowWidth()
-  c.SetLogy()
-  c.Divide(1,2,0,0,0)
+  c2 = TCanvas("c2","VV mass fit",W,H)
+  c2.GetWindowHeight()
+  c2.GetWindowWidth()
+  c2.SetLogy()
+  c2.Divide(1,2,0,0,0)
 
   #------------ pad 1  ----------------
-  c.cd(1)
-  p11_1 = c.GetPad(1)
+  c2.cd(1)
+  p11_1 = c2.GetPad(1)
   p11_1.SetPad(0.01,0.26,0.99,0.98)
   p11_1.SetLogy()
   p11_1.SetRightMargin(0.05)
@@ -462,7 +568,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   addInfo.SetTextSize(0.040)
   addInfo.SetTextAlign(12)
   
-  vFrame = p11_1.DrawFrame(fFitXmin,0.0000005,fFitXmax,hMassNEW.GetMaximum()*5.0)  
+  vFrame = p11_1.DrawFrame(fFitXmin,0.000005,fFitXmax,hMassNEW.GetMaximum()*6.0)  
   vFrame.SetTitle("")
   vFrame.SetXTitle("M_{jj} [GeV]")
   vFrame.SetYTitle("#frac{dN}{dm_{jj}}")
@@ -473,17 +579,13 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   #vFrame.GetYaxis().SetTitleOffset(1.0)
   vFrame.GetYaxis().SetLabelSize(0.05)
 
-  # hMassNEW.GetXaxis().SetNdivisions(405)
-  # hMassNEW.SetMarkerSize(0.9)
-  # hMassNEW.SetMarkerStyle(20)
-  # g.GetXaxis().SetNdivisions(405)
   g.SetMarkerSize(0.9)
   g.SetMarkerStyle(20)
   g.GetXaxis().SetNdivisions(405)
   g.Draw("pe0 same")
   
-  colors = [kRed,kBlue,kMagenta,kBlack]
-  styles = [1,4,8,2]
+  colors = [kOrange,kRed,kBlue,kMagenta,kBlack,kGreen]
+  styles = [2,1,4,8,2,6,8,7]
   i =0
   for f in M1Bkg:
     f.SetLineWidth(2)
@@ -492,8 +594,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
     f.Draw("same")
     i+=1
 
- 
-  legend = TLegend(0.56164991,0.62,0.8503575,0.80)
+  legend = TLegend(0.337351,0.7177579,0.5890289,0.9182374)
   legend.SetTextSize(0.038)
   legend.SetLineColor(0)
   legend.SetShadowColor(0)
@@ -503,10 +604,11 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   legend.SetFillStyle(0)
   legend.SetMargin(0.35)
   legend.AddEntry(g, "CMS data","lpe")
-  legend.AddEntry(M1Bkg[0], "Default fit, 3 param.","l")
-  legend.AddEntry(M1Bkg[1], "Default fit, 4 param.","l")
-  if not (fLabel.find("q")!=-1 or (fLabel.find("VV")!=-1 and fLabel.find("NP")!=-1)):
-    legend.AddEntry(M1Bkg[2], "Alternate fit, 4 param.","l")
+  legend.AddEntry(M1Bkg[0], "Default fit, 2 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[0],dof[0]),"l")
+  legend.AddEntry(M1Bkg[1], "Default fit, 3 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[1],dof[1]),"l")
+  legend.AddEntry(M1Bkg[2], "Default fit, 4 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[2],dof[2]),"l")
+  legend.AddEntry(M1Bkg[3], "Default fit, 5 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[3],dof[3]),"l")
+  legend.AddEntry(M1Bkg[4], "Alternate fit, 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[4],dof[4]),"l")
   legend.Draw("same")
   addInfo.Draw("same")
   p11_1.RedrawAxis()
@@ -514,15 +616,14 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   p11_1.GetFrame().Draw()
   CMS_lumi.CMS_lumi(p11_1, iPeriod, iPos)
   
-  c.cd(2)
-  p11_2 = c.GetPad(2)
+  c2.cd(2)
+  p11_2 = c2.GetPad(2)
   p11_2.SetPad(0.01,0.02,0.99,0.27)
   p11_2.SetBottomMargin(0.35)
   p11_2.SetRightMargin(0.05)
   p11_2.SetGridx()
   p11_2.SetGridy()
   vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -3.5, p11_1.GetUxmax(), 3.5)
-  # vFrame2 = p11_2.DrawFrame(fFitXmin,-3.5,fFitXmax,3.5)
   vFrame2.SetTitle("")
   vFrame2.SetXTitle("M_{jj} [GeV]")
   vFrame2.GetXaxis().SetTitleSize(0.06)
@@ -535,7 +636,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   vFrame2.GetXaxis().SetLabelSize(0.12)
   vFrame2.GetXaxis().SetNdivisions(405)
   
-  styles = [20,22,32,25]
+  styles = [20,22,32,25,32]
   i =0
   for h in hist_fit_residual_vsMass:   
     h.SetLineColor(colors[i])
@@ -551,46 +652,43 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   line2.DrawLine(p11_2.GetUxmin(), p11_2.GetUymax(), p11_2.GetUxmax(), p11_2.GetUymax())
   line2.DrawLine(p11_2.GetUxmax(), p11_2.GetUymin(), p11_2.GetUxmax(), p11_2.GetUymax())
   
-  cname = fOutputFile+"_fitComp.png"
-  c.SaveAs(cname)
+  cname = fOutputFile+"_fitComp.pdf"
+  c2.SaveAs(cname)
+  time.sleep(100)
 
-  del c
+  # del c2
   
 # ---------------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
   
-  number_of_variableWidth_bins = 103
 
-           
-  bins1 = range (900,1300,50)
-  bins2 = range (1300,3000,100)
-  bins3 = range (3000,4000,200)
-  bins4 = range (4000,6000,300)
-  bins = []
-  bins = bins1
-  bins += bins2
-  bins += bins3
-  bins += bins4
-  # bins = range (900,6000,40)
-  
-  # bins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890,
- #  944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854,
- #  4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430,10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
+  massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058,
+             1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
+             4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
 
-  channels = ["VV","WW","WZ","ZZ","qV","qW","qZ"]
-  
+  channels = ["VV","WW","WZ","ZZ"]
+  channels = ["ZZ"]
   for ch in channels:
     if ch.find("q") != -1: 
-      fitmax = 5000
+      fitmax = 5058
     else: 
-      fitmax = 4000
-      
-    performFit("input/DATA.root",
-             "DijetMassHighPuri%s"%ch, len(bins)-1, bins, 1000, fitmax, "%s category, HP"%ch,
-             "plots/%s_HP_1263invpb.pdf"%ch)            
-    performFit("input/DATA.root",
-               "DijetMassLowPuri%s"%ch, len(bins)-1, bins, 1000, fitmax, "%s category, LP"%ch,
-               "plots/%s_LP_1263invpb.pdf"%ch)
-    performFit("input/DATA.root",
-               "DijetMassNoPuri%s"%ch, len(bins)-1, bins, 1000, fitmax, "%s category, NP"%ch,
-               "plots/%s_NP_1263invpb.pdf"%ch)  
+      fitmax = 5058
+    
+    # performFit("input/QCD.root",
+    #          "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, HP"%ch,
+    #          "%s_HP_QCD"%ch)
+    performFit("input/QCD.root",
+               "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, LP"%ch,
+               "%s_LP_QCD"%ch)
+    # performFit("input/QCD.root",
+    #            "DijetMassNoPuri%s"%ch, len(massBins)-1, massBins, 1001, fitmax, "%s category, NP"%ch,
+    #            "plots/%s_NP_QCD"%ch)  
+    # performFit("input/DATA_SB.root",
+    #          "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, HP"%ch,
+    #          "plots/%s_HP_1263invpb.pdf"%ch)
+#     performFit("input/DATA.root",
+#                "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, LP"%ch,
+#                "plots/%s_LP_1263invpb.pdf"%ch)
+    # performFit("input/DATA_SB.root",
+    #            "DijetMassNoPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, NP"%ch,
+    #            "plots/%s_NP_1263invpb_SB.pdf"%ch)
