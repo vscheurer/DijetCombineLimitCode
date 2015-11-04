@@ -27,7 +27,7 @@ iPeriod = 0
 sqrtS = 13000.
 lumi = 1263.89
 
-def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOutputFile):
+def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOutputFile,do2par):
   
   fits = []
   residuals = []
@@ -129,10 +129,12 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
     M1Bkg = fitresult[3]
     hist_fit_residual_vsMass = fitresult[4]
     nPar = nBins_fit - fitresult[1] - 1
-    # if FunctionType != -2:fits.append(M1Bkg)
-    # if FunctionType != -2:residuals.append(hist_fit_residual_vsMass) \\if skipping 2 paramter fit
-    fits.append(M1Bkg)
-    residuals.append(hist_fit_residual_vsMass)
+    if not do2par:
+      if FunctionType != -2:fits.append(M1Bkg)
+      if FunctionType != -2:residuals.append(hist_fit_residual_vsMass) #if skipping 2 paramter fit
+    else:
+      fits.append(M1Bkg)
+      residuals.append(hist_fit_residual_vsMass)
     rss.append(fitresult[0])
     chi2.append(fitresult[2])
     dof.append(fitresult[1])
@@ -160,13 +162,13 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
       AltConfidenceLevel.append(AltCL)
     f += 1
 # --------------------------------------- Print some results ---------------------------------------  
-  print "################################################################################################################################################"
+  print "###################################################################################################################################################"
   print ""
   print ""
   print "FOR CATEGORY: %s" %fLabel
   print ""
   print ""
-  print "#############################################            ALTERNATIVE METHOD (from Yong)            #############################################"  
+  print "#############################################            ALTERNATIVE METHOD (from Yongjie)            #############################################"  
   print ""
   print "Summary:"   
   print "Residuals = "+str(rssALL)
@@ -196,7 +198,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   print ""
   print ""
   print ""
-  print "#############################################            DIJET METHOD           #############################################"
+  print "#############################################                     DIJET METHOD                     #############################################"  
   print ""
   print "Summary:" 
   print "Residuals = "+str(rss)
@@ -227,7 +229,6 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   print "\hline"
 
   print "##############################################################################################################"
-  print "##############################################################################################################"
   alpha = 0.1
   print  " F - test results using alternate method: " 
   print "-----------------------------------------"
@@ -254,7 +255,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
 # --------------------------------------- Make plots ---------------------------------------
     
   # DrawFit(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile) #when final fit is decided, plots only one
-  FitComparisons(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof) #draw all fit functions with residuals
+  FitComparisons(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof,do2par) #draw all fit functions with residuals
   
   del file
   
@@ -524,7 +525,7 @@ def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin
 
   # del c1
 # ---------------------------------------------------------------------------------------------------------------------------    
-def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof):
+def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof,do2par):
   W = 600
   H = 700
   H_ref = 700 
@@ -584,8 +585,12 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   g.GetXaxis().SetNdivisions(405)
   g.Draw("pe0 same")
   
-  colors = [kOrange,kRed,kBlue,kMagenta,kBlack,kGreen]
-  styles = [2,1,4,8,2,6,8,7]
+  if (do2par):
+    colors = [kOrange,kRed,kBlue,kMagenta,kBlack,kGreen]
+    styles = [2,1,4,8,2,6,8,7]
+  else:
+    colors = [kRed,kBlue,kMagenta,kBlack,kGreen]
+    styles = [1,4,8,2,6,8,7]
   i =0
   for f in M1Bkg:
     f.SetLineWidth(2)
@@ -604,11 +609,17 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   legend.SetFillStyle(0)
   legend.SetMargin(0.35)
   legend.AddEntry(g, "CMS data","lpe")
-  legend.AddEntry(M1Bkg[0], "Default fit, 2 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[0],dof[0]),"l")
-  legend.AddEntry(M1Bkg[1], "Default fit, 3 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[1],dof[1]),"l")
-  legend.AddEntry(M1Bkg[2], "Default fit, 4 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[2],dof[2]),"l")
-  legend.AddEntry(M1Bkg[3], "Default fit, 5 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[3],dof[3]),"l")
-  legend.AddEntry(M1Bkg[4], "Alternate fit, 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[4],dof[4]),"l")
+  if (do2par): 
+    legend.AddEntry(M1Bkg[0], "Default fit, 2 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[0],dof[0]),"l")
+    legend.AddEntry(M1Bkg[1], "Default fit, 3 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[1],dof[1]),"l")
+    legend.AddEntry(M1Bkg[2], "Default fit, 4 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[2],dof[2]),"l")
+    legend.AddEntry(M1Bkg[3], "Default fit, 5 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[3],dof[3]),"l")
+    legend.AddEntry(M1Bkg[4], "Alternate fit, 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[4],dof[4]),"l")
+  else:
+    legend.AddEntry(M1Bkg[0], "Default fit, 3 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[1],dof[1]),"l")
+    legend.AddEntry(M1Bkg[1], "Default fit, 4 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[2],dof[2]),"l")
+    legend.AddEntry(M1Bkg[2], "Default fit, 5 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[3],dof[3]),"l")
+    legend.AddEntry(M1Bkg[3], "Alternate fit, 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[4],dof[4]),"l")
   legend.Draw("same")
   addInfo.Draw("same")
   p11_1.RedrawAxis()
@@ -665,30 +676,31 @@ if __name__ == '__main__':
   massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058,
              1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
              4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
-
+             
+  do2par = True 
   channels = ["VV","WW","WZ","ZZ"]
   channels = ["ZZ"]
   for ch in channels:
     if ch.find("q") != -1: 
       fitmax = 5058
     else: 
-      fitmax = 5058
+      fitmax = 3019
     
     # performFit("input/QCD.root",
     #          "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, HP"%ch,
-    #          "%s_HP_QCD"%ch)
+    #          "%s_HP_QCD"%ch,do2par)
     performFit("input/QCD.root",
                "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, LP"%ch,
-               "%s_LP_QCD"%ch)
+               "%s_LP_QCD"%ch,do2par)
     # performFit("input/QCD.root",
     #            "DijetMassNoPuri%s"%ch, len(massBins)-1, massBins, 1001, fitmax, "%s category, NP"%ch,
-    #            "plots/%s_NP_QCD"%ch)  
+    #            "plots/%s_NP_QCD"%ch,do2par)  
     # performFit("input/DATA_SB.root",
     #          "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, HP"%ch,
-    #          "plots/%s_HP_1263invpb.pdf"%ch)
+    #          "plots/%s_HP_1263invpb.pdf"%ch,do2par)
 #     performFit("input/DATA.root",
 #                "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, LP"%ch,
-#                "plots/%s_LP_1263invpb.pdf"%ch)
+#                "plots/%s_LP_1263invpb.pdf"%ch,do2par)
     # performFit("input/DATA_SB.root",
     #            "DijetMassNoPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, NP"%ch,
-    #            "plots/%s_NP_1263invpb_SB.pdf"%ch)
+    #            "plots/%s_NP_1263invpb_SB.pdf"%ch,do2par)
