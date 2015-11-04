@@ -141,11 +141,10 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
     rssALL.append(fitresult[7])
     chi2ALL.append(fitresult[6])
     dofALL.append(fitresult[5])
-    print "chi2 / dof for f%d = %f / %d" % (FunctionType,fitresult[2],fitresult[1])
+    print "Calculated Chi2 / dof for f%d = %f / %d" % (FunctionType,fitresult[2],fitresult[1])
     if (f>0):
       result = FisherTest(rss[f-1],rss[f],dof[f-1],dof[f],nBins_fit)
       if (f>3):
-        print f
         result = FisherTest(rss[f-3],rss[f],dof[f-3],dof[f],nBins_fit) #now comparing alternate four paramter fit to 3 paramter fit
       F = result[0]
       CL = result[1]
@@ -154,7 +153,6 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
       fpdfs.append(result[2])
       Altresult = AltFisherTest(rssALL[f-1],rss[f],dofALL[f-1],dofALL[f],nBins_fit1) #alternative Fisher test using TMath.FDistI
       if (f>3):
-        print f
         Altresult = AltFisherTest(rssALL[f-3],rss[f],dofALL[f-3],dofALL[f],nBins_fit1)
       AltF = Altresult[0]
       AltCL = Altresult[1]
@@ -233,11 +231,11 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   print  " F - test results using alternate method: " 
   print "-----------------------------------------"
   if (AltConfidenceLevel[0]>alpha):
-    print  "A linear fit is sufficient to describe these data" 
+    print  "A two parameter fit is sufficient to describe these data" 
   elif (AltConfidenceLevel[1]>alpha):
     print  " A three parameter fit is sufficient to describe these data." 
   elif (AltConfidenceLevel[2]>alpha):
-    print  " A four paramter fit appears adequate to describe these data." 
+    print  " A four parameter fit appears adequate to describe these data." 
   elif (AltConfidenceLevel[3]>alpha):
     print  " The alternate fit is better than the 3 parameter default fit" 
   else:
@@ -362,7 +360,7 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
 
   
   print "Chi2 Minuit = %f"%BKGfit.GetChisquare()
-  print "NDF Minuit = %i"%BKGfit.GetNDF()
+  print "NDF Minuit  = %i"%BKGfit.GetNDF()
 
   
   return [chi2_VarBin_notNorm,ndf_VarBin,chi2_VarBin,BKGfit,hist_fit_residual_vsMass,nPar,chi2_VarBin_ALL,chi2_VarBin_notNorm_ALL]   
@@ -381,13 +379,10 @@ def FisherTest(RSS_1,RSS_2,dof_1,dof_2,N):
   # print "((RSS1-RSS2)/(n2-n1)) = %f" %((RSS1-RSS2)/(n2-n1))
   # print "(RSS2/(N-n2) = %f" %(RSS2/(N-n2))
   F = ((RSS1-RSS2)/(n2-n1)) / (RSS2/(N-n2))
-  print "F = %f" % F
   F_dist = TF1("F_distr","TMath::Sqrt( (TMath::Power([0]*x,[0]) * TMath::Power([1],[1])) / (TMath::Power([0]*x + [1],[0]+[1])) ) / (x*TMath::Beta([0]/2,[1]/2))",0,1000)
-  print "d1 = %d    d2 = %d" %(n2-n1,N-n2)
   F_dist.SetParameter(0, n2-n1)
   F_dist.SetParameter(1, N-n2)
   CL = 1 - F_distr.Integral(0.00000001,F)
-  print "CL == %f" %CL
   return [F,CL,F_dist]
 
 def AltFisherTest(RSS_0,RSS_1,dof_0,dof_1,N):
@@ -397,7 +392,6 @@ def AltFisherTest(RSS_0,RSS_1,dof_0,dof_1,N):
   rss1 = RSS_1
   Ftest_10 = (rss0-rss1)/p1_10 / (rss1/p2_10)
   good_CL10 =  1.-TMath.FDistI(Ftest_10,p1_10,p2_10)
-  print "Ftest10 = %f" %(1.-TMath.FDistI(Ftest_10,p1_10,p2_10))
   return [Ftest_10,good_CL10]
     
      
@@ -569,7 +563,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   addInfo.SetTextSize(0.040)
   addInfo.SetTextAlign(12)
   
-  vFrame = p11_1.DrawFrame(fFitXmin,0.000005,fFitXmax,hMassNEW.GetMaximum()*6.0)  
+  vFrame = p11_1.DrawFrame(fFitXmin,0.00005,fFitXmax,hMassNEW.GetMaximum()*6.0)  
   vFrame.SetTitle("")
   vFrame.SetXTitle("M_{jj} [GeV]")
   vFrame.SetYTitle("#frac{dN}{dm_{jj}}")
