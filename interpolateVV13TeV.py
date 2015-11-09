@@ -32,18 +32,21 @@ frac1 = 0.8
 frac2 = 1.2
 
 inputRoot = sys.argv[1]
+# print "INPUT = %s"%inputRoot
 outmjj = int( sys.argv[2] )
+# print "outmjj = %s"%outmjj
 if len(sys.argv)>3:
    suffix=sys.argv[3]
 else:
    suffix=""
 
-histnames= [#"DijetMassHighPuriVV", # VV high purity
-            #"DijetMassMediumPuriVV", # VV medium purity
-            #"DijetMassLowPuriVV", # not used
-            #"DijetMassHighPuriqV", # qV high purity
-            #"DijetMassMediumPuriqV", # qV medium purity
-            #"DijetMassLowPuriqV", # not used
+# print "suffix = %s"%suffix
+histnames= ["DijetMassHighPuriVV", # VV high purity
+            "DijetMassNoPuriVV", # VV medium purity
+            "DijetMassLowPuriVV", # not used
+            "DijetMassHighPuriqV", # qV high purity
+            "DijetMassNoPuriqV", # qV medium purity
+            "DijetMassLowPuriqV", # not used
             "DijetMassHighPuriWW", # WW high purity
             "DijetMassLowPuriWW", # WW low purity
             "DijetMassNoPuriWW", # WW no purity
@@ -84,6 +87,9 @@ if outmjj>=masses[-1]:
 inputlow = TFile( inputRoot + str(mjjlow) + suffix + '.root' )
 inputhigh = TFile( inputRoot + str(mjjhigh) + suffix +  '.root' )
 output = TFile( inputRoot +'OUT' + str(outmjj) + suffix + '.root', 'recreate')
+# print "inputlow = %s"%inputlow
+# print "inputhigh = %s"%inputhigh
+# print "output = %s"%output
 
 print sys.argv[1], outmjj, mjjlow, mjjhigh
 

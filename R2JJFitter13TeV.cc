@@ -119,7 +119,7 @@ static const Int_t NCAT = 21; //for VV and qV analysis together this should be 6
 Double_t MMIN = 1000;
 Double_t MMAX = 7000;
 std::string filePOSTfix="";
-double signalScaler=1263.890*0.01/10000.; // assume signal cross section of 0.01pb=10fb and 3000/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
+double signalScaler=1263.890*0.01/10000.; // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
 double scaleFactorHP=0.860; // tau21 and jet mass scale factors data/MC
 double scaleFactorLP=1.385; // tau21 and jet mass scale factors data/MC
 double scaleFactorHPherwig=1.0; // tau21 and jet mass scale factors Herwig/Pythia
