@@ -8,6 +8,9 @@ import time
 import copy
 from array import *
 import CMS_lumi, tdrstyle
+from ROOT import TVirtualFitter
+# gSystem.Load('libRooFit')
+# from ROOT import *
 # from ROOT import Math/QuantFuncMathCore
 
 
@@ -17,17 +20,28 @@ tdrstyle.setTDRStyle()
 gStyle.SetOptFit(1) 
 CMS_lumi.lumi_13TeV = "1.26 fb^{-1}"
 CMS_lumi.writeExtraText = 1
-CMS_lumi.extraText = "Simulation"
+CMS_lumi.extraText = "Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
 iPos = 11
 if( iPos==0 ): CMS_lumi.relPosX = 0.12
-iPeriod = 0
+iPeriod=4
 
 
 sqrtS = 13000.
 lumi = 1263.89
 
-def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOutputFile,do2par):
+def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOutputFile,do2par,doSigmaBand):
+  
+  if (fInputFile.find("DATA")!=-1):
+    CMS_lumi.lumi_13TeV = "1.26 fb^{-1}"
+    CMS_lumi.writeExtraText = 1
+    CMS_lumi.extraText = "Preliminary"
+    
+  if (fInputFile.find("QCD")!=-1):  
+    CMS_lumi.lumi_13TeV = "1.26 fb^{-1}"
+    CMS_lumi.writeExtraText = 1
+    CMS_lumi.extraText = "Simulation"
+    
   
   fits = []
   residuals = []
@@ -38,7 +52,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   file =TFile(fInputFile,"READ")
   hMass = file.Get(fPlot)
   # hMass.Scale(1/lumi)
-  # hMass.SetBinErrorOption(TH1.kPoisson)
+  hMass.SetBinErrorOption(TH1.kPoisson)
 
   hMass_rebinned = hMass.Rebin(fNbins,"hMass_rebinned",xbins)
   
@@ -46,11 +60,21 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   hMassNEW = TH1F("hist_mass","",fNbins,xbins)
 
 # --------------------------------------- Filling new h dividing by binwidth ---------------------------------------
+  alpha = 1 - 0.6827
   for i in range (1,fNbins):
     bincontent = hMass_rebinned.GetBinContent(i)
     binwidth = hMass_rebinned.GetBinWidth(i)
     hMassNEW.SetBinContent(i,bincontent/(binwidth))
-    # hMassNEW.SetBinError(i,(hMass_rebinned.GetBinError(i)/(binwidth)))
+    # if(bincontent==0): l = 0
+    # else: l = Math.gamma_quantile(alpha/2,bincontent,1.) #as recommended in https://twiki.cern.ch/twiki/bin/view/CMS/PoissonErrorBars
+    # h = Math.gamma_quantile_c(alpha/2,bincontent+1,1)
+    # eDATA_L = (bincontent-l)/(binwidth)
+    # eDATA_H = (h-bincontent)/(binwidth)
+    # if(eDATA_L > eDATA_H):
+    #   hMassNEW.SetBinError(i,eDATA_L)
+    # elif(eDATA_H > eDATA_L):
+    #   hMassNEW.SetBinError(i,eDATA_H)
+  hMassNEW.SetBinErrorOption(TH1.kPoisson)
 
 
 # ---------------------------- Create graph from data with Poisson error bars (for data) ----------------------------    
@@ -76,12 +100,8 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
     if(n==0): l = 0
     else: l = Math.gamma_quantile(alpha/2,n,1.) #as recommended in https://twiki.cern.ch/twiki/bin/view/CMS/PoissonErrorBars
     h = Math.gamma_quantile_c(alpha/2,n+1,1) 
-    if (fInputFile.find("DATA")!=-1):
-      eyl.append( (n-l)/(dm) )
-      eyh.append( (h-n)/(dm) )
-    if (fInputFile.find("QCD")!=-1):
-      eyl.append(hMass_rebinned.GetBinError(i+1)/dm)
-      eyh.append(hMass_rebinned.GetBinError(i+1)/dm )
+    eyl.append( (n-l)/(dm) )
+    eyh.append( (h-n)/(dm) )
     #print "%f   %f    %f    %f    %f     %f" % (x[i],y[i],exl[i],exh[i],eyl[i],eyh[i])
   
   vx = array("f",x)
@@ -109,7 +129,9 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   dof = []
   fisher = []
   ConfidenceLevel = []
+  ConfidenceLevel2 = []
   fpdfs = []
+  histoCI = []
   
   #For alternate F-test inspired by Yongjie (not skipping empty bins)
   Altfisher = []
@@ -119,6 +141,13 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   dofALL = []
   
 # --------------------------------------- Do fits ---------------------------------------
+  print "######################################################################################################################################"
+  print "######################################################################################################################################"
+  print "######################################################################################################################################"
+  print "###################################################     START!!    ###################################################################"
+  print "######################################################################################################################################"
+  print "######################################################################################################################################"
+  print "######################################################################################################################################"
   f = 0
   FunctionTypes = [-2,0,1,2,3]
   for FunctionType in FunctionTypes:
@@ -131,7 +160,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
     nPar = nBins_fit - fitresult[1] - 1
     if not do2par:
       if FunctionType != -2:fits.append(M1Bkg)
-      if FunctionType != -2:residuals.append(hist_fit_residual_vsMass) #if skipping 2 paramter fit
+      if FunctionType != -2:residuals.append(hist_fit_residual_vsMass) #if skipping 2 paramter fit, dont plot!
     else:
       fits.append(M1Bkg)
       residuals.append(hist_fit_residual_vsMass)
@@ -141,19 +170,22 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
     rssALL.append(fitresult[7])
     chi2ALL.append(fitresult[6])
     dofALL.append(fitresult[5])
+    histoCI.append(fitresult[8])
     print "Calculated Chi2 / dof for f%d = %f / %d" % (FunctionType,fitresult[2],fitresult[1])
     if (f>0):
       result = FisherTest(rss[f-1],rss[f],dof[f-1],dof[f],nBins_fit)
       if (f>3):
-        result = FisherTest(rss[f-3],rss[f],dof[f-3],dof[f],nBins_fit) #now comparing alternate four paramter fit to 3 paramter fit
+        result = FisherTest(rss[1],rss[f],dof[1],dof[f],nBins_fit) #now comparing alternate four paramter fit to 3 paramter fit
       F = result[0]
       CL = result[1]
       fisher.append(F)
       ConfidenceLevel.append(CL)
+      CL2 = result[3]
+      ConfidenceLevel2.append(CL2)
       fpdfs.append(result[2])
-      Altresult = AltFisherTest(rssALL[f-1],rss[f],dofALL[f-1],dofALL[f],nBins_fit1) #alternative Fisher test using TMath.FDistI
+      Altresult = AltFisherTest(rss[f-1],rss[f],dof[f-1],dof[f],nBins_fit1) #alternative Fisher test using TMath.FDistI
       if (f>3):
-        Altresult = AltFisherTest(rssALL[f-3],rss[f],dofALL[f-3],dofALL[f],nBins_fit1)
+        Altresult = AltFisherTest(rssALL[1],rssALL[f],dofALL[1],dofALL[f],nBins_fit1)
       AltF = Altresult[0]
       AltCL = Altresult[1]
       Altfisher.append(AltF)
@@ -166,12 +198,12 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   print "FOR CATEGORY: %s" %fLabel
   print ""
   print ""
-  print "#############################################            ALTERNATIVE METHOD (from Yongjie)            #############################################"  
+  print "###################################       ALTERNATIVE METHOD (from Yongjie), not skipping empty bins   ########################################"  
   print ""
   print "Summary:"   
-  print "Residuals = "+str(rssALL)
-  print "$\chi^2$ = "+str(chi2ALL)
-  print "D.O.F ="+str(dofALL)
+  print "Residuals = "+str(rss)
+  print "$\chi^2$ = "+str(chi2)
+  print "D.O.F ="+str(dof)
   print "Fishers F = "+str(Altfisher)
   print "ConfidenceLevel = "+str(AltConfidenceLevel)  
   print "-----------------------------------------"
@@ -204,6 +236,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   print "D.O.F ="+str(dof)
   print "Fishers F = "+str(fisher)
   print "ConfidenceLevel = "+str(ConfidenceLevel)
+  print "Alternate CL (using TMath.FDistI) = "+str(ConfidenceLevel2)
   print "Functions = "+str(FunctionTypes)
   print "Nr. bins in fit = "+str(nBins_fit)
   print "-----------------------------------------"
@@ -230,13 +263,13 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   alpha = 0.1
   print  " F - test results using alternate method: " 
   print "-----------------------------------------"
-  if (AltConfidenceLevel[0]>alpha):
+  if (ConfidenceLevel[0]>alpha):
     print  "A two parameter fit is sufficient to describe these data" 
-  elif (AltConfidenceLevel[1]>alpha):
+  elif (ConfidenceLevel[1]>alpha):
     print  " A three parameter fit is sufficient to describe these data." 
-  elif (AltConfidenceLevel[2]>alpha):
+  elif (ConfidenceLevel[2]>alpha):
     print  " A four parameter fit appears adequate to describe these data." 
-  elif (AltConfidenceLevel[3]>alpha):
+  elif (ConfidenceLevel[3]>alpha):
     print  " The alternate fit is better than the 3 parameter default fit" 
   else:
     print  " A better fit is needed for these data. " 
@@ -252,8 +285,9 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
 
 # --------------------------------------- Make plots ---------------------------------------
     
-  # DrawFit(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile) #when final fit is decided, plots only one
-  FitComparisons(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof,do2par) #draw all fit functions with residuals
+  # DrawFit(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile) #when final fit is decided, plots only one fit
+  FitComparisons(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof,do2par,doSigmaBand,histoCI) #draw all fit functions with residuals
+  # doRooFit(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof,do2par) #DO NOT USE, IN DEVELOPEMENT
   
   del file
   
@@ -266,45 +300,52 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
   if( FunctionType==-2 ):    
       nPar=2
       BKGfit = TF1("BKGfit%i"%FunctionType," [0] / ( TMath::Power(x/13000,[1]) )",fFitXmin,fFitXmax)
-      BKGfit.SetParameter(0,1.59778e-08)
-      BKGfit.SetParameter(1,7.78922e+00)
+      # BKGfit.SetParameter(0,1.65834e-14   )
+    
+
 
   if( FunctionType==0 ):
     print "Fitting three parameter default function!"
     nPar=3
     BKGfit = TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)
-    BKGfit.SetParameter(0,4.98767e-07)
+
 
 
   elif( FunctionType==1 ):
     print "Fitting four parameter default function!"
     nPar=4
     BKGfit = TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )",fFitXmin,fFitXmax)
-    BKGfit.SetParameter(0,2.01354e-07)
-    BKGfit.SetParameter(1,0.224623)
-    # BKGfit.SetParameter(2,7.31499e+00)
-    # BKGfit.SetParameter(3,8.63532e-02)
-    
+    BKGfit.SetParameter(0,4.93638e-05)
+    BKGfit.SetParameter(1,9.3)
+    BKGfit.SetParameter(2,7.2)
+    BKGfit.SetParameter(3,0.4)
+    # BKGfit.SetParameter(4,3.1)
+    #
   elif( FunctionType==2 ):
     print "Fitting five parameter  function!"
     nPar=5
     # BKGfit =  TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)+[4]*TMath::Power(log(x/13000),2)) )",fFitXmin,fFitXmax)
     BKGfit =  TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1])*(1+[4]*x/13000) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )",fFitXmin,fFitXmax)
-    BKGfit.SetParameter(0,4.98767e-07)
+    BKGfit.SetParameter(0,4.93638e-05)
+    BKGfit.SetParameter(1,9.3)
+    BKGfit.SetParameter(2,7.2)
+    BKGfit.SetParameter(3,0.4)
+    BKGfit.SetParameter(4,3.1)
 
-    #
+    
   elif( FunctionType==3 ):
     print "Fitting four parameter alternate function!"
     nPar=4
     BKGfit =  TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000 + [3]*TMath::Power(x/13000,2),[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)
-    BKGfit.SetParameter(0,4.98767e-07)
+    BKGfit.SetParameter(0,4.93638e-05  ) #VVHP
+    BKGfit.SetParameter(1,7.45424e+00   )
 
     
   
   
   stopProgram=1;
   for loop in range (0,10):
-    r = hMassNEW.Fit("BKGfit%i"%FunctionType,"SR","",fFitXmin,fFitXmax)          
+    r = hMassNEW.Fit("BKGfit%i"%FunctionType,"ILSR","",fFitXmin,fFitXmax)          
     fitStatus = int(r)
     print "fit status : %d" % fitStatus
     if(fitStatus==0):
@@ -315,9 +356,10 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
   if(stopProgram==1):
     print "######################" 
     print"######################" 
-    print "ERROR : Fit failed!!!!" 
+    print "ERROR : Fit %i failed!!!!" %FunctionType
     print "######################" 
     print "######################"
+    sys.exit()
   
   NumberOfVarBins = 0
   NumberOfObservations_VarBin = 0
@@ -325,6 +367,25 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
   chi2_VarBin_ALL = 0.
   chi2_VarBin_notNorm = 0.
   chi2_VarBin_notNorm_ALL = 0.
+  
+  #Create a histogram to hold the confidence intervals
+  histoCI=TH1D("histoCI","", fNbins,xbins) 
+  # histoCI=TH1D()
+  histoCI.SetTitle("Fitted histogram with .95 conf. band")
+  (TVirtualFitter.GetFitter()).GetConfidenceIntervals(histoCI)
+  #Now the "hint" histogram has the fitted function values as the 
+  #bin contents and the confidence intervals as bin errors
+  histoCI.SetStats(kFALSE)
+  histoCI.SetFillColor(kRed+2)
+  histoCI.SetLineColor(kRed+2)
+  histoCI.SetFillStyle(3354)
+  
+  
+  # c1 = TCanvas("c1","VV mass fit",800,800)
+  # c1.cd()
+  # histoCI.Draw("e3")
+  # time.sleep(100)
+  
   
   
   
@@ -346,24 +407,19 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
        # if(err_tot==0):continue
        fit_residual = (data - fit) / err_tot
        err_fit_residual = 1
-       chi2_VarBin_notNorm_ALL += pow( (data - fit) , 2 )
+       chi2_VarBin_notNorm_ALL += pow( (data - fit) , 2 ) #For alternate method from Yongjie, not skipping emty bins
        chi2_VarBin_ALL += pow( (data - fit) , 2 ) / pow( err_tot , 2 )
        if (hMassNEW.GetBinContent(bin)>0):
          NumberOfObservations_VarBin+=1
          chi2_VarBin += pow( (data - fit) , 2 ) / pow( err_tot , 2 )	 
-         chi2_VarBin_notNorm += pow( (data - fit) , 2 ) 	 
+         chi2_VarBin_notNorm += pow( (data - fit) , 2 ) 	 #For dijet method, skipping emty bins
 
        hist_fit_residual_vsMass.SetBinContent(bin,fit_residual)
        hist_fit_residual_vsMass.SetBinError(bin,err_fit_residual)
   
-  ndf_VarBin = NumberOfObservations_VarBin - nPar -1
-
+  ndf_VarBin = NumberOfObservations_VarBin - nPar -1 #ndof
   
-  print "Chi2 Minuit = %f"%BKGfit.GetChisquare()
-  print "NDF Minuit  = %i"%BKGfit.GetNDF()
-
-  
-  return [chi2_VarBin_notNorm,ndf_VarBin,chi2_VarBin,BKGfit,hist_fit_residual_vsMass,nPar,chi2_VarBin_ALL,chi2_VarBin_notNorm_ALL]   
+  return [chi2_VarBin_notNorm,ndf_VarBin,chi2_VarBin,BKGfit,hist_fit_residual_vsMass,nPar,chi2_VarBin_ALL,chi2_VarBin_notNorm_ALL,histoCI]   
 
 def FisherTest(RSS_1,RSS_2,dof_1,dof_2,N):
   RSS1 = RSS_1
@@ -383,7 +439,8 @@ def FisherTest(RSS_1,RSS_2,dof_1,dof_2,N):
   F_dist.SetParameter(0, n2-n1)
   F_dist.SetParameter(1, N-n2)
   CL = 1 - F_distr.Integral(0.00000001,F)
-  return [F,CL,F_dist]
+  alternateCL =  1.-TMath.FDistI(F,n2-n1,N-n2)
+  return [F,CL,alternateCL,F_dist]
 
 def AltFisherTest(RSS_0,RSS_1,dof_0,dof_1,N):
   p1_10 = dof_1-dof_0;
@@ -513,13 +570,13 @@ def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin
   line2.DrawLine(p11_2.GetUxmin(), p11_2.GetUymax(), p11_2.GetUxmax(), p11_2.GetUymax())
   line2.DrawLine(p11_2.GetUxmax(), p11_2.GetUymin(), p11_2.GetUxmax(), p11_2.GetUymax())
 
-  # time.sleep(10)
+
   cname = fOutputFile+"_fit.pdf"
   c1.SaveAs(cname)
-
+  time.sleep(100)
   # del c1
 # ---------------------------------------------------------------------------------------------------------------------------    
-def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof,do2par):
+def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof,do2par,doSigmaBand,histoCI):
   W = 600
   H = 700
   H_ref = 700 
@@ -551,6 +608,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   #addInfo = TPaveText(0.1558691,0.30735043,0.3750171,0.4070085,"NDC")
   addInfo = TPaveText(0.2358691,0.04035043,0.5050171,0.1870085,"NDC")
   
+  addInfo.AddText("Pruned mass sideband")
   addInfo.AddText(fLabel)
   # addInfo.AddText("65 GeV < M_{P} < 105 GeV")
   # addInfo.AddText("|#eta| < 2.4, p_{T} > 200 GeV")
@@ -578,6 +636,8 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   g.SetMarkerStyle(20)
   g.GetXaxis().SetNdivisions(405)
   g.Draw("pe0 same")
+  if (doSigmaBand): histoCI[1].Draw("e3same")
+  g.Draw("pe0 same")
   
   if (do2par):
     colors = [kOrange,kRed,kBlue,kMagenta,kBlack,kGreen]
@@ -594,6 +654,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
     i+=1
 
   legend = TLegend(0.337351,0.7177579,0.5890289,0.9182374)
+  if (doSigmaBand): legend = TLegend(0.3692308,0.6115702,0.4871795,0.946281)
   legend.SetTextSize(0.038)
   legend.SetLineColor(0)
   legend.SetShadowColor(0)
@@ -603,7 +664,14 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   legend.SetFillStyle(0)
   legend.SetMargin(0.35)
   legend.AddEntry(g, "CMS data","lpe")
-  if (do2par): 
+  if (doSigmaBand and do2par): 
+    legend.AddEntry(M1Bkg[0], "Default fit, 2 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[0],dof[0]),"l")
+    legend.AddEntry(M1Bkg[1], "Default fit, 3 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[1],dof[1]),"l")
+    legend.AddEntry(histoCI[1], " #pm 1 #sigma (3 par. default fit)","f")
+    legend.AddEntry(M1Bkg[2], "Default fit, 4 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[2],dof[2]),"l")
+    legend.AddEntry(M1Bkg[3], "Default fit, 5 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[3],dof[3]),"l")
+    legend.AddEntry(M1Bkg[4], "Alternate fit, 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[4],dof[4]),"l")
+  elif (do2par and not doSigmaBand): 
     legend.AddEntry(M1Bkg[0], "Default fit, 2 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[0],dof[0]),"l")
     legend.AddEntry(M1Bkg[1], "Default fit, 3 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[1],dof[1]),"l")
     legend.AddEntry(M1Bkg[2], "Default fit, 4 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[2],dof[2]),"l")
@@ -658,10 +726,52 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   line2.DrawLine(p11_2.GetUxmax(), p11_2.GetUymin(), p11_2.GetUxmax(), p11_2.GetUymax())
   
   cname = fOutputFile+"_fitComp.pdf"
+  if (doSigmaBand): cname = fOutputFile+"_SigmaBand.pdf"
   c2.SaveAs(cname)
-  time.sleep(100)
+  cname = fOutputFile+"_fitComp.C"
+  if (doSigmaBand): cname = fOutputFile+"_SigmaBand.C"
+  c2.Print(cname,"cxx")
+  time.sleep(10)
 
   # del c2
+
+
+def doRooFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof,do2par):
+  
+  x = RooRealVar("M_{jj}","M_{jj}",fFitXmin,fFitXmax)   
+  x.setUnit("GeV")
+  
+  p1mod = RooRealVar("p1mod","",10., -100.0, 500.0)
+  p2mod = RooRealVar("p2mod","",5.,0.0, 100.0)
+  p3mod = RooRealVar("p3mod","",0.,-10.0, 10.0)
+  p3mod.setConstant(true)
+  
+  
+  roo_histo = RooDataHist("name","title",RooArgList(x),hMassNEW)
+  
+  
+  bkg_fitTmp = RooGenericPdf("BKGfit", "pow(1-(@0/13000), @1)/pow(@0/13000, @2+@3*log(@0/13000))", RooArgList(x, p1mod, p2mod, p3mod))
+  
+  
+  c1 = RooRealVar("constant1","exponential constant 1",-1,0)
+  exp1 = RooExponential("expo1","exponential PDF1",x,c1)
+  result = exp1.fitTo(roo_histo,RooFit.Save(),RooFit.SumW2Error(kTRUE))
+  
+  c = TCanvas()
+  c.SetFillColor(0)
+
+  xframe = x.frame() 
+  roo_histo.plotOn(xframe, RooFit.DataError(RooAbsData.SumW2)) 
+  bkg_fitTmp.plotOn(xframe, RooFit.DataError(RooAbsData.SumW2) ) 
+  xframe.SetMinimum(0.00005)
+  xframe.SetMaximum(hMassNEW.GetMaximum()*6.0)
+  c.SetLogy()
+  xframe.Draw()
+  time.sleep(100)
+
+  
+  
+  
   
 # ---------------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
@@ -671,30 +781,21 @@ if __name__ == '__main__':
              1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
              4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
              
-  do2par = True 
-  channels = ["VV","WW","WZ","ZZ"]
-  channels = ["ZZ"]
+  do2par = True #to add 2 paramter fit
+  channels = ["VV","WW","ZZ"]
+  channels = ["VV"]
   for ch in channels:
     if ch.find("q") != -1: 
       fitmax = 5058
     else: 
-      fitmax = 3019
-    
-    # performFit("input/QCD.root",
-    #          "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, HP"%ch,
-    #          "%s_HP_QCD"%ch,do2par)
-    performFit("input/QCD.root",
-               "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, LP"%ch,
-               "%s_LP_QCD"%ch,do2par)
-    # performFit("input/QCD.root",
-    #            "DijetMassNoPuri%s"%ch, len(massBins)-1, massBins, 1001, fitmax, "%s category, NP"%ch,
-    #            "plots/%s_NP_QCD"%ch,do2par)  
+      fitmax = 4509
+
+    performFit("input/DATA_SB.root",
+      "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, HP"%ch,
+      "fit-comparisons/DATA2_SB_%sHP"%ch,do2par,doSigmaBand=True)
     # performFit("input/DATA_SB.root",
-    #          "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, HP"%ch,
-    #          "plots/%s_HP_1263invpb.pdf"%ch,do2par)
-#     performFit("input/DATA.root",
-#                "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, LP"%ch,
-#                "plots/%s_LP_1263invpb.pdf"%ch,do2par)
+    #   "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, LP"%ch,
+    #   "fit-comparisons/DATA2_SB_%sLP"%ch,do2par,doSigmaBand=True)
     # performFit("input/DATA_SB.root",
-    #            "DijetMassNoPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, NP"%ch,
-    #            "plots/%s_NP_1263invpb_SB.pdf"%ch,do2par)
+    #   "DijetMassNoPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, NP"%ch,
+    #   "fit-comparisons/DATA2_SB_%sNP"%ch,do2par,doSigmaBand=True)
