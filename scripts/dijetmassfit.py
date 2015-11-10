@@ -16,6 +16,9 @@ from ROOT import TVirtualFitter
 
 #Remember to have a version of CMS_lumi.C/h and tdrstyle.C/py in your folder!!
 
+
+
+
 tdrstyle.setTDRStyle()
 gStyle.SetOptFit(1) 
 CMS_lumi.lumi_13TeV = "1.26 fb^{-1}"
@@ -65,16 +68,16 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
     bincontent = hMass_rebinned.GetBinContent(i)
     binwidth = hMass_rebinned.GetBinWidth(i)
     hMassNEW.SetBinContent(i,bincontent/(binwidth))
-    # if(bincontent==0): l = 0
-    # else: l = Math.gamma_quantile(alpha/2,bincontent,1.) #as recommended in https://twiki.cern.ch/twiki/bin/view/CMS/PoissonErrorBars
-    # h = Math.gamma_quantile_c(alpha/2,bincontent+1,1)
-    # eDATA_L = (bincontent-l)/(binwidth)
-    # eDATA_H = (h-bincontent)/(binwidth)
-    # if(eDATA_L > eDATA_H):
-    #   hMassNEW.SetBinError(i,eDATA_L)
-    # elif(eDATA_H > eDATA_L):
-    #   hMassNEW.SetBinError(i,eDATA_H)
-  hMassNEW.SetBinErrorOption(TH1.kPoisson)
+    if(bincontent==0): l = 0
+    else: l = Math.gamma_quantile(alpha/2,bincontent,1.) #as recommended in https://twiki.cern.ch/twiki/bin/view/CMS/PoissonErrorBars
+    h = Math.gamma_quantile_c(alpha/2,bincontent+1,1)
+    eDATA_L = (bincontent-l)/(binwidth)
+    eDATA_H = (h-bincontent)/(binwidth)
+    if(eDATA_L > eDATA_H):
+      hMassNEW.SetBinError(i,eDATA_L)
+    elif(eDATA_H > eDATA_L):
+      hMassNEW.SetBinError(i,eDATA_H)
+  # hMassNEW.SetBinErrorOption(TH1.kPoisson)
 
 
 # ---------------------------- Create graph from data with Poisson error bars (for data) ----------------------------    
@@ -180,9 +183,9 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
       CL = result[1]
       fisher.append(F)
       ConfidenceLevel.append(CL)
-      CL2 = result[3]
+      CL2 = result[2]
       ConfidenceLevel2.append(CL2)
-      fpdfs.append(result[2])
+      fpdfs.append(result[3])
       Altresult = AltFisherTest(rss[f-1],rss[f],dof[f-1],dof[f],nBins_fit1) #alternative Fisher test using TMath.FDistI
       if (f>3):
         Altresult = AltFisherTest(rssALL[1],rssALL[f],dofALL[1],dofALL[f],nBins_fit1)
@@ -345,7 +348,7 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
   
   stopProgram=1;
   for loop in range (0,10):
-    r = hMassNEW.Fit("BKGfit%i"%FunctionType,"ILSR","",fFitXmin,fFitXmax)          
+    r = hMassNEW.Fit("BKGfit%i"%FunctionType,"ISR","",fFitXmin,fFitXmax)          
     fitStatus = int(r)
     print "fit status : %d" % fitStatus
     if(fitStatus==0):
@@ -369,22 +372,32 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
   chi2_VarBin_notNorm_ALL = 0.
   
   #Create a histogram to hold the confidence intervals
-  histoCI=TH1D("histoCI","", fNbins,xbins) 
-  # histoCI=TH1D()
-  histoCI.SetTitle("Fitted histogram with .95 conf. band")
+  # histoCI=TH1D("histoCI","", fNbins,xbins)
+  # # histoCI=TH1D()
+  # histoCI.SetTitle("Fitted histogram with .95 conf. band")
+  # (TVirtualFitter.GetFitter()).GetConfidenceIntervals(histoCI)
+  # #Now the "hint" histogram has the fitted function values as the
+  # #bin contents and the confidence intervals as bin errors
+  # histoCI.SetStats(kFALSE)
+  # histoCI.SetFillColor(kRed+2)
+  # histoCI.SetLineColor(kRed+2)
+  # histoCI.SetFillStyle(3354)
+
+
+  histoCI = TGraphErrors(fNbins)
+  histoCI.SetTitle("Fitted line with .95 conf. band")
+  for i in range (0, fNbins):
+    histoCI.SetPoint(i, g.GetX()[i], 0)
+  #Compute the confidence intervals at the x points of the created graph
   (TVirtualFitter.GetFitter()).GetConfidenceIntervals(histoCI)
-  #Now the "hint" histogram has the fitted function values as the 
-  #bin contents and the confidence intervals as bin errors
-  histoCI.SetStats(kFALSE)
-  histoCI.SetFillColor(kRed+2)
-  histoCI.SetLineColor(kRed+2)
-  histoCI.SetFillStyle(3354)
+  # //Now the "grint" graph contains function values as its y-coordinates
+ #  //and confidence intervals as the errors on these coordinates
+ #  //Draw the graph, the function and the confidence intervals
+  histoCI.SetLineColor(0)
+  histoCI.SetLineWidth(-802)
+  histoCI.SetFillStyle(3002)
+  histoCI.SetFillColor(2)  
   
-  
-  # c1 = TCanvas("c1","VV mass fit",800,800)
-  # c1.cd()
-  # histoCI.Draw("e3")
-  # time.sleep(100)
   
   
   
@@ -418,7 +431,7 @@ def doFit(FunctionType,hMassNEW,hMass,g,fFitXmin,fFitXmax,fNbins,xbins):
        hist_fit_residual_vsMass.SetBinError(bin,err_fit_residual)
   
   ndf_VarBin = NumberOfObservations_VarBin - nPar -1 #ndof
-  
+    
   return [chi2_VarBin_notNorm,ndf_VarBin,chi2_VarBin,BKGfit,hist_fit_residual_vsMass,nPar,chi2_VarBin_ALL,chi2_VarBin_notNorm_ALL,histoCI]   
 
 def FisherTest(RSS_1,RSS_2,dof_1,dof_2,N):
@@ -636,7 +649,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   g.SetMarkerStyle(20)
   g.GetXaxis().SetNdivisions(405)
   g.Draw("pe0 same")
-  if (doSigmaBand): histoCI[1].Draw("e3same")
+  if (doSigmaBand): histoCI[1].Draw("same3")
   g.Draw("pe0 same")
   
   if (do2par):
@@ -731,7 +744,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   cname = fOutputFile+"_fitComp.C"
   if (doSigmaBand): cname = fOutputFile+"_SigmaBand.C"
   c2.Print(cname,"cxx")
-  time.sleep(10)
+  time.sleep(2)
 
   # del c2
 
@@ -776,6 +789,10 @@ def doRooFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmi
 # ---------------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
   
+  orig_stdout = sys.stdout
+  f = file("Sideband-fits-Ftest.txt", 'w')
+  sys.stdout = f
+  
 
   massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058,
              1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
@@ -783,7 +800,7 @@ if __name__ == '__main__':
              
   do2par = True #to add 2 paramter fit
   channels = ["VV","WW","ZZ"]
-  channels = ["VV"]
+  # channels = ["VV"]
   for ch in channels:
     if ch.find("q") != -1: 
       fitmax = 5058
@@ -791,11 +808,15 @@ if __name__ == '__main__':
       fitmax = 4509
 
     performFit("input/DATA_SB.root",
-      "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, HP"%ch,
+      "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1000, 3416, "%s category, HP"%ch,
       "fit-comparisons/DATA2_SB_%sHP"%ch,do2par,doSigmaBand=True)
-    # performFit("input/DATA_SB.root",
-    #   "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, LP"%ch,
-    #   "fit-comparisons/DATA2_SB_%sLP"%ch,do2par,doSigmaBand=True)
+    performFit("input/DATA_SB.root",
+      "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1000, 3704, "%s category, LP"%ch,
+      "fit-comparisons/DATA2_SB_%sLP"%ch,do2par,doSigmaBand=True)
     # performFit("input/DATA_SB.root",
     #   "DijetMassNoPuri%s"%ch, len(massBins)-1, massBins, 1000, fitmax, "%s category, NP"%ch,
     #   "fit-comparisons/DATA2_SB_%sNP"%ch,do2par,doSigmaBand=True)
+  sys.stdout = orig_stdout  
+
+ 
+ 
