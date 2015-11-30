@@ -114,14 +114,13 @@
 using namespace RooFit;
 using namespace RooStats ;
 
-
-static const Int_t NCAT = 21; //for VV and qV analysis together this should be 6
+static const Int_t NCAT = 12; //for VV and qV analysis together this should be 6--> Now 21!
 Double_t MMIN = 1000;
-Double_t MMAX = 7000;
+Double_t MMAX = 2500;
 std::string filePOSTfix="";
-double signalScaler=1263.890*0.01/10000.; // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
-double scaleFactorHP=0.860; // tau21 and jet mass scale factors data/MC
-double scaleFactorLP=1.385; // tau21 and jet mass scale factors data/MC
+double signalScaler=2460.00*1.00/10000.; // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
+double scaleFactorHP=0.992; // tau21 and jet mass scale factors data/MC
+double scaleFactorLP=1.023; // tau21 and jet mass scale factors data/MC
 double scaleFactorHPherwig=1.0; // tau21 and jet mass scale factors Herwig/Pythia
 double scaleFactorLPherwig=1.3; // tau21 and jet mass scale factors Herwig/Pythia
 
@@ -147,6 +146,7 @@ RooArgSet* defineVariables()
 //   categories->defineType("highPureqV",3);
 //   categories->defineType("mediumPureqV",4);
 //   categories->defineType("lowPureqV",5);
+  
   categories->defineType("highPureVV",0);
   categories->defineType("lowPureVV",1);
   categories->defineType("noPureVV",2);
@@ -286,19 +286,39 @@ void runfits(const Float_t mass=2000, int signalsample = 1, Bool_t dobands = fal
     MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 0, signalname, signalsample, cat_names, mass);
     if(NCAT>1)
     MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 1, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 2, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 3, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 4, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 5, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 6, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 7, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 8, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 9, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 10, signalname, signalsample, cat_names, mass);
+    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 11, signalname, signalsample, cat_names, mass);
+
   }
   if((signalsample==3)||(signalsample==4))
   {
-    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 3, signalname, signalsample, cat_names, mass);
     if(NCAT>3)
-    MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 4, signalname, signalsample, cat_names, mass);
+      
+      MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 12, signalname, signalsample, cat_names, mass);
+      MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 13, signalname, signalsample, cat_names, mass);
+      MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 14, signalname, signalsample, cat_names, mass);
+      MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 15, signalname, signalsample, cat_names, mass);
+      MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 16, signalname, signalsample, cat_names, mass);
+      MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 17, signalname, signalsample, cat_names, mass);
+      MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 18, signalname, signalsample, cat_names, mass);
+      MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 19, signalname, signalsample, cat_names, mass);
+      MakeDataCard_1Channel(w, fileBaseName, fileBkgName, 20, signalname, signalsample, cat_names, mass);
   }
 
-  cout << "MAKE PLOTS" << endl;
-  
-// Make plots for data and fit results
-  MakePlots(w, mass, fitresults, signalname,cat_names);
-
+//   cout << "MAKE PLOTS" << endl;
+//
+// // Make plots for data and fit results
+//   MakePlots(w, mass, fitresults, signalname,cat_names);
+     
+     cout << "DONE!" << endl;
 
 
     return;
@@ -560,7 +580,10 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
 
   for (int c = 0; c < ncat; ++c) {
     data[c]   = (RooDataSet*) w->data(TString::Format("Data_%s",cat_names.at(c).c_str()));
-                
+
+    ((RooRealVar*) w->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->setConstant(true);
+    cout << "---------------- Parameter 1 set to const" << endl;
+
     ((RooRealVar*) w->var(TString::Format("bkg_fit_slope3_%s",cat_names.at(c).c_str())))->setConstant(true);
     cout << "---------------- Parameter 3 set to const" << endl;
 
@@ -586,6 +609,7 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
     //w->import(bkg_fitTmp);
 
     // FOR COMBINE IN CMSSW_7_1
+    // RooAbsPdf* bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "pow(1, @1)/pow(@0, @2+@3*log(@0))", RooArgList(*x, *p1mod, *p2mod, *p3mod));
     RooAbsPdf* bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "pow(1-@0, @1)/pow(@0, @2+@3*log(@0))", RooArgList(*x, *p1mod, *p2mod, *p3mod));
     // alternative 3-parameter function
 //    //RooAbsPdf* bkg_fitTmp1 = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "exp(-(@0-@1)/(1+@2*(@0-@1)+@3*(@0-@1)*(@0-@1)))", RooArgList(*x, *p1mod, *p2mod, *p3mod));
@@ -706,13 +730,13 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
   RooDataSet* dataAll         = (RooDataSet*) w->data("Data");
   RooDataSet* signalAll       = (RooDataSet*) w->data("Sig");
 
-  RooDataSet* data[9];  
-  RooDataSet* signal[9];
-  RooAbsPdf*  jjGaussSig[9];
-  RooAbsPdf*  jjCBSig[9];
-  RooAbsPdf*  jjSig[9];
-  RooAbsPdf*  bkg_fit[9];  
-//  RooAbsPdf*  bkg_fit2[9];  
+  RooDataSet* data[21];  
+  RooDataSet* signal[21];
+  RooAbsPdf*  jjGaussSig[21];
+  RooAbsPdf*  jjCBSig[21];
+  RooAbsPdf*  jjSig[21];
+  RooAbsPdf*  bkg_fit[21];  
+//  RooAbsPdf*  bkg_fit2[21];  
 
   for (int c = 0; c < ncat; ++c) {
     data[c]         = (RooDataSet*) w->data(TString::Format("Data_%s",cat_names.at(c).c_str()));
@@ -782,7 +806,7 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
 //  TCanvas* c2 = new TCanvas("c2","jj Categories",0,0,1000,1000);
 
 //  c2->Divide(3,3);
-  RooPlot* plotjj[9];
+  RooPlot* plotjj[21];
   for (int c = 0; c < ncat; ++c) {
     plotjj[c] = mgg->frame(Range(minMassFit,maxMassFit),Bins(nBinsMass));
     signal[c]->plotOn(plotjj[c],LineColor(kWhite),MarkerColor(kWhite),PrintEvalErrors(-1));    
@@ -845,16 +869,16 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
 // Plot Background Categories 
 //****************************//
 
-  TCanvas* c4 = new TCanvas("c4","jj Background Categories",0,0,1000,1000);
-  c4->Divide(2,3);
+  TCanvas* c4 = new TCanvas("c4","jj Background Categories",0,0,2000,2000);
+  c4->Divide(3,7);
 
-  RooPlot* plotbkg_fit[9];
+  RooPlot* plotbkg_fit[21];
   for (int c = 0; c < ncat; ++c) {
     plotbkg_fit[c] = mgg->frame(Range(minMassFit,maxMassFit),Bins(nBinsMass));
     data[c]->plotOn(plotbkg_fit[c],LineColor(kWhite),MarkerColor(kWhite));    
     bkg_fit[c]->plotOn(plotbkg_fit[c],LineColor(kBlue),Range("fitrange"),NormRange("fitrange"),PrintEvalErrors(-1)); 
     data[c]->plotOn(plotbkg_fit[c]);    
-    bkg_fit[c]->paramOn(plotbkg_fit[c], ShowConstants(true), Layout(0.4,0.9,0.9), Format("NEU",AutoPrecision(4)));
+    bkg_fit[c]->paramOn(plotbkg_fit[c],Layout(0.4,0.9,0.9), Format("NEU",AutoPrecision(4)));
     plotbkg_fit[c]->getAttText()->SetTextSize(0.03);
     c4->cd(c+1);
     plotbkg_fit[c]->Draw();  
@@ -869,10 +893,10 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
 
 
 
-  TCanvas* c5 = new TCanvas("c5","jj Background Categories",0,0,1000,1000);
-  c5->Divide(2,3);
+  TCanvas* c5 = new TCanvas("c5","jj Background Categories",0,0,2000,2000);
+  c5->Divide(3,7);
 
-  RooPlot* plotbkg_fit[9];
+  RooPlot* plotbkg_fit[21];
   for (int c = 0; c < ncat; ++c) {
     plotbkg_fit[c] = mgg->frame(nBinsMass);
     data[c]->plotOn(plotbkg_fit[c],LineColor(kWhite),MarkerColor(kWhite));    
@@ -1194,23 +1218,25 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   ofstream outFile(filename);
 
   double scaleFactor=signalScaler;
-  // Herwig HP+HP
-  if(((signalsample==0)||(signalsample==1))&&(iChan==0))
-      scaleFactor*=(scaleFactorHP*scaleFactorHP/scaleFactorHPherwig/scaleFactorHPherwig);
-  // Herwig HP+LP
-  if(((signalsample==0)||(signalsample==1))&&(iChan==1))
-      scaleFactor*=(scaleFactorHP*scaleFactorLP/scaleFactorHPherwig/scaleFactorLPherwig);
+  // // Herwig HP+HP
+  // if(((signalsample==0)||(signalsample==1))&&(iChan==0))
+  //     scaleFactor*=(scaleFactorHP*scaleFactorHP/scaleFactorHPherwig/scaleFactorHPherwig);
+  // // Herwig HP+LP
+  // if(((signalsample==0)||(signalsample==1))&&(iChan==1))
+  //     scaleFactor*=(scaleFactorHP*scaleFactorLP/scaleFactorHPherwig/scaleFactorLPherwig);
   // Pythia HP+HP
-  if(((signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==0))
+  if(((signalsample==0)||(signalsample==1)||(signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==0 ||iChan==3 ||iChan==6 ||iChan==9))
       scaleFactor*=(scaleFactorHP*scaleFactorHP);
   // Pythia HP+LP
-  if(((signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==1))
+  if(((signalsample==0)||(signalsample==1)||(signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==1||iChan==4||iChan==7||iChan==10))
       scaleFactor*=(scaleFactorHP*scaleFactorLP);
+  
+  //SINGLE Q
   // Pythia HP
-  if(((signalsample==3)||(signalsample==4))&&(iChan==3))
+  if(((signalsample==3)||(signalsample==4))&&(iChan==12 ||iChan==15 ||iChan==18 ))
       scaleFactor*=(scaleFactorHP);
   // Pythia LP
-  if(((signalsample==3)||(signalsample==4))&&(iChan==4))
+  if(((signalsample==3)||(signalsample==4))&&(iChan==13||iChan==16||iChan==19))
       scaleFactor*=(scaleFactorLP);
 
   outFile << "# Fully Hadronic VV analysis" << endl;
@@ -1258,7 +1284,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
-  outFile << "lumi_13TeV       lnN  1.026  1.026  1.026    - " << endl;
+  outFile << "lumi_13TeV       lnN  1.05  1.05  1.05    - " << endl;
   if((iChan==0)||(iChan==3)){
   outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.15  1.15  1.15      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
@@ -1317,8 +1343,8 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  0.58  0.58      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
-  outFile << "CMS_scale_j_13TeV         lnN  1.120  1.120      - # jet energy scale" << endl;
-  outFile << "CMS_res_j_13TeV         lnN  1.040  1.040      - # jet energy resolution" << endl;
+  outFile << "CMS_scale_j_13TeV         lnN  1.02  1.02      - # jet energy scale" << endl;
+  outFile << "CMS_res_j_13TeV         lnN  1.10  1.10      - # jet energy resolution" << endl;
   outFile << "CMS_pu_13TeV         lnN  1.030  1.030      - # pileup" << endl;
   } 
   outFile << "# Parametric shape uncertainties, entered by hand." << endl;
