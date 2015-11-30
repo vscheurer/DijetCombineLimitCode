@@ -1852,7 +1852,7 @@ BulkWW_jj_CMS_jj_qZNP      = AddPdf(jjGaussSigBulkWW_CMS_jj_qZNP, jjCBSigBulkWW_
 
 
 
-
+##For 3 parameter fit
 # bkg_fit_slope[1.0,0, 1];
 # bkg_fit_slope1[7,0.0, 100.0];
 # bkg_fit_slope2[5,0.0, 100.0];
