@@ -6,7 +6,7 @@ double mgg, mjj,evWeight, mtot, normWeight;
  evWeight = 1.0;
  normWeight = 1;
 
- for (int iSample = 0; iSample < 2; iSample++){
+ for (int iSample = 0; iSample < 1; iSample++){
    
    string inFile("WprimeToWZ");
    if (iSample == 1) inFile = string("RS1WW");

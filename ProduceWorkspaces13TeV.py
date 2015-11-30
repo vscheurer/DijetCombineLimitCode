@@ -1,7 +1,8 @@
 import os
 
-masses =[m*100 for m in range(10,60+1)]
-masses = [1000]
+masses =[m*100 for m in range(10,40+1)]
+masses =[1600,1700,1800,1900,2000,2100,2200]
+masses =[1400]
 
 for mass in masses:
   outputname = "submit_Wprime_"+str(mass)+".src"

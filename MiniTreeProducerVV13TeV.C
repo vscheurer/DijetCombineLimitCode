@@ -5,10 +5,10 @@
  int categories;
 
  evWeight = 1.0;
- normWeight = 1;
+ normWeight = 1.;
 
 
- string sInFile = "input/DATA.root";
+ string sInFile = "/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/input/Pseudodata.root";
  cout << sInFile.c_str() << endl;
  TFile file0(sInFile.c_str(), "read");
  
@@ -58,10 +58,11 @@
    if (iCat == 18) hMass = (TH1D*) file0.Get("DijetMassHighPuriqZ"); // qZ high purity
    if (iCat == 19) hMass = (TH1D*) file0.Get("DijetMassLowPuriqZ"); // qZ low purity
    if (iCat == 20) hMass = (TH1D*) file0.Get("DijetMassNoPuriqZ"); // qZ low purity
-
+   std::cout<<"Category = " << iCat << std::endl;
+   std::cout<<"Histogram = " << hMass.GetName() << std::endl;
    TAxis* Axis =   hMass->GetXaxis();
    for (int i = 1 ; i < hMass->GetNbinsX()+1; i++){
-     int N = abs(hMass->GetBinContent(i));
+     double N = abs(hMass->GetBinContent(i));
  
      if (i%10 == 0) cout << "i = " << i << "N = " << N << " binCenter = " << hMass->GetBinCenter(i) << endl;
      
@@ -70,6 +71,7 @@
      normWeight = N;
      categories = iCat;
      if (N > 1e-10) TCVARS->Fill();
+     // if (N > 0) TCVARS->Fill();
    }
  }
 
