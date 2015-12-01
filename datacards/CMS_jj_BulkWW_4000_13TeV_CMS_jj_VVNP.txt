@@ -9,12 +9,12 @@ shapes BulkWW_jj CMS_jj_VVNP ../workspaces/CMS_jj_BulkWW_4000_13TeV.root w_all:B
 shapes BulkZZ_jj CMS_jj_VVNP ../workspaces/CMS_jj_BulkZZ_4000_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_VVNP
 ---------------
 bin          CMS_jj_VVNP
-observation   25756
+observation   25757
 ------------------------------
 bin                      CMS_jj_VVNP       CMS_jj_VVNP      CMS_jj_VVNP      
 process                 BulkWW_jj BulkZZ_jj     bkg_fit_jj     
 process                 -1 0        1          
-rate                        1.63049  0  1
+rate                        5.61815  0  1
 --------------------------------
 # signal scaled by 0.000246 to a cross section of 10/fb and also scale factor of 1 are applied.
 lumi_13TeV       lnN  1.050  1.050    - 

@@ -15,7 +15,7 @@ observation   2085
 bin                      CMS_jj_WWLP       CMS_jj_WWLP      CMS_jj_WWLP      CMS_jj_WWLP      
 process                 RS1WW_jj RS1ZZ_jj WZ_jj     bkg_fit_jj     
 process                 -2 -1 0        1          
-rate                        0  0  0.657814  1
+rate                        0  0  0.669298  1
 --------------------------------
 # signal scaled by 0.000246 to a cross section of 10/fb and also scale factor of 1.01482 are applied.
 lumi_13TeV       lnN  1.05  1.05  1.05    - 
