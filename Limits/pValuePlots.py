@@ -3,6 +3,7 @@ from ROOT import *
 import os
 import sys
 from array import *
+import time
 
 # define the plot canvas
 def setStyle(c,histo):
@@ -76,13 +77,42 @@ def PlotPValue(filePVALNAME, label):
         text[i-1].SetTextColor(2)
         text[i-1].Draw("SAME")
 
-    banner = TLatex(0.27,0.93,"CMS Preliminary, 19.7 fb^{-1}, #sqrt{s} = 8TeV");
+    banner = TLatex(0.27,0.91,"CMS Preliminary, 2.4 fb^{-1}, #sqrt{s} = 13 TeV");
     banner.SetNDC()
     banner.SetTextSize(0.04)
-    banner.Draw();  
-
+    banner.Draw(); 
+    
+    addInfo = rt.TPaveText(0.1644295,0.2185315,0.4328859,0.3426573,"NDC")
+    # if(label.find("BulkWW")!=-1):addInfo.AddText("G_{Bulk}#rightarrowWW")
+#     if(label.find("BulkZZ")!=-1):addInfo.AddText("G_{Bulk}#rightarrowZZ")
+#     if(label.find("WZin")!=-1):addInfo.AddText("W'#rightarrowWZ")
+    if(label.find("WW_high_purity")!=-1):addInfo.AddText("WW category")
+    if(label.find("WZ_high_purity")!=-1):addInfo.AddText("WZ category")
+    if(label.find("ZZ_high_purity")!=-1):addInfo.AddText("ZZ category")
+    if(label.find("VVnew_high_purity")!=-1):addInfo.AddText("WW+WZ+ZZ combined")
+    if(label.find("VVold_high_purity")!=-1):addInfo.AddText("VV category")
+    if(label.find("WW_low_purity")!=-1):addInfo.AddText("WW category")
+    if(label.find("WZ_low_purity")!=-1):addInfo.AddText("WZ category")
+    if(label.find("ZZ_low_purity")!=-1):addInfo.AddText("ZZ category")
+    if(label.find("VVnew_low_purity")!=-1):addInfo.AddText("WW+WZ+ZZ combined")
+    if(label.find("VVold_low_purity")!=-1):addInfo.AddText("VV category")
+    if(label.find("_combined_old")!=-1):addInfo.AddText("VV category")
+    if(label.find("_combined_new")!=-1):addInfo.AddText("WW+WZ+ZZ categories")
+    if(label.find("low_purity")!=-1):addInfo.AddText("LP")
+    if(label.find("high_purity")!=-1):addInfo.AddText("HP")
+    
+    addInfo.SetFillColor(0)
+    addInfo.SetLineColor(0)
+    addInfo.SetFillStyle(0)
+    addInfo.SetBorderSize(0)
+    addInfo.SetTextFont(42)
+    addInfo.SetTextSize(0.040)
+    addInfo.SetTextAlign(12)
+    addInfo.Draw("same") 
+    
     c1.Update()
-    c1.SaveAs("pvalue_%s.pdf" %label)
+    c1.SaveAs("silverjson/pvalue/pvalue_%s.pdf" %label)
+    # time.sleep(10)
 
 def PlotMu(muFILENAME, label):
     
@@ -141,26 +171,59 @@ def PlotMu(muFILENAME, label):
     l.SetLineColor(2)
     l.Draw("same")
 
+    PlotPValue(combinedplots_old,chan+"_combined_old")
+    PlotPValue(combinedplots_new,chan+"_combined_new")
+    
+
     c1.Update()
     c1.SaveAs("mu_%s.pdf" %label)
+    time.sleep(100)
 
 if __name__ == '__main__':
 
   channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
+  channels=["WZ","BulkWW"]
 
   for chan in channels:
+      
     print "chan =",chan
     if "q" in chan:
        cat="qV"
     elif "Bulk" in chan:
-       cat="VV"
+       cat="WW"
     else:
        cat="VV"
+       
+    WWHPplots="CMS_jj_"+chan+"_13TeV_CMS_jj_WWHP_pvalue.txt"
+    WWLPplots="CMS_jj_"+chan+"_13TeV_CMS_jj_WWLP_pvalue.txt"
+    
+    WZHPplots="CMS_jj_"+chan+"_13TeV_CMS_jj_WZHP_pvalue.txt"
+    WZLPplots="CMS_jj_"+chan+"_13TeV_CMS_jj_WZLP_pvalue.txt"
+    
+    ZZHPplots="CMS_jj_"+chan+"_13TeV_CMS_jj_ZZHP_pvalue.txt"
+    ZZLPplots="CMS_jj_"+chan+"_13TeV_CMS_jj_ZZLP_pvalue.txt"
+    
+    combinedplots_old="CMS_jj_"+chan+"_13TeV_CMS_jj_VV_pvalue.txt"
+    combinedplots_new="CMS_jj_"+chan+"_13TeV_CMS_jj_VVnew_pvalue.txt"
+    
+    HPnewplots="CMS_jj_"+chan+"_13TeV_CMS_jj_VVHPnew_pvalue.txt"
+    # HPoldplots="CMS_jj_"+chan+"_13TeV_CMS_jj_VVHP_pvalue.txt"
+    LPnewplots="CMS_jj_"+chan+"_13TeV_CMS_jj_VVLPnew_pvalue.txt"
+    # LPoldplots="CMS_jj_"+chan+"_13TeV_CMS_jj_VVLP_pvalue.txt"
 
-    HPplots="CMS_jj_"+chan+"_8TeV_CMS_jj_"+cat+"HP_pvalue.txt"
-    LPplots="CMS_jj_"+chan+"_8TeV_CMS_jj_"+cat+"LP_pvalue.txt"
-    combinedplots="CMS_jj_"+chan+"_8TeV_CMS_jj_"+cat+"_pvalue.txt"
+    PlotPValue(WWHPplots,chan+"inWW_high_purity")
+    PlotPValue(WWLPplots,chan+"inWW_low_purity")
+    
+    PlotPValue(WZHPplots,chan+"inWZ_high_purity")
+    PlotPValue(WZLPplots,chan+"inWZ_low_purity")
+    
+    PlotPValue(ZZHPplots,chan+"inZZ_high_purity")
+    PlotPValue(ZZLPplots,chan+"inZZ_low_purity")
+    
+    PlotPValue(HPnewplots,chan+"inVVnew_high_purity")
+    PlotPValue(LPnewplots,chan+"inVVnew_low_purity")
+    # PlotPValue(HPoldplots,chan+"inVVold_high_purity")
+    # PlotPValue(LPoldplots,chan+"inVVold_low_purity")
 
-    PlotPValue(HPplots,chan+"_high_purity")
-    PlotPValue(LPplots,chan+"_low_purity")
-    PlotPValue(combinedplots,chan+"_combined")
+    PlotPValue(combinedplots_old,chan+"in_combined_old")
+    PlotPValue(combinedplots_new,chan+"in_combined_new")

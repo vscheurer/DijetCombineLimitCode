@@ -1,17 +1,18 @@
 {
 
-double mgg, mjj,evWeight, mtot, normWeight;
+
+  double mgg, mjj,evWeight, mtot, normWeight;
  int categories;
 
  evWeight = 1.0;
  normWeight = 1;
 
- for (int iSample = 0; iSample < 1; iSample++){
+ for (int iSample = 6; iSample < 7; iSample++){
    
-   string inFile("WprimeToWZ");
+   string inFile("Wprime");
    if (iSample == 1) inFile = string("RS1WW");
-   if (iSample == 2) inFile = string("RS1ZZ");
-   // if (iSample == 2) inFile = string("RS1WW"); // Fake ZZ signal
+   //if (iSample == 2) inFile = string("RS1ZZ");
+   if (iSample == 2) inFile = string("RS1WW"); // Fake ZZ signal
    if (iSample == 3) inFile = string("QstarQW");
    if (iSample == 4) inFile = string("QstarQZ");
    if (iSample == 5) inFile = string("BulkWW");
@@ -47,7 +48,6 @@ double mgg, mjj,evWeight, mtot, normWeight;
 
   
      double dMass = 1000.+iMass*50.;
-
 
      
      for (int iCat = 0; iCat < 21; iCat++){

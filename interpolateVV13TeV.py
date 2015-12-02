@@ -41,12 +41,13 @@ else:
    suffix=""
 
 # print "suffix = %s"%suffix
-histnames= ["DijetMassHighPuriVV", # VV high purity
+histnames= [
+            "DijetMassHighPuriVV", # VV high purity
             "DijetMassNoPuriVV", # VV medium purity
             "DijetMassLowPuriVV", # not used
             "DijetMassHighPuriqV", # qV high purity
             "DijetMassNoPuriqV", # qV medium purity
-            "DijetMassLowPuriqV", # not used
+            "DijetMassLowPuriqV", # qV kow purity
             "DijetMassHighPuriWW", # WW high purity
             "DijetMassLowPuriWW", # WW low purity
             "DijetMassNoPuriWW", # WW no purity
@@ -65,35 +66,42 @@ histnames= ["DijetMassHighPuriVV", # VV high purity
             ]
 
 if "WprimeToWZ" in inputRoot:
-  # masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
-  masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
+  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+  # masses=[1000,2000,3000,4000]
+  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,]
 
-
+if "BulkZZ" in inputRoot:
+  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+  # masses=[1000,2000,3000,4000]
+  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,]
+  
 if "BulkWW" in inputRoot:
-  # masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
-  masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
+  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+  # masses=[1000,2000,3000,4000]
+  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,]
+  
 
 if "QstarQW" in inputRoot:
   # masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
-  masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
+  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500,5000,6000]
+  # masses=[1000,2000,3000,4000]
+  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
   
 if "QstarQZ" in inputRoot:
   # masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
-  masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]  
+  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500,5000,6000]
+  # masses=[1000,2000,3000,4000]
+  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
   
 if "RS1WW" in inputRoot:
   # masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
   masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
+  ngenevents=[1.,1.,1.,1.]
 
 if "RS1ZZ" in inputRoot:
   # masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
   masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]      
+  ngenevents=[1.,1.,1.,1.]    
 # if "RS1ZZ" in inputRoot:
 #   masses=[1000,2000,3000,4000]
 #   ngenevents=[1.,1.,1.,1.]
@@ -166,7 +174,7 @@ for histname in histnames:
      inputf = TFile( inputRoot + str(x) + suffix + '.root' )
      f = inputf.Get( histname )
      xvalues.push_back(x)
-     yvalues.push_back(f.Integral(f.FindBin(x*0.8),f.FindBin(x*1.2))/ngenevents[masses.index(x)]*10000.)
+     yvalues.push_back(f.Integral(f.FindBin(x*0.8),f.FindBin(x*1.2))/ngenevents[masses.index(x)]*100000.)
    interpolator=r.Math.Interpolator(xvalues,yvalues)
    integral=interpolator.Eval(outmjj)
    foutmjj.Scale( integral/foutmjj.Integral(foutmjj.FindBin(outmjj*0.8),foutmjj.FindBin(outmjj*1.2)) )
@@ -184,7 +192,7 @@ for histname in histnames:
      xvalues.push_back(m)
      for i in range(npoints+1):
        x=0.0 + i/float(npoints)*2.0
-       yvalues[i].push_back(f.Integral(f.FindBin(m*x)-rebin+1,f.FindBin(m*x)+rebin-1)/float(2*rebin-1)/ngenevents[masses.index(m)]*10000.)
+       yvalues[i].push_back(f.Integral(f.FindBin(m*x)-rebin+1,f.FindBin(m*x)+rebin-1)/float(2*rebin-1)/ngenevents[masses.index(m)]*100000.)
    for i in range(npoints+1):
      x=0.0 + i/float(npoints)*2.0
      inter=r.Math.Interpolator(xvalues,yvalues[i])

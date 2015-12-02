@@ -21,6 +21,8 @@ gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
 channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
+channels=["WZ"]
+# channels=["WZ","BulkWW"]
 
 fullToys=False
 
@@ -31,36 +33,41 @@ for chan in channels:
        masses =[m*100 for m in range(10,40+1)]
        bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
-       masses =[m*100 for m in range(10,29+1)]
-       bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
+       masses =[m*100 for m in range(12,40+1)]
+       bins=["CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVnew","CMS_jj_VVHPnew","CMS_jj_VVLPnew","CMS_jj_VV"]
+       bins=["CMS_jj_VVnew","CMS_jj_VV"]
+       bins=["CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVHPnew","CMS_jj_VVLPnew"]
+       bins=["CMS_jj_WWHP"]
 
     for bin in bins:
         sig=[]
         pval=[]
         for mass in masses:
             print "mass =",mass
-        
-            outputname = "CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_pvalue_submit.src"
-	    outfile="Limits/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_pvalue.out"
+            outputname = "CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_pvalue_submit.src"
+            outfile="Limits/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_pvalue.out"
             outputfile = open(outputname,'w')
             outputfile.write('#!/bin/bash\n')
             outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
-	    if "CMS_jj_qV" in bin:
-                freeze=" --freezeNuisances CMS_bkg_fit_slope3_CMS_jj_qVHP,CMS_bkg_fit_slope3_CMS_jj_qVLP"
-	    if "CMS_jj_VV" in bin:
+            if "CMS_jj_qV" in bin:
+              freeze=" --freezeNuisances CMS_bkg_fit_slope3_CMS_jj_qVHP,CMS_bkg_fit_slope3_CMS_jj_qVLP"
+            if "CMS_jj_WWHP" in bin:
                 freeze=" --freezeNuisances CMS_bkg_fit_slope3_CMS_jj_VVHP,CMS_bkg_fit_slope3_CMS_jj_VVLP"
-	    if fullToys:
-                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M HybridNew "+freeze+" --frequentist --fullBToys -T 3000 --fork 0 -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
+            if fullToys:
+              outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew "+freeze+" --frequentist --fullBToys -T 3000 --fork 0 -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
             else:
-                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+".txt -M ProfileLikelihood -v2 "+freeze+" -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
+                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M ProfileLikelihood -v2 -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
             outputfile.close()
   
             command="rm "+outfile
-	    print command
+            print command
             os.system(command)
-	    if fullToys:
-                command="bsub -q 8nh -o "+outfile+" source "+outputname
+            if fullToys:
+              command="bsub -q 8nh -o "+outfile+" source "+outputname
             else:
-	        command="bsub -q 1nh -o "+outfile+" source "+outputname
-	    print command
+              command="bsub -q 1nh -o "+outfile+" source "+outputname
+            print command
+            command="chmod 755 ./"+outputname+";./"+outputname +">"+outfile
             os.system(command)
+
+  	        

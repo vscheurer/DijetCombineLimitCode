@@ -21,6 +21,7 @@ gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
 channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
+channels=["WZ","BulkWW"]
 
 for chan in channels:
     print "chan =",chan
@@ -29,8 +30,9 @@ for chan in channels:
        masses =[m*100 for m in range(10,40+1)]
        bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
-       masses =[m*100 for m in range(10,29+1)]
+       masses =[m*100 for m in range(12,40+1)]
        bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
+       bins=["CMS_jj_WWHP","CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVHPnew","CMS_jj_VVLPnew"]
 
     for bin in bins:
         sig=[]
@@ -38,7 +40,7 @@ for chan in channels:
         for mass in masses:
             print "mass =",mass
 
-            f_fit=file("Limits/CMS_jj_"+chan+"_"+str(mass)+"_8TeV_"+bin+"_pvalue.out")
+            f_fit=file("Limits/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_pvalue.out")
             print "we look inside the fit output for bin "+str(bin)
 	    s=0
 	    p=1.0
@@ -61,7 +63,7 @@ for chan in channels:
 
         sSig=[(masses[i],sig[i]) for i in range(len(masses))]
 
-        f = open("Limits/CMS_jj_"+chan+"_8TeV_"+bin+"_significance.txt", "w")
+        f = open("Limits/CMS_jj_"+chan+"_13TeV_"+bin+"_significance.txt", "w")
         f.write(str(sSig))
         f.close()
 
@@ -69,6 +71,6 @@ for chan in channels:
 
         sPval=[(masses[i],pval[i]) for i in range(len(masses))]
 
-        f = open("Limits/CMS_jj_"+chan+"_8TeV_"+bin+"_pvalue.txt", "w")
+        f = open("Limits/CMS_jj_"+chan+"_13TeV_"+bin+"_pvalue.txt", "w")
         f.write(str(sPval))
         f.close()

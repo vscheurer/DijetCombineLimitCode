@@ -114,11 +114,11 @@
 using namespace RooFit;
 using namespace RooStats ;
 
-static const Int_t NCAT = 12; //for VV and qV analysis together this should be 6--> Now 21!
+static const Int_t NCAT = 21; //for VV and qV analysis together this should be 6--> Now 21!
 Double_t MMIN = 1000;
-Double_t MMAX = 2500;
+Double_t MMAX = 4600;
 std::string filePOSTfix="";
-double signalScaler=2460.00*1.00/10000.; // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
+double signalScaler=2460.00*0.01/100000.; // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
 double scaleFactorHP=0.992; // tau21 and jet mass scale factors data/MC
 double scaleFactorLP=1.023; // tau21 and jet mass scale factors data/MC
 double scaleFactorHPherwig=1.0; // tau21 and jet mass scale factors Herwig/Pythia
@@ -314,9 +314,9 @@ void runfits(const Float_t mass=2000, int signalsample = 1, Bool_t dobands = fal
   }
 
 //   cout << "MAKE PLOTS" << endl;
-//
-// // Make plots for data and fit results
-//   MakePlots(w, mass, fitresults, signalname,cat_names);
+
+// Make plots for data and fit results
+  MakePlots(w, mass, fitresults, signalname,cat_names);
      
      cout << "DONE!" << endl;
 
@@ -581,8 +581,10 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
   for (int c = 0; c < ncat; ++c) {
     data[c]   = (RooDataSet*) w->data(TString::Format("Data_%s",cat_names.at(c).c_str()));
 
-    ((RooRealVar*) w->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->setConstant(true);
-    cout << "---------------- Parameter 1 set to const" << endl;
+    if(c==3 || c==4 || c==6){
+      ((RooRealVar*) w->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->setConstant(true);
+      cout << "---------------- Parameter 1 set to const" << endl;
+    }
 
     ((RooRealVar*) w->var(TString::Format("bkg_fit_slope3_%s",cat_names.at(c).c_str())))->setConstant(true);
     cout << "---------------- Parameter 3 set to const" << endl;
@@ -950,8 +952,8 @@ void MakeSigWS(RooWorkspace* w, const char* fileBaseName, TString signalname, st
 
 // (2) Systematics on energy scale and resolution
 
-  wAll->factory("CMS_sig_p1_jes_13TeV[0.0,-5.0,5.0]");
-  wAll->factory("CMS_jj_sig_p1_jes_13TeV[0.01,0.01,0.01]");
+  wAll->factory("CMS_sig_p1_jes_13TeV[0.0,-10.0,10.0]");
+  wAll->factory("CMS_jj_sig_p1_jes_13TeV[0.02,0.02,0.02]");
   wAll->factory("sum::CMS_sig_p1_jes_sum_13TeV(1.0,prod::CMS_sig_p1_jes_prod_13TeV(CMS_sig_p1_jes_13TeV, CMS_jj_sig_p1_jes_13TeV))");
     for (int c = 0; c < ncat; ++c) {
 wAll->factory("prod::CMS_jj_"+signalname+"_sig_m0_"+TString::Format("%s_13TeV",cat_names.at(c).c_str())+"(jj_"+signalname+"_sig_m0_"+TString::Format("%s",cat_names.at(c).c_str())+", CMS_sig_p1_jes_sum_13TeV)");
@@ -960,7 +962,7 @@ wAll->factory("prod::CMS_jj_"+signalname+"_sig_m0_"+TString::Format("%s_13TeV",c
 // (3) Systematics on resolution: create new sigmas
 
 
-  wAll->factory("CMS_sig_p2_jer_13TeV[0.0,-5.0,5.0]");
+  wAll->factory("CMS_sig_p2_jer_13TeV[0.0,-10.0,10.0]");
   wAll->factory("CMS_jj_sig_p2_jer_13TeV[0.1,0.1,0.1]");
   wAll->factory("sum::CMS_sig_p2_jer_sum_13TeV(1.0,prod::CMS_sig_p2_jer_prod_13TeV(CMS_sig_p2_jer_13TeV, CMS_jj_sig_p2_jer_13TeV))");
 
@@ -1224,6 +1226,55 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   // // Herwig HP+LP
   // if(((signalsample==0)||(signalsample==1))&&(iChan==1))
   //     scaleFactor*=(scaleFactorHP*scaleFactorLP/scaleFactorHPherwig/scaleFactorLPherwig);
+  
+  // signalsamle:::
+  // if (signalsample==0)
+  // { signalname="RS1ZZ";
+  // }
+  // if (signalsample==1)
+  // { signalname="RS1WW";
+  // }
+  // if (signalsample==2)
+  // { signalname="WZ";
+  // }
+  // if (signalsample==3)
+  // { signalname="qW";
+  // }
+  // if (signalsample==4)
+  // { signalname="qZ";
+  // }
+  // if (signalsample==5)
+  // { signalname="BulkWW";
+  // }
+  // if (signalsample==6)
+  // { signalname="BulkZZ";
+  // }
+  // ICHANNEL
+  // categories->defineType("highPureVV",0);
+//   categories->defineType("lowPureVV",1);
+//   categories->defineType("noPureVV",2);
+//   categories->defineType("highPureWW",3);
+//   categories->defineType("lowPureWW",4);
+//   categories->defineType("noPureWW",5);
+//   categories->defineType("highPureWZ",6);
+//   categories->defineType("lowPureWZ",7);
+//   categories->defineType("noPureWZ",8);
+//   categories->defineType("highPureZZ",9);
+//   categories->defineType("lowPureZZ",10);
+//   categories->defineType("noPureZZ",11);
+//   categories->defineType("highPureqV",12);
+//   categories->defineType("lowPureqV",13);
+//   categories->defineType("noPureqV",14);
+//   categories->defineType("highPureqW",15);
+//   categories->defineType("lowPureqW",16);
+//   categories->defineType("noPureqW",17);
+//   categories->defineType("highPureqZ",18);
+//   categories->defineType("lowPureqZ",19);
+//   categories->defineType("noPureqZ",20);
+  //HP = iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18
+  //LP = iChan==1||iChan==4||iChan==7||iChan==10 || iChan==13||iChan==16||iChan==19
+  
+  
   // Pythia HP+HP
   if(((signalsample==0)||(signalsample==1)||(signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==0 ||iChan==3 ||iChan==6 ||iChan==9))
       scaleFactor*=(scaleFactorHP*scaleFactorHP);
@@ -1285,7 +1336,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
   outFile << "lumi_13TeV       lnN  1.05  1.05  1.05    - " << endl;
-  if((iChan==0)||(iChan==3)){
+  if(iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18){
   outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.15  1.15  1.15      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
@@ -1293,9 +1344,9 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  0.58  0.58  0.58      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
-  outFile << "CMS_scale_j_13TeV         lnN  1.120  1.120  1.120      - # jet energy scale" << endl;
-  outFile << "CMS_res_j_13TeV         lnN  1.040  1.040  1.040      - # jet energy resolution" << endl;
-  outFile << "CMS_pu_13TeV         lnN  1.030  1.030  1.030      - # pileup" << endl;
+  outFile << "CMS_scale_j_13TeV         lnN  1.020  1.020  1.020      - # jet energy scale" << endl;
+  outFile << "CMS_res_j_13TeV         lnN  1.10  1.10  1.10      - # jet energy resolution" << endl;
+  outFile << "CMS_pu_13TeV         lnN  1.015  1.015  1.015      - # pileup" << endl;
   } else if(signalsample<5) {
   outFile << "bin                      "<< Form("%s      %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
   outFile << "process                 qW_jj qZ_jj     bkg_fit_jj     " << endl;
@@ -1309,8 +1360,8 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
-  outFile << "lumi_13TeV       lnN  1.026  1.026    - " << endl;
-  if((iChan==0)||(iChan==3)){
+  outFile << "lumi_13TeV       lnN  1.05  1.05    - " << endl;
+  if((iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18)){
   outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.076  1.076      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.093  1.099      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
@@ -1318,9 +1369,9 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  0.54  0.54      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.093  1.099      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
-  outFile << "CMS_scale_j_13TeV         lnN  1.060  1.060      - # jet energy scale" << endl;
-  outFile << "CMS_res_j_13TeV         lnN  1.020  1.020      - # jet energy resolution" << endl;
-  outFile << "CMS_pu_13TeV         lnN  1.030  1.030      - # pileup" << endl;
+  outFile << "CMS_scale_j_13TeV         lnN  1.020  1.020      - # jet energy scale" << endl;
+  outFile << "CMS_res_j_13TeV         lnN  1.10  1.10      - # jet energy resolution" << endl;
+  outFile << "CMS_pu_13TeV         lnN  1.0150  1.0150      - # pileup" << endl;
   } else {
   outFile << "bin                      "<< Form("%s       %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
   outFile << "process                 BulkWW_jj BulkZZ_jj     bkg_fit_jj     " << endl;
@@ -1334,8 +1385,8 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
-  outFile << "lumi_13TeV       lnN  1.026  1.026    - " << endl;
-  if((iChan==0)||(iChan==3)){
+  outFile << "lumi_13TeV       lnN  1.050  1.050    - " << endl;
+  if((iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18)){
   outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.15  1.15      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
@@ -1345,7 +1396,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   }
   outFile << "CMS_scale_j_13TeV         lnN  1.02  1.02      - # jet energy scale" << endl;
   outFile << "CMS_res_j_13TeV         lnN  1.10  1.10      - # jet energy resolution" << endl;
-  outFile << "CMS_pu_13TeV         lnN  1.030  1.030      - # pileup" << endl;
+  outFile << "CMS_pu_13TeV         lnN  1.0150  1.0150      - # pileup" << endl;
   } 
   outFile << "# Parametric shape uncertainties, entered by hand." << endl;
   outFile << Form("CMS_sig_p1_jes_13TeV    param   0.0   1.0   # dijet mass shift due to JES uncertainty") << endl;
@@ -1445,21 +1496,20 @@ Double_t effSigma(TH1 *hist) {
 void R2JJFitter13TeV(double mass, std::string postfix="", int signalsamples=0)
 {
     filePOSTfix=postfix;
-    if(signalsamples==0)
-    {
-    runfits(mass, 0);
-    runfits(mass, 1);
+    if(signalsamples==0){
+      runfits(mass, 0);
+      runfits(mass, 1);
     //runfits(mass, 2);
-    } else if(signalsamples==1)
-    {
-    runfits(mass, 3);
-    runfits(mass, 4);
-    } else if(signalsamples==5)
-    {
-    runfits(mass, 5);
+    } 
+    else if(signalsamples==1){
+      runfits(mass, 3);
+      runfits(mass, 4);
+    } 
+    else if(signalsamples==5){
+      runfits(mass, 5);
     // runfits(mass, 6);
     }
     else {
-    runfits(mass, 2);
+      runfits(mass, 2);
     }
 }

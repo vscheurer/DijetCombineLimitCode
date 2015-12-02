@@ -21,7 +21,7 @@ gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
 channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
-channels=["RS1WW"]
+channels=["WZ","BulkWW"]
 
 fullToys=False
 
@@ -32,11 +32,9 @@ for chan in channels:
        masses =[m*100 for m in range(10,60+1)]
        bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
-       # masses =[m*100 for m in range(10,40+1)]
-       bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
-       # bins=["CMS_jj_VVHP"]
-       masses=[1000,1200,2000,3000,4000]
-       
+       masses =[m*100 for m in range(36,40+1)]
+       bins=["CMS_jj_VVHPnew","CMS_jj_VVLPnew","CMS_jj_VVnew",]
+       bins=["CMS_jj_WWHP","CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVnew","CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
 
     if fullToys:
       points=[]
@@ -73,7 +71,7 @@ for chan in channels:
 	      outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.975 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_975_fullCLs.out\n")
             else:
                 outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M Asymptotic -v2 -m "+str(mass) + " -n "+chan+str(bin)+" --rMax 1000 --rMin 0.01 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_asymptoticCLs.out\n")
-                outputfile.write("mv higgsCombine"+chan+str(bin)+".Asymptotic.mH"+str(int(mass))+".root Limits/CMS_jj_"+str(mass)+"_"+chan+"_13TeV_"+bin+"_asymptoticCLs.root")
+                outputfile.write("mv higgsCombine"+chan+str(bin)+".Asymptotic.mH"+str(int(mass))+".root Limits/CMS_jj_"+str(mass)+"_"+chan+"_13TeV_"+bin+"_asymptoticCLs_new.root")
             outputfile.close()
   
             command="rm "+logname
