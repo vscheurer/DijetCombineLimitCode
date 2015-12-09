@@ -114,7 +114,7 @@
 using namespace RooFit;
 using namespace RooStats ;
 
-static const Int_t NCAT = 21; //for VV and qV analysis together this should be 6--> Now 21!
+static const Int_t NCAT = 12; //for VV and qV analysis together this should be 6--> Now 21!
 Double_t MMIN = 1000;
 Double_t MMAX = 4600;
 std::string filePOSTfix="";
@@ -159,15 +159,15 @@ RooArgSet* defineVariables()
   categories->defineType("highPureZZ",9);
   categories->defineType("lowPureZZ",10);
   categories->defineType("noPureZZ",11);
-  categories->defineType("highPureqV",12);
-  categories->defineType("lowPureqV",13);
-  categories->defineType("noPureqV",14);
-  categories->defineType("highPureqW",15);
-  categories->defineType("lowPureqW",16);
-  categories->defineType("noPureqW",17);
-  categories->defineType("highPureqZ",18);
-  categories->defineType("lowPureqZ",19);
-  categories->defineType("noPureqZ",20);
+  // categories->defineType("highPureqV",12);
+  // categories->defineType("lowPureqV",13);
+  // categories->defineType("noPureqV",14);
+  // categories->defineType("highPureqW",15);
+  // categories->defineType("lowPureqW",16);
+  // categories->defineType("noPureqW",17);
+  // categories->defineType("highPureqZ",18);
+  // categories->defineType("lowPureqZ",19);
+  // categories->defineType("noPureqZ",20);
   RooArgSet* ntplVars = new RooArgSet(*mgg, *categories, *evWeight, *normWeight);
  
   return ntplVars;
@@ -226,15 +226,15 @@ void runfits(const Float_t mass=2000, int signalsample = 1, Bool_t dobands = fal
   cat_names.push_back("CMS_jj_ZZHP");
   cat_names.push_back("CMS_jj_ZZLP");
   cat_names.push_back("CMS_jj_ZZNP");
-  cat_names.push_back("CMS_jj_qVHP");
-  cat_names.push_back("CMS_jj_qVLP");
-  cat_names.push_back("CMS_jj_qVNP");
-  cat_names.push_back("CMS_jj_qWHP");
-  cat_names.push_back("CMS_jj_qWLP");
-  cat_names.push_back("CMS_jj_qWNP");
-  cat_names.push_back("CMS_jj_qZHP");
-  cat_names.push_back("CMS_jj_qZLP");
-  cat_names.push_back("CMS_jj_qZNP");
+  // cat_names.push_back("CMS_jj_qVHP");
+  // cat_names.push_back("CMS_jj_qVLP");
+  // cat_names.push_back("CMS_jj_qVNP");
+  // cat_names.push_back("CMS_jj_qWHP");
+  // cat_names.push_back("CMS_jj_qWLP");
+  // cat_names.push_back("CMS_jj_qWNP");
+  // cat_names.push_back("CMS_jj_qZHP");
+  // cat_names.push_back("CMS_jj_qZLP");
+  // cat_names.push_back("CMS_jj_qZNP");
 
 
   TString fileBkgName(TString::Format("CMS_jj_bkg_13TeV", mass));
@@ -529,7 +529,7 @@ void SigModelFit(RooWorkspace* w, Float_t mass, TString signalname, std::vector<
       
 
 
-    jjSig[c]     ->fitTo(*sigToFit[c],Range(mass*0.8,mass*1.5),SumW2Error(kTRUE),PrintEvalErrors(-1));
+    jjSig[c]     ->fitTo(*sigToFit[c],Range(mass*0.8,mass*1.6),SumW2Error(kTRUE),PrintEvalErrors(-1));
 // IMPORTANT: fix all pdf parameters to constant
     w->defineSet(TString::Format("SigPdfParam_%s",cat_names.at(c).c_str()), RooArgSet(*w->var("jj_"+signalname+TString::Format("_sig_m0_%s",cat_names.at(c).c_str())),
 								   *w->var("jj_"+signalname+TString::Format("_sig_sigma_%s",cat_names.at(c).c_str())),
@@ -582,10 +582,11 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
     data[c]   = (RooDataSet*) w->data(TString::Format("Data_%s",cat_names.at(c).c_str()));
 
     if(c==3 || c==4 || c==6){
+       cout << "---------------- For channel: " << cat_names.at(c)<< endl;
       ((RooRealVar*) w->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->setConstant(true);
       cout << "---------------- Parameter 1 set to const" << endl;
     }
-
+    
     ((RooRealVar*) w->var(TString::Format("bkg_fit_slope3_%s",cat_names.at(c).c_str())))->setConstant(true);
     cout << "---------------- Parameter 3 set to const" << endl;
 
@@ -828,38 +829,40 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
     plotjj[c]->SetTitle("");      
     plotjj[c]->SetMinimum(0.0);
     plotjj[c]->SetMaximum(1.40*plotjj[c]->GetMaximum());
-    plotjj[c]->GetXaxis()->SetTitle("m_{jj} (GeV)");
+    plotjj[c]->GetXaxis()->SetTitle("Dijet invariant mass [GeV]");
+    plotjj[c]->GetYaxis()->SetTitleOffset(0.9);
 
     TCanvas* ctmp = new TCanvas("ctmp","jj Background Categories",0,0,500,500);
     plotjj[c]->Draw();  
 //    hist->Draw("same");
     
     plotjj[c]->Draw("SAME");  
-    TLegend *legmc = new TLegend(0.62,0.75,0.92,0.9);
-    legmc->AddEntry(plotjj[c]->getObject(5),"Simulation","LPE");
+    TLegend *legmc = new TLegend(0.60,0.72,0.90,0.87);
+    legmc->AddEntry(plotjj[c]->getObject(5),"CMS data","LPE");
     legmc->AddEntry(plotjj[c]->getObject(1),"Parametric Model","L");
-    legmc->AddEntry(plotjj[c]->getObject(3),"Crystal Ball component","L");
+    legmc->AddEntry(plotjj[c]->getObject(3),"Crystal Ball comp.","L");
     legmc->AddEntry(plotjj[c]->getObject(2),"Gaussian Outliers","L");
     
     legmc->SetBorderSize(0);
     legmc->SetFillStyle(0);
-    legmc->Draw();    
+    legmc->Draw();
     
     float effS = effSigma(hist);
 //    text->DrawLatex(0.65,0.4, TString::Format("#sigma_{eff} = %.2f GeV",effS));
 //    cout<<"effective sigma [" << c << "] = " << effS <<endl;
     
-    TLatex *lat  = new TLatex(minMassFit+1.5,0.85*plotjj[c]->GetMaximum(),"#scale[1.0]{CMS Preliminary}");
-    lat->Draw();
+    // TLatex *lat  = new TLatex(minMassFit+1.5,0.85*plotjj[c]->GetMaximum(),"#scale[1.0]{CMS Preliminary}");
+    // lat->Draw();
     TLatex *lat2 = new TLatex(minMassFit+1.5,0.75*plotjj[c]->GetMaximum(),cat_names.at(c).c_str());
     lat2->Draw();
     TLatex *lat3 = new TLatex(minMassFit+1.5,0.55*plotjj[c]->GetMaximum(),TString::Format("#scale[0.8]{#sigma_{eff} = %.2f GeV}",effS));
-    lat3->Draw();
+    // lat3->Draw();
 
     int iMass = abs(mass);
 
     //ctmp->SaveAs("plots/sigmodel_"+signalname+TString::Format("%d_%s.png", iMass, cat_names.at(c).c_str()));
     ctmp->SaveAs("plots/sigmodel_"+signalname+TString::Format("%d_%s.pdf", iMass, cat_names.at(c).c_str()));
+    ctmp->SaveAs("plots/sigmodel_"+signalname+TString::Format("%d_%s.root", iMass, cat_names.at(c).c_str()));
 
 
   }
@@ -1043,7 +1046,10 @@ void MakeBkgWS(RooWorkspace* w, const char* fileBaseName, std::vector<string> ca
    double min = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getMin();
    double max = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getMax();
 
-   wAll->factory(TString::Format("CMS_bkg_fit_slope1_%s_13TeV[%g,%g,%g]", cat_names.at(c).c_str(), mean, min, max));
+   if(c==3 || c==4 || c==6)wAll->factory(TString::Format("CMS_bkg_fit_slope1_%s_13TeV[%g,%g,%g]", cat_names.at(c).c_str(), mean, mean, mean));
+   else{
+     wAll->factory(TString::Format("CMS_bkg_fit_slope1_%s_13TeV[%g,%g,%g]", cat_names.at(c).c_str(), mean, min, max));
+   }
 
 
    double mean = (wAll->var(TString::Format("bkg_fit_slope2_%s",cat_names.at(c).c_str())))->getVal();
@@ -1335,7 +1341,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
-  outFile << "lumi_13TeV       lnN  1.05  1.05  1.05    - " << endl;
+  outFile << "lumi_13TeV       lnN  1.06  1.06  1.06    - " << endl;
   if(iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18){
   outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.15  1.15  1.15      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
@@ -1360,7 +1366,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
-  outFile << "lumi_13TeV       lnN  1.05  1.05    - " << endl;
+  outFile << "lumi_13TeV       lnN  1.06  1.06    - " << endl;
   if((iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18)){
   outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.076  1.076      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.093  1.099      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
@@ -1385,7 +1391,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
-  outFile << "lumi_13TeV       lnN  1.050  1.050    - " << endl;
+  outFile << "lumi_13TeV       lnN  1.060  1.060    - " << endl;
   if((iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18)){
   outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.15  1.15      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
@@ -1506,8 +1512,8 @@ void R2JJFitter13TeV(double mass, std::string postfix="", int signalsamples=0)
       runfits(mass, 4);
     } 
     else if(signalsamples==5){
-      runfits(mass, 5);
-    // runfits(mass, 6);
+    // runfits(mass, 5);
+    runfits(mass, 6);
     }
     else {
       runfits(mass, 2);
