@@ -47,7 +47,7 @@ categories = ["WW, high-purity","WW, low-purity","WZ, high-purity","WZ, low-puri
 legends=["G(2 TeV)#rightarrowWW","G(2 TeV)#rightarrowWW","W'(2 TeV)#rightarrowWZ","W'(2 TeV)#rightarrowWZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ"]         
 histos = ["DijetMassHighPuriWW","DijetMassLowPuriWW","DijetMassHighPuriWZ", "DijetMassLowPuriWZ", "DijetMassHighPuriZZ","DijetMassLowPuriZZ","DijetMassHighPuriVV","DijetMassLowPuriVV"]
 lumi = 2460
-maxVals =[2659,2895,2895,3416,3147,2659,3416,3416]
+maxVals =[2659,2895,2895,3416,3147,3600,3416,3416]
 
 # #For Wprime VVHPandLP
 # alphas    = [0.647132,0.448616 ,1.53339,1.17580,2.99999,2.2626,]              #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forWprimeWZ),VVLP(forWprimeWZ)
@@ -65,7 +65,6 @@ maxVals =[2659,2895,2895,3416,3147,2659,3416,3416]
 ii = -1        
 for h in histos:
     ii += 1
-    # if ii != 5: continue
     title = h.replace("DijetMass","")
     htmp = fileIN.Get(h)
     
@@ -83,7 +82,7 @@ for h in histos:
 
     dataDistOLD = htmp.Rebin(len(xbins)-1,"hMass_rebinned",xbins)
     minVal = 1000.
-    maxVal = maxVals[ii]
+    maxVal = 3600
 
 
     bins = []
@@ -102,15 +101,19 @@ for h in histos:
             dataDist.SetBinContent(iBin, binContent)
 
 
-    p0 = rt.RooRealVar("p0", "p0", 8.5 , 0. , 22.)
-    p1 = rt.RooRealVar("p1", "p1", 3.45965, 0. , 32.)
-    p2 = rt.RooRealVar("p2", "p2", 7.85115, 2., 12.)
+    p0 = rt.RooRealVar("p0", "p0", 8.5 , 0. , 2200.)
+    p1 = rt.RooRealVar("p1", "p1", 0.0, -100. , 1000.)
+    p2 = rt.RooRealVar("p2", "p2", 7.85115, 0., 1000.)
     p3 = rt.RooRealVar("p3", "p3", 0., -12., 12.)
 
     mjj = rt.RooRealVar("mjjCMS","Dijet invariant mass [GeV]",len(bins)-1, bins[0], bins[-1])
 
     bkg_fit = rt.RooGenericPdf("bkg_fitCMS", "pow(1-@0/13000., @1)/pow(@0/13000., @2+@3*log(@0))", rt.RooArgList(mjj, p1, p2,p3))
     p3.setConstant(rt.kTRUE)
+    if(ii < 3): 
+      print title
+      print "Setting paramter 1 constant"
+      p1.setConstant(rt.kTRUE)
 
     alpha = rt.RooRealVar("alpha","alpha",alphas[ii], 0., 4)
     sigfrac = rt.RooRealVar("sigfrac","sigfrac",sigfracs[ii], 0.3, .90)
