@@ -1314,13 +1314,15 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << Form("shapes RS1WW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1WW_%.0f_13TeV.root", mass) << Form(" w_all:RS1WW_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   outFile << Form("shapes RS1ZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1ZZ_%.0f_13TeV.root", mass) << Form(" w_all:RS1ZZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   outFile << Form("shapes WZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_WZ_%.0f_13TeV.root", mass) << Form(" w_all:WZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
-  } else if(signalsample<5){
+  } 
+  else if(signalsample<5){
   outFile << Form("shapes qW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_qW_%.0f_13TeV.root", mass) << Form(" w_all:qW_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   outFile << Form("shapes qZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_qZ_%.0f_13TeV.root", mass) << Form(" w_all:qZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   } else {
   outFile << Form("shapes BulkWW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_BulkWW_%.0f_13TeV.root", mass) << Form(" w_all:BulkWW_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   outFile << Form("shapes BulkZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_BulkZZ_%.0f_13TeV.root", mass) << Form(" w_all:BulkZZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   }
+  
   outFile << "---------------" << endl;
   outFile << Form("bin          %s", cat_names[iChan].c_str()) << endl;
   outFile <<  "observation   "  <<  Form("%.10lg",data[iChan]->sumEntries()) << endl;
@@ -1341,19 +1343,20 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
-  outFile << "lumi_13TeV       lnN  1.06  1.06  1.06    - " << endl;
+  outFile << "lumi_13TeV       lnN  1.046  1.046  1.046    - " << endl;
   if(iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18){
-  outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.15  1.15  1.15      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.44/0.64  1.44/0.64  1.44/0.64      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
   // anti-correlated the high purity (1.076*1.076) and low purity (0.54*1.076) categories
-  outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  0.58  0.58  0.58      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  0.88/1.01  0.88/1.01  0.88/1.01      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s         lnN  1.185  1.197  1.191      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
   outFile << "CMS_scale_j_13TeV         lnN  1.020  1.020  1.020      - # jet energy scale" << endl;
   outFile << "CMS_res_j_13TeV         lnN  1.10  1.10  1.10      - # jet energy resolution" << endl;
   outFile << "CMS_pu_13TeV         lnN  1.015  1.015  1.015      - # pileup" << endl;
-  } else if(signalsample<5) {
+  } 
+  else if(signalsample<5) {
   outFile << "bin                      "<< Form("%s      %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
   outFile << "process                 qW_jj qZ_jj     bkg_fit_jj     " << endl;
   outFile << "process                 -1 0        1          " << endl;
@@ -1366,9 +1369,9 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
-  outFile << "lumi_13TeV       lnN  1.06  1.06    - " << endl;
+  outFile << "lumi_13TeV       lnN  1.046  1.046    - " << endl;
   if((iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18)){
-  outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.076  1.076      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.28  0.72      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.093  1.099      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
   // anti-correlated the high purity (1.076) and low purity (0.54) categories
@@ -1378,7 +1381,8 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "CMS_scale_j_13TeV         lnN  1.020  1.020      - # jet energy scale" << endl;
   outFile << "CMS_res_j_13TeV         lnN  1.10  1.10      - # jet energy resolution" << endl;
   outFile << "CMS_pu_13TeV         lnN  1.0150  1.0150      - # pileup" << endl;
-  } else {
+  } 
+  else {
   outFile << "bin                      "<< Form("%s       %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
   outFile << "process                 BulkWW_jj BulkZZ_jj     bkg_fit_jj     " << endl;
   outFile << "process                 -1 0        1          " << endl;
@@ -1391,13 +1395,13 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
-  outFile << "lumi_13TeV       lnN  1.060  1.060    - " << endl;
+  outFile << "lumi_13TeV       lnN  1.046  1.046    - " << endl;
   if((iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18)){
-  outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  1.15  1.15      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN   1.44/0.64   1.44/0.64      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   } else {
   // anti-correlated the high purity (1.076*1.076) and low purity (0.54*1.076) categories
-  outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  0.58  0.58      - # tau21 efficiency" << endl;
+  outFile << "CMS_eff_vtag_tau21_sf_13TeV         lnN  0.88/1.01  0.88/1.01      - # tau21 efficiency" << endl;
 //  outFile << Form("CMS_eff_vtag_mass_sf_%s          lnN  1.185  1.197      - # jet mass efficiency",cat_names[iChan].c_str()) << endl;
   }
   outFile << "CMS_scale_j_13TeV         lnN  1.02  1.02      - # jet energy scale" << endl;
@@ -1512,7 +1516,7 @@ void R2JJFitter13TeV(double mass, std::string postfix="", int signalsamples=0)
       runfits(mass, 4);
     } 
     else if(signalsamples==5){
-    // runfits(mass, 5);
+    runfits(mass, 5);
     runfits(mass, 6);
     }
     else {
