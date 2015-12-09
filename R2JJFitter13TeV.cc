@@ -1,116 +1,3 @@
-/** \macro H2GGFitter.cc
- *
- * $Id: R2JJFitter.cc,v 1.14 2013/06/27 10:18:27 hinzmann Exp $
- *
- * Software developed for the CMS Detector at LHC
- *
- *
- *  \author Serguei Ganjour - CEA/IRFU/SPP, Saclay
- *  \modified by Maxime Gouzevitch for the Dijet Bump Search - IPNL, Lyon 
- *
- * Macro is implementing the unbinned maximum-likelihood model for 
- * the Higgs to gamma gamma analysis. PDF model and RooDataSets 
- * are stored in the workspace which is feeded to  HiggsAnalysis/CombinedLimit tools:
- * 
- * http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/CMSSW/HiggsAnalysis/CombinedLimit
- * http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/CMSSW/HiggsAnalysis/CombinedLimit/data/lhc-hcg/cms-jj-1fb/
- * 
- * The analysis root trees produced in a simple format 
- *
- *     TFile file(filename,"RECREATE", "X->jj input tree for unbinned maximum-likelihood fit");
- *     TTree* outTree  = new TTree("XTojj","X->jj input tree for unbinned maximum-likelihood fit");
- *     Float_t mass;
- *     Int_t CAT3;
- *     Float_t weight;
- *
- *     outTree->Branch("mass",&mass,"mass/F");
- *     outTree->Branch("weight",&weight,"weight/F");
- *     outTree->Branch("CAT4",&CAT4,"CAT4/I");
- *     {
- *       .............
- *       outTree->Fill();
- *     }
- *
- *     file.Write();
- *     file.Close();
- *     delete outTree;
- *
- * are used as input files. They have to be produced for 
- * data and Monte Carlo signal and background data sets 
- * after all analysis selections to be applied. It is recommended to put   
- * loose kinematical cuts on pt1 and pt2 (20 GeV) since further selections 
- * are possible based on RooDataSets. 
- * It is recommended to use Root 5.28/00 (CMSSW_4_1_3).
- *
- *
- */
-// Loading:  .L H2GGFitter.cc
-// Running:  runfits("jj120-shapes-combined-Unbinned.root")  
-//                
-
-/*
-#include <cstring>
-#include <cerrno>
-#include <iostream>
-#include <cstdlib>
-#include <cmath>
-#include <vector>
-#include <string>
-#include <stdexcept>
-#include <algorithm>
-#include <unistd.h>
-#include <errno.h>
-#include <iomanip>
-// ROOT headers
-#include "TCanvas.h"
-#include "TAxis.h"
-#include "TH1F.h"
-#include "TF1.h"
-#include "TFile.h"
-#include "TTree.h"
-#include "TIterator.h"
-
-#include "TLatex.h"
-#include "TString.h"
-#include "TLegend.h"
-#include "TGraphAsymmErrors.h"
-
-
-// RooFit headers
-#include "RooAbsPdf.h"
-#include "RooDataHist.h"
-#include "RooDataSet.h"
-#include "RooHistPdf.h"
-#include "RooMsgService.h"
-#include "RooNLLVar.h"
-#include "RooPlot.h"
-#include "RooRandom.h"
-#include "RooRealVar.h"
-#include "RooWorkspace.h"
-#include "TStyle.h"
-
-// RooStats headers
-#include "RooStats/HLFactory.h"
-
-#include "RooAbsPdf.h"
-#include "RooAddPdf.h"
-#include "RooProdPdf.h"
-#include "RooAbsData.h"
-#include "RooPlot.h"
-#include "RooGaussian.h"
-#include "RooProduct.h"
-#include "RooExtendPdf.h"
-#include "RooBernstein.h"
-#include "RooFitResult.h"
-#include "RooMinimizer.h"
-#include "RooCmdArg.h"
-#include "RooConstVar.h"
-#include "RooRealVar.h"
-*/
-//#include "HiggsCSandWidth.h"
-//#include "HiggsCSandWidth.cc"
-//#include "RooPower.h"
-
 using namespace RooFit;
 using namespace RooStats ;
 
@@ -119,10 +6,9 @@ Double_t MMIN = 1000;
 Double_t MMAX = 4600;
 std::string filePOSTfix="";
 double signalScaler=2460.00*0.01/100000.; // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
-double scaleFactorHP=0.992; // tau21 and jet mass scale factors data/MC
-double scaleFactorLP=1.023; // tau21 and jet mass scale factors data/MC
-double scaleFactorHPherwig=1.0; // tau21 and jet mass scale factors Herwig/Pythia
-double scaleFactorLPherwig=1.3; // tau21 and jet mass scale factors Herwig/Pythia
+double scaleFactorHP=0.692; // tau21 and jet mass scale factors data/MC
+double scaleFactorLP=1.458; // tau21 and jet mass scale factors data/MC
+
 
 void AddSigData(RooWorkspace*, Float_t);
 void AddBkgData(RooWorkspace*);
@@ -529,7 +415,7 @@ void SigModelFit(RooWorkspace* w, Float_t mass, TString signalname, std::vector<
       
 
 
-    jjSig[c]     ->fitTo(*sigToFit[c],Range(mass*0.8,mass*1.6),SumW2Error(kTRUE),PrintEvalErrors(-1));
+    jjSig[c]     ->fitTo(*sigToFit[c],Range(mass*0.6,mass*1.6),SumW2Error(kTRUE),PrintEvalErrors(-1));
 // IMPORTANT: fix all pdf parameters to constant
     w->defineSet(TString::Format("SigPdfParam_%s",cat_names.at(c).c_str()), RooArgSet(*w->var("jj_"+signalname+TString::Format("_sig_m0_%s",cat_names.at(c).c_str())),
 								   *w->var("jj_"+signalname+TString::Format("_sig_sigma_%s",cat_names.at(c).c_str())),
@@ -1046,7 +932,9 @@ void MakeBkgWS(RooWorkspace* w, const char* fileBaseName, std::vector<string> ca
    double min = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getMin();
    double max = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getMax();
 
-   if(c==3 || c==4 || c==6)wAll->factory(TString::Format("CMS_bkg_fit_slope1_%s_13TeV[%g,%g,%g]", cat_names.at(c).c_str(), mean, mean, mean));
+   if(c==3 || c==4 || c==6){
+     wAll->factory(TString::Format("CMS_bkg_fit_slope1_%s_13TeV[%g,%g,%g]", cat_names.at(c).c_str(), mean, mean, mean));
+   }
    else{
      wAll->factory(TString::Format("CMS_bkg_fit_slope1_%s_13TeV[%g,%g,%g]", cat_names.at(c).c_str(), mean, min, max));
    }
@@ -1226,73 +1114,20 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   ofstream outFile(filename);
 
   double scaleFactor=signalScaler;
-  // // Herwig HP+HP
-  // if(((signalsample==0)||(signalsample==1))&&(iChan==0))
-  //     scaleFactor*=(scaleFactorHP*scaleFactorHP/scaleFactorHPherwig/scaleFactorHPherwig);
-  // // Herwig HP+LP
-  // if(((signalsample==0)||(signalsample==1))&&(iChan==1))
-  //     scaleFactor*=(scaleFactorHP*scaleFactorLP/scaleFactorHPherwig/scaleFactorLPherwig);
+ 
   
-  // signalsamle:::
-  // if (signalsample==0)
-  // { signalname="RS1ZZ";
-  // }
-  // if (signalsample==1)
-  // { signalname="RS1WW";
-  // }
-  // if (signalsample==2)
-  // { signalname="WZ";
-  // }
-  // if (signalsample==3)
-  // { signalname="qW";
-  // }
-  // if (signalsample==4)
-  // { signalname="qZ";
-  // }
-  // if (signalsample==5)
-  // { signalname="BulkWW";
-  // }
-  // if (signalsample==6)
-  // { signalname="BulkZZ";
-  // }
-  // ICHANNEL
-  // categories->defineType("highPureVV",0);
-//   categories->defineType("lowPureVV",1);
-//   categories->defineType("noPureVV",2);
-//   categories->defineType("highPureWW",3);
-//   categories->defineType("lowPureWW",4);
-//   categories->defineType("noPureWW",5);
-//   categories->defineType("highPureWZ",6);
-//   categories->defineType("lowPureWZ",7);
-//   categories->defineType("noPureWZ",8);
-//   categories->defineType("highPureZZ",9);
-//   categories->defineType("lowPureZZ",10);
-//   categories->defineType("noPureZZ",11);
-//   categories->defineType("highPureqV",12);
-//   categories->defineType("lowPureqV",13);
-//   categories->defineType("noPureqV",14);
-//   categories->defineType("highPureqW",15);
-//   categories->defineType("lowPureqW",16);
-//   categories->defineType("noPureqW",17);
-//   categories->defineType("highPureqZ",18);
-//   categories->defineType("lowPureqZ",19);
-//   categories->defineType("noPureqZ",20);
-  //HP = iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18
-  //LP = iChan==1||iChan==4||iChan==7||iChan==10 || iChan==13||iChan==16||iChan==19
-  
-  
-  // Pythia HP+HP
+  //  HP+HP
   if(((signalsample==0)||(signalsample==1)||(signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==0 ||iChan==3 ||iChan==6 ||iChan==9))
       scaleFactor*=(scaleFactorHP*scaleFactorHP);
-  // Pythia HP+LP
+  //  HP+LP
   if(((signalsample==0)||(signalsample==1)||(signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==1||iChan==4||iChan==7||iChan==10))
       scaleFactor*=(scaleFactorHP*scaleFactorLP);
   
   //SINGLE Q
-  // Pythia HP
+  //  HP
   if(((signalsample==3)||(signalsample==4))&&(iChan==12 ||iChan==15 ||iChan==18 ))
       scaleFactor*=(scaleFactorHP);
-  // Pythia LP
+  //  LP
   if(((signalsample==3)||(signalsample==4))&&(iChan==13||iChan==16||iChan==19))
       scaleFactor*=(scaleFactorLP);
 
