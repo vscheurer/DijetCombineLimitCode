@@ -5,7 +5,7 @@ static const Int_t NCAT = 12; //for VV and qV analysis together this should be 6
 Double_t MMIN = 1000;
 Double_t MMAX = 4600;
 std::string filePOSTfix="";
-double signalScaler=2564.649*0.01/100000.; // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
+double signalScaler=2564.649*0.01/(100000.*0.70*0.70); // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script. Dividing out BR(V-->had)=70% for non-inclusive samples
 double scaleFactorHP=0.692; // tau21 and jet mass scale factors data/MC
 double scaleFactorLP=1.458; // tau21 and jet mass scale factors data/MC
 
@@ -221,7 +221,7 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
   TString inDir   = "./MiniTrees/Signal_VV_13TeV/";
 
   Float_t MASS(mass);
-  Float_t sqrts(8);
+  Float_t sqrts(21);
 
 
 //****************************//
@@ -1114,7 +1114,10 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   ofstream outFile(filename);
 
   double scaleFactor=signalScaler;
- 
+  
+  
+  cout << "For signalsample " <<signalsample<<"and channel "<<iChan<< endl;
+  cout << "scalefactor (before HPLP) " <<scaleFactor<< endl;
   
   //  HP+HP
   if(((signalsample==0)||(signalsample==1)||(signalsample==2)||(signalsample==5)||(signalsample==6))&&(iChan==0 ||iChan==3 ||iChan==6 ||iChan==9))
@@ -1131,6 +1134,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   if(((signalsample==3)||(signalsample==4))&&(iChan==13||iChan==16||iChan==19))
       scaleFactor*=(scaleFactorLP);
 
+  cout << "scalefactor (after HPLP) " <<scaleFactor<< endl; 
   outFile << "# Fully Hadronic VV analysis" << endl;
   outFile << "imax 1" << endl;
   if(signalsample<3){
@@ -1146,6 +1150,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile << Form("shapes data_obs %s ", cat_names[iChan].c_str()) << wsDir+TString(fileBkgName)+".root" << Form(" w_all:data_obs_%s", cat_names[iChan].c_str()) << endl;
   outFile << Form("shapes bkg_fit_jj %s ", cat_names[iChan].c_str()) <<  wsDir+TString(fileBkgName)+".root" << Form(" w_all:CMS_bkg_fit_%s_13TeV", cat_names[iChan].c_str()) << endl;
   if(signalsample<3){
+    cout << "I SHOULD BE HERE FOR Wprime " << endl;
   outFile << Form("shapes RS1WW_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1WW_%.0f_13TeV.root", mass) << Form(" w_all:RS1WW_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   outFile << Form("shapes RS1ZZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_RS1ZZ_%.0f_13TeV.root", mass) << Form(" w_all:RS1ZZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
   outFile << Form("shapes WZ_jj %s ", cat_names[iChan].c_str()) << wsDir+TString::Format("CMS_jj_WZ_%.0f_13TeV.root", mass) << Form(" w_all:WZ_jj_sig_%s", cat_names[iChan].c_str()) << endl;
@@ -1163,18 +1168,18 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   outFile <<  "observation   "  <<  Form("%.10lg",data[iChan]->sumEntries()) << endl;
   outFile << "------------------------------" << endl;
   if(signalsample<3){
+    
   outFile << "bin                      "<< Form("%s       %s      %s      %s      ", cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str(), cat_names[iChan].c_str()) << endl;
   outFile << "process                 RS1WW_jj RS1ZZ_jj WZ_jj     bkg_fit_jj     " << endl;
   outFile << "process                 -2 -1 0        1          " << endl;
   if(signalname=="RS1ZZ")
       outFile <<  "rate                      " 
 	  << "  0  " << signal[iChan]->sumEntries()*scaleFactor << "  0  " << 1 << endl;
-  if(signalname=="RS1WW")
-      outFile <<  "rate                      " 
-	  << "  " << signal[iChan]->sumEntries()*scaleFactor << "  0  0  " << 1 << endl;
-  if(signalname=="WZ")
-      outFile <<  "rate                      " 
-	  << "  0  0  " << signal[iChan]->sumEntries()*scaleFactor << "  " << 1 << endl;
+  if(signalname=="RS1WW")outFile <<  "rate                      " << "  " << signal[iChan]->sumEntries()*scaleFactor << "  0  0  " << 1 << endl;
+  cout << "Yield before SF! " <<(signal[iChan]->sumEntries())<< endl;
+  if(signalname=="WZ") outFile <<  "rate                      "<< "  0  0  " << signal[iChan]->sumEntries()*scaleFactor << "  " << 1 << endl;
+  cout << "Yield after SF! " <<signal[iChan]->sumEntries()*scaleFactor<< endl;
+  cout << "W-tagging SF  " <<scaleFactor/signalScaler<< endl;
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
@@ -1351,7 +1356,7 @@ void R2JJFitter13TeV(double mass, std::string postfix="", int signalsamples=0)
       runfits(mass, 4);
     } 
     else if(signalsamples==5){
-    // runfits(mass, 5);
+    runfits(mass, 5);
     runfits(mass, 6);
     }
     else {
