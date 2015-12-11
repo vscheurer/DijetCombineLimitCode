@@ -5,7 +5,7 @@ static const Int_t NCAT = 12; //for VV and qV analysis together this should be 6
 Double_t MMIN = 1000;
 Double_t MMAX = 4600;
 std::string filePOSTfix="";
-double signalScaler=2460.00*0.01/100000.; // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
+double signalScaler=2564.649*0.01/100000.; // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script
 double scaleFactorHP=0.692; // tau21 and jet mass scale factors data/MC
 double scaleFactorLP=1.458; // tau21 and jet mass scale factors data/MC
 
@@ -415,7 +415,7 @@ void SigModelFit(RooWorkspace* w, Float_t mass, TString signalname, std::vector<
       
 
 
-    jjSig[c]     ->fitTo(*sigToFit[c],Range(mass*0.6,mass*1.6),SumW2Error(kTRUE),PrintEvalErrors(-1));
+    jjSig[c]     ->fitTo(*sigToFit[c],Range(mass*0.7,mass*1.6),SumW2Error(kTRUE),PrintEvalErrors(-1));
 // IMPORTANT: fix all pdf parameters to constant
     w->defineSet(TString::Format("SigPdfParam_%s",cat_names.at(c).c_str()), RooArgSet(*w->var("jj_"+signalname+TString::Format("_sig_m0_%s",cat_names.at(c).c_str())),
 								   *w->var("jj_"+signalname+TString::Format("_sig_sigma_%s",cat_names.at(c).c_str())),
@@ -1228,7 +1228,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
       outFile <<  "rate                      " 
 	  << "  " << signal[iChan]->sumEntries()*scaleFactor << "  0  " << 1 << endl;
   outFile << "--------------------------------" << endl;
-  outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
+  outFile << "# signal scaled by " << signalScaler << " to a cross section of 0.01 pb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
   
   outFile << "lumi_13TeV       lnN  1.046  1.046    - " << endl;
   if((iChan==0 ||iChan==3 ||iChan==6 ||iChan==9 || iChan==12 ||iChan==15 ||iChan==18)){
@@ -1351,7 +1351,7 @@ void R2JJFitter13TeV(double mass, std::string postfix="", int signalsamples=0)
       runfits(mass, 4);
     } 
     else if(signalsamples==5){
-    runfits(mass, 5);
+    // runfits(mass, 5);
     runfits(mass, 6);
     }
     else {

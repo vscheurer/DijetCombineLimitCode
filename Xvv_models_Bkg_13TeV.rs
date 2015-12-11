@@ -547,7 +547,7 @@ jj_WZ_sig_sigma_CMS_jj_WWHP[100, 0.0, 1000.0];
 jj_WZ_sig_alpha_CMS_jj_WWHP[ 0.8, 0.0, 3.0]; 
 jj_WZ_sig_n_CMS_jj_WWHP[130, 0.00001, 1000.0]; 
 jj_WZ_sig_gsigma_CMS_jj_WWHP[100, 0.0, 1000.0];
-jj_WZ_sig_frac_CMS_jj_WWHP[0.0, 0.0, 0.1];
+jj_WZ_sig_frac_CMS_jj_WWHP[0.0, 0.0, 0.0];
 
 
 jjGaussSigWZ_CMS_jj_WWHP = Gaussian(mgg13TeV, jj_WZ_sig_m0_CMS_jj_WWHP, jj_WZ_sig_gsigma_CMS_jj_WWHP);
@@ -572,7 +572,7 @@ jj_WZ_sig_sigma_CMS_jj_ZZHP[100, 0.0, 1000.0];
 jj_WZ_sig_alpha_CMS_jj_ZZHP[ 0.8, 0.0, 3.0]; 
 jj_WZ_sig_n_CMS_jj_ZZHP[130, 0.00001, 1000.0]; 
 jj_WZ_sig_gsigma_CMS_jj_ZZHP[100, 0.0, 1000.0];
-jj_WZ_sig_frac_CMS_jj_ZZHP[0.0, 0.0, 0.1];
+jj_WZ_sig_frac_CMS_jj_ZZHP[0.0, 0.0, 0.0];
 
 
 jjGaussSigWZ_CMS_jj_ZZHP = Gaussian(mgg13TeV, jj_WZ_sig_m0_CMS_jj_ZZHP, jj_WZ_sig_gsigma_CMS_jj_ZZHP);
@@ -1356,7 +1356,7 @@ jj_BulkZZ_sig_sigma_CMS_jj_WZHP[50, 0.0, 500.0];
 jj_BulkZZ_sig_alpha_CMS_jj_WZHP[ 0.8, 0.0, 3.0]; 
 jj_BulkZZ_sig_n_CMS_jj_WZHP[130, 0.00001, 1000.0]; 
 jj_BulkZZ_sig_gsigma_CMS_jj_WZHP[500, 0.0, 1000.0];
-jj_BulkZZ_sig_frac_CMS_jj_WZHP[0.5, 0.30, 1.0];
+jj_BulkZZ_sig_frac_CMS_jj_WZHP[0.5, 0.0, 1.0];
 
 
 jjGaussSigBulkZZ_CMS_jj_WZHP = Gaussian(mgg13TeV, jj_BulkZZ_sig_m0_CMS_jj_WZHP, jj_BulkZZ_sig_gsigma_CMS_jj_WZHP);
@@ -1844,18 +1844,18 @@ BulkWW_jj_CMS_jj_qZNP      = AddPdf(jjGaussSigBulkWW_CMS_jj_qZNP, jjCBSigBulkWW_
 
 #For 2-parameter fit
 bkg_fit_slope_CMS_jj_WWHP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_WWHP[0., -100.0, 500.0];
-bkg_fit_slope2_CMS_jj_WWHP[4.,-100.0, 500.0];
+bkg_fit_slope1_CMS_jj_WWHP[0., 0.0, 500.0];
+bkg_fit_slope2_CMS_jj_WWHP[8.,-100.0, 500.0];
 bkg_fit_slope3_CMS_jj_WWHP[0.,-50.0, 50.0];
 
 bkg_fit_slope_CMS_jj_WZHP[1000.0,0, 10000000];
 bkg_fit_slope1_CMS_jj_WZHP[0., -100., 500.0];
-bkg_fit_slope2_CMS_jj_WZHP[4.,-100.0, 500.0];
+bkg_fit_slope2_CMS_jj_WZHP[8.,-100.0, 500.0];
 bkg_fit_slope3_CMS_jj_WZHP[0.,-50.0, 50.0];
 
 bkg_fit_slope_CMS_jj_WWLP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_WWLP[0., -100.0, 500.0];
-bkg_fit_slope2_CMS_jj_WWLP[3.,-100.0, 500.0];
+bkg_fit_slope1_CMS_jj_WWLP[0., 0., 500.0];
+bkg_fit_slope2_CMS_jj_WWLP[8.,-100.0, 500.0];
 bkg_fit_slope3_CMS_jj_WWLP[0.,-50.0, 50.0];
 
 
@@ -1866,29 +1866,29 @@ bkg_fit_slope2[5,0.0, 100.0];
 bkg_fit_slope3[0.,-100.0, 100.0];
 
 bkg_fit_slope_CMS_jj_VVHP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_VVHP[20., -100.0, 500.0];
-bkg_fit_slope2_CMS_jj_VVHP[3., -100., 100.0];
+bkg_fit_slope1_CMS_jj_VVHP[7., -100.0, 500.0];
+bkg_fit_slope2_CMS_jj_VVHP[7., -100., 100.0];
 bkg_fit_slope3_CMS_jj_VVHP[0.,-50.0, 50.0];
 
 bkg_fit_slope_CMS_jj_ZZHP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_ZZHP[0., -100.0, 500.0];
+bkg_fit_slope1_CMS_jj_ZZHP[40., -100.0, 500.0];
 bkg_fit_slope2_CMS_jj_ZZHP[3.,-100.0, 100.0];
 bkg_fit_slope3_CMS_jj_ZZHP[0.,-50.0, 50.0];
 
 
 bkg_fit_slope_CMS_jj_VVLP[1000.0,0, 10000000];
 bkg_fit_slope1_CMS_jj_VVLP[20., .0, 100.0];
-bkg_fit_slope2_CMS_jj_VVLP[3.,-100.0, 100.0];
+bkg_fit_slope2_CMS_jj_VVLP[5.,-100.0, 100.0];
 bkg_fit_slope3_CMS_jj_VVLP[0.,-50.0, 50.0];
 
 bkg_fit_slope_CMS_jj_WZLP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_WZLP[20., -100.0, 500.0];
-bkg_fit_slope2_CMS_jj_WZLP[3.,-100.0, 100.0];
+bkg_fit_slope1_CMS_jj_WZLP[24., -100.0, 500.0];
+bkg_fit_slope2_CMS_jj_WZLP[5.,-100.0, 100.0];
 bkg_fit_slope3_CMS_jj_WZLP[0.,-50.0, 50.0];
 
 bkg_fit_slope_CMS_jj_ZZLP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_ZZLP[1., -100.0, 1000.0];
-bkg_fit_slope2_CMS_jj_ZZLP[10.,-100.0, 1000.0];
+bkg_fit_slope1_CMS_jj_ZZLP[30., -100.0, 1000.0];
+bkg_fit_slope2_CMS_jj_ZZLP[4.,-100.0, 1000.0];
 bkg_fit_slope3_CMS_jj_ZZLP[0.,-50.0, 50.0];
 
 bkg_fit_slope_CMS_jj_VVNP[1000.0,0, 10000000];
