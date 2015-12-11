@@ -10,16 +10,16 @@ shapes RS1ZZ_jj CMS_jj_WZNP ../workspaces/CMS_jj_RS1ZZ_1800_13TeV.root w_all:RS1
 shapes WZ_jj CMS_jj_WZNP ../workspaces/CMS_jj_WZ_1800_13TeV.root w_all:WZ_jj_sig_CMS_jj_WZNP
 ---------------
 bin          CMS_jj_WZNP
-observation   12942
+observation   12943
 ------------------------------
 bin                      CMS_jj_WZNP       CMS_jj_WZNP      CMS_jj_WZNP      CMS_jj_WZNP      
 process                 RS1WW_jj RS1ZZ_jj WZ_jj     bkg_fit_jj     
 process                 -2 -1 0        1          
-rate                        0  0  3.10034  1
+rate                        0  0  7.58572  1
 --------------------------------
-# signal scaled by 0.000246 to a cross section of 10/fb and also scale factor of 1 are applied.
-lumi_13TeV       lnN  1.05  1.05  1.05    - 
-CMS_eff_vtag_tau21_sf_13TeV         lnN  0.58  0.58  0.58      - # tau21 efficiency
+# signal scaled by 0.000256465 to a cross section of 10/fb and also scale factor of 1 are applied.
+lumi_13TeV       lnN  1.046  1.046  1.046    - 
+CMS_eff_vtag_tau21_sf_13TeV         lnN  0.88/1.01  0.88/1.01  0.88/1.01      - # tau21 efficiency
 CMS_scale_j_13TeV         lnN  1.020  1.020  1.020      - # jet energy scale
 CMS_res_j_13TeV         lnN  1.10  1.10  1.10      - # jet energy resolution
 CMS_pu_13TeV         lnN  1.015  1.015  1.015      - # pileup

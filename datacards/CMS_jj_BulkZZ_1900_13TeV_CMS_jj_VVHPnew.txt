@@ -22,13 +22,13 @@ observation  303.0        763.0        495.0
 bin                                            CMS_jj_WWHP  CMS_jj_WWHP  CMS_jj_WWHP  CMS_jj_WZHP  CMS_jj_WZHP  CMS_jj_WZHP  CMS_jj_ZZHP  CMS_jj_ZZHP  CMS_jj_ZZHP
 process                                        BulkWW_jj    BulkZZ_jj    bkg_fit_jj   BulkWW_jj    BulkZZ_jj    bkg_fit_jj   BulkWW_jj    BulkZZ_jj    bkg_fit_jj 
 process                                        -1           0            1            -1           0            1            -1           0            1          
-rate                                           0.0000       0.4173       1.0000       0.0000       1.3772       1.0000       0.0000       1.3542       1.0000     
+rate                                           0.0000       0.2117       1.0000       0.0000       0.6987       1.0000       0.0000       0.6870       1.0000     
 ----------------------------------------------------------------------------------------------------------------------------------
-CMS_eff_vtag_tau21_sf_13TeV   lnN              1.15         1.15         -            1.15         1.15         -            1.15         1.15         -          
+CMS_eff_vtag_tau21_sf_13TeV   lnN              1.440/0.640  1.440/0.640  -            1.440/0.640  1.440/0.640  -            1.440/0.640  1.440/0.640  -          
 CMS_pu_13TeV            lnN                    1.015        1.015        -            1.015        1.015        -            1.015        1.015        -          
-CMS_res_j_13TeV         lnN                    1.1          1.1          -            1.1          1.1          -            1.1          1.1          -          
-CMS_scale_j_13TeV       lnN                    1.02         1.02         -            1.02         1.02         -            1.02         1.02         -          
-lumi_13TeV              lnN                    1.05         1.05         -            1.05         1.05         -            1.05         1.05         -          
+CMS_res_j_13TeV         lnN                    1.000/1.000  1.000/1.000  -            1.000/1.000  1.000/1.000  -            1.000/1.000  1.000/1.000  -          
+CMS_scale_j_13TeV       lnN                    0.730/1.390  0.730/1.390  -            0.890/1.100  0.890/1.100  -            1.140/0.800  1.140/0.800  -          
+lumi_13TeV              lnN                    1.046        1.046        -            1.046        1.046        -            1.046        1.046        -          
 CMS_sig_p2_jer_13TeV  param  0.0 1.0
 CMS_sig_p1_jes_13TeV  param  0.0 1.0
 CMS_bkg_fit_slope3_CMS_jj_ZZHP_13TeV  flatParam
