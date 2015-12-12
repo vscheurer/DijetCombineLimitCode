@@ -15,7 +15,7 @@ observation   1561
 bin                      CMS_jj_VVHP       CMS_jj_VVHP      CMS_jj_VVHP      CMS_jj_VVHP      
 process                 RS1WW_jj RS1ZZ_jj WZ_jj     bkg_fit_jj     
 process                 -2 -1 0        1          
-rate                        0  0  2.9928  1
+rate                        0  0  6.33274  1
 --------------------------------
 # signal scaled by 0.000256465 to a cross section of 10/fb and also scale factor of 0.478864 are applied.
 lumi_13TeV       lnN  1.046  1.046  1.046    - 
@@ -30,3 +30,8 @@ CMS_bkg_fit_CMS_jj_VVHP_13TeV_norm           flatParam  # Normalization uncertai
 CMS_bkg_fit_slope1_CMS_jj_VVHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
 CMS_bkg_fit_slope2_CMS_jj_VVHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
 CMS_bkg_fit_slope3_CMS_jj_VVHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
+
+CMS_mass_scale_j_13TeV     lnN      1.00133/0.99896      1.00133/0.99896      1.00133/0.99896      -
+CMS_mass_res_j_13TeV         lnN      0.99372/1.00254      0.99372/1.00254      0.99372/1.00254      -
+CMS_scale_j_13TeV            lnN      1.00356/0.99377      1.00356/0.99377      1.00356/0.99377      -
+CMS_res_j_13TeV              lnN      1.0/1.0      1.0/1.0      1.0/1.0      -

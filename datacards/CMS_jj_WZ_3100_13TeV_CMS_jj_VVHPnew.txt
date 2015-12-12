@@ -1,7 +1,7 @@
 Combination of CMS_jj_WWHP=datacards/CMS_jj_WZ_3100_13TeV_CMS_jj_WWHP.txt  CMS_jj_WZHP=datacards/CMS_jj_WZ_3100_13TeV_CMS_jj_WZHP.txt  CMS_jj_ZZHP=datacards/CMS_jj_WZ_3100_13TeV_CMS_jj_ZZHP.txt
 imax 3 number of bins
 jmax 3 number of processes minus 1
-kmax 7 number of nuisance parameters
+kmax 9 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
 shapes RS1WW_jj     CMS_jj_WWHP  datacards/../workspaces/CMS_jj_RS1WW_3100_13TeV.root w_all:RS1WW_jj_sig_CMS_jj_WWHP
 shapes RS1ZZ_jj     CMS_jj_WWHP  datacards/../workspaces/CMS_jj_RS1ZZ_3100_13TeV.root w_all:RS1ZZ_jj_sig_CMS_jj_WWHP
@@ -25,12 +25,14 @@ observation  303.0        763.0        495.0
 bin                                            CMS_jj_WWHP  CMS_jj_WWHP  CMS_jj_WWHP  CMS_jj_WWHP  CMS_jj_WZHP  CMS_jj_WZHP  CMS_jj_WZHP  CMS_jj_WZHP  CMS_jj_ZZHP  CMS_jj_ZZHP  CMS_jj_ZZHP  CMS_jj_ZZHP
 process                                        RS1ZZ_jj     WZ_jj        RS1WW_jj     bkg_fit_jj   RS1ZZ_jj     WZ_jj        RS1WW_jj     bkg_fit_jj   RS1ZZ_jj     WZ_jj        RS1WW_jj     bkg_fit_jj 
 process                                        -2           -1           0            1            -2           -1           0            1            -2           -1           0            1          
-rate                                           0.0000       0.6535       0.0000       1.0000       0.0000       1.4316       0.0000       1.0000       0.0000       0.3006       0.0000       1.0000     
+rate                                           0.0000       1.3828       0.0000       1.0000       0.0000       3.0293       0.0000       1.0000       0.0000       0.6362       0.0000       1.0000     
 ----------------------------------------------------------------------------------------------------------------------------------
 CMS_eff_vtag_tau21_sf_13TeV   lnN              1.440/0.640  1.440/0.640  1.440/0.640  -            1.440/0.640  1.440/0.640  1.440/0.640  -            1.440/0.640  1.440/0.640  1.440/0.640  -          
+CMS_mass_res_j_13TeV    lnN                    0.991/0.997  0.991/0.997  0.991/0.997  -            0.988/1.010  0.988/1.010  0.988/1.010  -            1.057/1.003  1.057/1.003  1.057/1.003  -          
+CMS_mass_scale_j_13TeV   lnN                   0.898/1.103  0.898/1.103  0.898/1.103  -            1.014/0.978  1.014/0.978  1.014/0.978  -            1.133/0.893  1.133/0.893  1.133/0.893  -          
 CMS_pu_13TeV            lnN                    1.015        1.015        1.015        -            1.015        1.015        1.015        -            1.015        1.015        1.015        -          
 CMS_res_j_13TeV         lnN                    1.000/1.000  1.000/1.000  1.000/1.000  -            1.000/1.000  1.000/1.000  1.000/1.000  -            1.000/1.000  1.000/1.000  1.000/1.000  -          
-CMS_scale_j_13TeV       lnN                    0.760/1.270  0.760/1.270  0.760/1.270  -            1.010/0.940  1.010/0.940  1.010/0.940  -            1.370/0.700  1.370/0.700  1.370/0.700  -          
+CMS_scale_j_13TeV       lnN                    0.760/1.280  0.760/1.280  0.760/1.280  -            1.015/0.943  1.015/0.943  1.015/0.943  -            1.374/0.709  1.374/0.709  1.374/0.709  -          
 lumi_13TeV              lnN                    1.046        1.046        1.046        -            1.046        1.046        1.046        -            1.046        1.046        1.046        -          
 CMS_sig_p2_jer_13TeV  param  0.0 1.0
 CMS_sig_p1_jes_13TeV  param  0.0 1.0
