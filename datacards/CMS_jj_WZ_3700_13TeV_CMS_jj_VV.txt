@@ -1,18 +1,18 @@
-Combination of CMS_jj_VVHP=datacards/CMS_jj_WZ_3700_13TeV_CMS_jj_VVHP.txt  CMS_jj_VVLP=datacards/CMS_jj_WZ_3700_13TeV_CMS_jj_VVLP.txt
+Combination of CMS_jj_VVHP=datacards_backup/CMS_jj_WZ_3700_13TeV_CMS_jj_VVHP.txt  CMS_jj_VVLP=datacards_backup/CMS_jj_WZ_3700_13TeV_CMS_jj_VVLP.txt
 imax 2 number of bins
 jmax 3 number of processes minus 1
 kmax 9 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes RS1WW_jj     CMS_jj_VVHP  datacards/../workspaces/CMS_jj_RS1WW_3700_13TeV.root w_all:RS1WW_jj_sig_CMS_jj_VVHP
-shapes RS1ZZ_jj     CMS_jj_VVHP  datacards/../workspaces/CMS_jj_RS1ZZ_3700_13TeV.root w_all:RS1ZZ_jj_sig_CMS_jj_VVHP
-shapes WZ_jj        CMS_jj_VVHP  datacards/../workspaces/CMS_jj_WZ_3700_13TeV.root w_all:WZ_jj_sig_CMS_jj_VVHP
-shapes bkg_fit_jj   CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_13TeV.root w_all:CMS_bkg_fit_CMS_jj_VVHP_13TeV
-shapes data_obs     CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_13TeV.root w_all:data_obs_CMS_jj_VVHP
-shapes RS1WW_jj     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_RS1WW_3700_13TeV.root w_all:RS1WW_jj_sig_CMS_jj_VVLP
-shapes RS1ZZ_jj     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_RS1ZZ_3700_13TeV.root w_all:RS1ZZ_jj_sig_CMS_jj_VVLP
-shapes WZ_jj        CMS_jj_VVLP  datacards/../workspaces/CMS_jj_WZ_3700_13TeV.root w_all:WZ_jj_sig_CMS_jj_VVLP
-shapes bkg_fit_jj   CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_13TeV.root w_all:CMS_bkg_fit_CMS_jj_VVLP_13TeV
-shapes data_obs     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_13TeV.root w_all:data_obs_CMS_jj_VVLP
+shapes RS1WW_jj     CMS_jj_VVHP  datacards_backup/../workspaces/CMS_jj_RS1WW_3700_13TeV.root w_all:RS1WW_jj_sig_CMS_jj_VVHP
+shapes RS1ZZ_jj     CMS_jj_VVHP  datacards_backup/../workspaces/CMS_jj_RS1ZZ_3700_13TeV.root w_all:RS1ZZ_jj_sig_CMS_jj_VVHP
+shapes WZ_jj        CMS_jj_VVHP  datacards_backup/../workspaces/CMS_jj_WZ_3700_13TeV.root w_all:WZ_jj_sig_CMS_jj_VVHP
+shapes bkg_fit_jj   CMS_jj_VVHP  datacards_backup/../workspaces/CMS_jj_bkg_13TeV.root w_all:CMS_bkg_fit_CMS_jj_VVHP_13TeV
+shapes data_obs     CMS_jj_VVHP  datacards_backup/../workspaces/CMS_jj_bkg_13TeV.root w_all:data_obs_CMS_jj_VVHP
+shapes RS1WW_jj     CMS_jj_VVLP  datacards_backup/../workspaces/CMS_jj_RS1WW_3700_13TeV.root w_all:RS1WW_jj_sig_CMS_jj_VVLP
+shapes RS1ZZ_jj     CMS_jj_VVLP  datacards_backup/../workspaces/CMS_jj_RS1ZZ_3700_13TeV.root w_all:RS1ZZ_jj_sig_CMS_jj_VVLP
+shapes WZ_jj        CMS_jj_VVLP  datacards_backup/../workspaces/CMS_jj_WZ_3700_13TeV.root w_all:WZ_jj_sig_CMS_jj_VVLP
+shapes bkg_fit_jj   CMS_jj_VVLP  datacards_backup/../workspaces/CMS_jj_bkg_13TeV.root w_all:CMS_bkg_fit_CMS_jj_VVLP_13TeV
+shapes data_obs     CMS_jj_VVLP  datacards_backup/../workspaces/CMS_jj_bkg_13TeV.root w_all:data_obs_CMS_jj_VVLP
 ----------------------------------------------------------------------------------------------------------------------------------
 bin          CMS_jj_VVHP  CMS_jj_VVLP
 observation  1561.0       8761.0     
