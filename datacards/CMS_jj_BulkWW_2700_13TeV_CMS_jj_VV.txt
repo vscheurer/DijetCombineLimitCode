@@ -1,16 +1,16 @@
-Combination of CMS_jj_VVHP=datacards_backup/CMS_jj_BulkWW_2700_13TeV_CMS_jj_VVHP.txt  CMS_jj_VVLP=datacards_backup/CMS_jj_BulkWW_2700_13TeV_CMS_jj_VVLP.txt
+Combination of CMS_jj_VVHP=datacards/CMS_jj_BulkWW_2700_13TeV_CMS_jj_VVHP.txt  CMS_jj_VVLP=datacards/CMS_jj_BulkWW_2700_13TeV_CMS_jj_VVLP.txt
 imax 2 number of bins
 jmax 2 number of processes minus 1
 kmax 9 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes BulkWW_jj    CMS_jj_VVHP  datacards_backup/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_VVHP
-shapes BulkZZ_jj    CMS_jj_VVHP  datacards_backup/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_VVHP
-shapes bkg_fit_jj   CMS_jj_VVHP  datacards_backup/../workspaces/CMS_jj_bkg_13TeV.root w_all:CMS_bkg_fit_CMS_jj_VVHP_13TeV
-shapes data_obs     CMS_jj_VVHP  datacards_backup/../workspaces/CMS_jj_bkg_13TeV.root w_all:data_obs_CMS_jj_VVHP
-shapes BulkWW_jj    CMS_jj_VVLP  datacards_backup/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_VVLP
-shapes BulkZZ_jj    CMS_jj_VVLP  datacards_backup/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_VVLP
-shapes bkg_fit_jj   CMS_jj_VVLP  datacards_backup/../workspaces/CMS_jj_bkg_13TeV.root w_all:CMS_bkg_fit_CMS_jj_VVLP_13TeV
-shapes data_obs     CMS_jj_VVLP  datacards_backup/../workspaces/CMS_jj_bkg_13TeV.root w_all:data_obs_CMS_jj_VVLP
+shapes BulkWW_jj    CMS_jj_VVHP  datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_VVHP
+shapes BulkZZ_jj    CMS_jj_VVHP  datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_VVHP
+shapes bkg_fit_jj   CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_13TeV.root w_all:CMS_bkg_fit_CMS_jj_VVHP_13TeV
+shapes data_obs     CMS_jj_VVHP  datacards/../workspaces/CMS_jj_bkg_13TeV.root w_all:data_obs_CMS_jj_VVHP
+shapes BulkWW_jj    CMS_jj_VVLP  datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_VVLP
+shapes BulkZZ_jj    CMS_jj_VVLP  datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_VVLP
+shapes bkg_fit_jj   CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_13TeV.root w_all:CMS_bkg_fit_CMS_jj_VVLP_13TeV
+shapes data_obs     CMS_jj_VVLP  datacards/../workspaces/CMS_jj_bkg_13TeV.root w_all:data_obs_CMS_jj_VVLP
 ----------------------------------------------------------------------------------------------------------------------------------
 bin          CMS_jj_VVHP  CMS_jj_VVLP
 observation  1561.0       8761.0     
