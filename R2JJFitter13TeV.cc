@@ -5,7 +5,7 @@ static const Int_t NCAT = 12; //for VV and qV analysis together this should be 6
 Double_t MMIN = 1000;
 Double_t MMAX = 4600;
 std::string filePOSTfix="";
-double signalScaler=2564.649*0.01/(100000.*0.70*0.70); // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script. Dividing out BR(V-->had)=70% for non-inclusive samples
+double signalScaler=2564.649*0.01/(100000.); // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script. Dividing out BR(V-->had)=70% for non-inclusive samples
 double scaleFactorHP=0.692; // tau21 and jet mass scale factors data/MC
 double scaleFactorLP=1.458; // tau21 and jet mass scale factors data/MC
 
@@ -1176,9 +1176,13 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
       outFile <<  "rate                      " 
 	  << "  0  " << signal[iChan]->sumEntries()*scaleFactor << "  0  " << 1 << endl;
   if(signalname=="RS1WW")outFile <<  "rate                      " << "  " << signal[iChan]->sumEntries()*scaleFactor << "  0  0  " << 1 << endl;
-  cout << "Yield before SF! " <<(signal[iChan]->sumEntries())<< endl;
-  if(signalname=="WZ") outFile <<  "rate                      "<< "  0  0  " << signal[iChan]->sumEntries()*scaleFactor << "  " << 1 << endl;
-  cout << "Yield after SF! " <<signal[iChan]->sumEntries()*scaleFactor<< endl;
+  if(signalname=="WZ"){ 
+    double BRfactor = 0.4725916 ; // for hadronic branching fractions 0.6991*0.6760;
+    cout << "Dividing out BR(V-->Had)  " <<BRfactor<< endl;
+    cout << "Before  " <<(signal[iChan]->sumEntries()*scaleFactor)<< endl;
+    cout << "After  " <<signal[iChan]->sumEntries()*scaleFactor*BRfactor<< endl;
+    outFile <<  "rate                      "<< "  0  0  " << signal[iChan]->sumEntries()*scaleFactor*BRfactor << "  " << 1 << endl;
+  }
   cout << "W-tagging SF  " <<scaleFactor/signalScaler<< endl;
   outFile << "--------------------------------" << endl;
   outFile << "# signal scaled by " << signalScaler << " to a cross section of 10/fb and also scale factor of " << scaleFactor/signalScaler << " are applied." << endl;
