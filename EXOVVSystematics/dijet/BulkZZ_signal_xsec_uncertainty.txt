@@ -1,7 +1,4 @@
 mass xsecUnc
-
-BulkG_ZZ_M1000 0.130
-BulkG_ZZ_M1100 0.140
 BulkG_ZZ_M1200 0.150
 BulkG_ZZ_M1300 0.160
 BulkG_ZZ_M1400 0.170
