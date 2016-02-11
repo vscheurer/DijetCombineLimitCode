@@ -1,11 +1,19 @@
 import os,commands, os.path
-import sys
-sys.argv.append( '-b-' )
 from ROOT import *
 import math
 import time
 from array import *
 import CMS_lumi, tdrstyle
+from optparse import OptionParser
+
+parser = OptionParser()
+parser.add_option('-b', action='store_true', dest='noX', default=False, help='no X11 windows')
+parser.add_option('--ch', action="store",type="string",dest="channel",default="WZHP")
+parser.add_option('-m', action="store",type="int",dest="masspoint",default=1400)
+(options, args) = parser.parse_args()
+
+if options.noX:
+  gROOT.SetBatch(True)
 
 gStyle.SetOptTitle(0)
 # gStyle.SetOptStat("rme")
@@ -47,7 +55,7 @@ def doPull(hSB,hB,gSB,fNbins,xbins,fFitXmin,fFitXmax):
 def write(fname, histolist):
     "Write the new histogram to disk"
     base = fname
-    outfname = "/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/input/Pseudodata.root"
+    outfname = "input/Pseudodata.root"
     print "Saving file %s " %outfname
     fout = TFile(outfname,"RECREATE")
     for h in histolist:
@@ -55,52 +63,56 @@ def write(fname, histolist):
     fout.Close()
 
 
-channels = ["VVHP","WWHP","WZHP","ZZHP"]
-# channels = ["WZHP"]
-ntoys = 100
-scaleS=1.0
+masspoint=4000
+ch = options.channel
 
-infile  = "/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/input/QCD_new.root"
-infileS = "/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/input/WprimeToWZ_13TeV_1400GeV.root"
+ntoys = 100
+scaleS=0.01
+masspoint = options.masspoint
+
+infile  = "input/QCD_new.root"
+infileS = "input/WprimeToWZ_13TeV_%iGeV.root" %masspoint
+
+print infileS
 
 massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058,
-             1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
+             1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337,
              4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
-                       
+
 xbins = array('d',massBins)
 fNbins = len(massBins)-1
 
 xsec_Wprime2TeV = 1
 lumi = 2460.0
 fitmin = 1000
-fitmax = 2332    
+fitmax = 2300
 
-print "Starting bias study for channels %s" %channels
+print "Starting bias study for channel" ,ch
 
 
-histnames = [ 'DijetMassHighPuriVV',
-              'DijetMassHighPuriWW',
-              'DijetMassHighPuriWZ',
-              'DijetMassHighPuriZZ',
-              'DijetMassLowPuriVV',
-              'DijetMassLowPuriWW',
-              'DijetMassLowPuriWZ',
-              'DijetMassLowPuriZZ',
-              'DijetMassHighPuriqV',
-              'DijetMassHighPuriqW',
-              'DijetMassHighPuriqZ',
-              'DijetMassLowPuriqV',
-              'DijetMassLowPuriqW',
-              'DijetMassLowPuriqZ',
-              'DijetMassNoPuriVV',
-              'DijetMassNoPuriWW',
-              'DijetMassNoPuriWZ',
-              'DijetMassNoPuriZZ',
-              'DijetMassNoPuriqV',
-              'DijetMassNoPuriqW',
-              'DijetMassNoPuriqZ'
+histnames = [ # 'DijetMassHighPuriVV',
+#               'DijetMassHighPuriWW',
+              'DijetMassHighPuriWZ'
+              # 'DijetMassHighPuriZZ',
+  #             'DijetMassLowPuriVV',
+  #             'DijetMassLowPuriWW',
+  #             'DijetMassLowPuriWZ',
+  #             'DijetMassLowPuriZZ',
+  #             'DijetMassHighPuriqV',
+  #             'DijetMassHighPuriqW',
+  #             'DijetMassHighPuriqZ',
+  #             'DijetMassLowPuriqV',
+  #             'DijetMassLowPuriqW',
+  #             'DijetMassLowPuriqZ',
+  #             'DijetMassNoPuriVV',
+  #             'DijetMassNoPuriWW',
+  #             'DijetMassNoPuriWZ',
+  #             'DijetMassNoPuriZZ',
+  #             'DijetMassNoPuriqV',
+  #             'DijetMassNoPuriqW',
+  #             'DijetMassNoPuriqZ'
             ]
-            
+
 bkgyields = []
 fits = []
 sighists = []
@@ -115,47 +127,20 @@ for j in range(0,len(histnames)):
   histB.SetName("%s_B" %histB.GetName())
   bkgyield = int(histB.Integral())
   bkgyields.append(bkgyield)
-  
+
   htmp = histB.Rebin(fNbins,"htmp",xbins)
   BKGfit = TF1("BKGfit","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]) )",fitmin,fitmax)
   htmp.Fit("BKGfit","ISR","",fitmin,2332)
   BKGfit.SetName(histname)
   fits.append(BKGfit)
-  
+
   hs = TH1F('hs','hs',7000,0,7000)
   histS = filetmpS.Get(histname)
   histS.Scale(lumi*scaleS)
   for j in range (0, int(histS.Integral())):
-    hs.Fill(histS.GetRandom())  
+    hs.Fill(histS.GetRandom())
   hs.SetName("%s_S" %histname)
   sighists.append(hs)
-  print histS.GetName()
-  print "BEFORE: Nr signal events == %.2f"%histS.Integral()
-  print "AFTER:  Nr signal events == %.2f"%hs.Integral()
-  
-# filetmpB.Close()
-# filetmpS.Close()
-# del histB
-# del htmp
-# del histS
-
-hlist_Bias=[]
-hlist_Pull=[]
-hlist_RSS=[]
-hlist_SigmaObs=[]
-hlist_SigmaExp=[]
-
-for ch in channels:
-  bias = TH1F("bias%s"%ch,"bias%s"%ch,100,-0.1,5.0)
-  pull = TH1F("pull%s"%ch,"pull%s"%ch,100,-3.,3.)
-  residuals = TH1F("residuals%s"%ch,"residuals%s"%ch,100,-4.0,4.0)
-  sigmaObs = TH1F("sigmaObs%s"%ch,"sigmaObs%s"%ch,100,-1.,15.)
-  sigmaExp = TH1F("sigmaExp%s"%ch,"sigmaExp%s"%ch,100,-1.,15.)
-  hlist_Bias.append(bias)
-  hlist_Pull.append(pull)
-  hlist_RSS.append(residuals)
-  hlist_SigmaObs.append(sigmaObs)
-  hlist_SigmaExp.append(sigmaExp)
 
 gRandom = TRandom3(0)
 for ii in range (0,ntoys):
@@ -165,23 +150,21 @@ for ii in range (0,ntoys):
   histolist=[]
   for i in range(0,len(histnames)):
     histname = histnames[i]
-    print histname
     hB = TH1F('%s'%histname,'%s'%histname,7000,0,7000)
     for j in range(0,bkgyields[i]):
       hB.Fill(fits[i].GetRandom())
-    
+
     hSB = hB.Clone()
     hSB.SetName(histname)
     hsig = sighists[i].Clone()
     hsig.SetName("sighist")
     hSB.Add(hsig)
-    # histolist[i].Fill(1400,103)
     for e in range(1,hSB.GetNbinsX()):
       error = math.sqrt(hSB.GetBinContent(e))
       hSB.SetBinError(e,error)
-            
+
     histolist.append(hSB)
-    
+
     if ii==0:
       cSB = TCanvas("%s"%histname,"%s"%histname,600,700)
       cSB.GetWindowHeight()
@@ -198,7 +181,7 @@ for ii in range (0,ntoys):
       pad1.SetBorderMode(0)
       pad1.SetFrameFillStyle(0)
       pad1.SetFrameBorderMode(0)
-    
+
       addInfo = TPaveText(0.2358691,0.04035043,0.5050171,0.1870085,"NDC")
       addInfo.AddText("%s"%histname)
       addInfo.SetFillColor(0)
@@ -208,7 +191,7 @@ for ii in range (0,ntoys):
       addInfo.SetTextFont(42)
       addInfo.SetTextSize(0.040)
       addInfo.SetTextAlign(12)
-      
+
       hsig = hsig.Rebin(fNbins,"hB",xbins)
       hB = hB.Rebin(fNbins,"hB",xbins)
       htmp = hSB.Clone()
@@ -217,7 +200,7 @@ for ii in range (0,ntoys):
       hB.SetFillStyle(3002)
       hB.SetFillColor(kBlack)
       hB.SetLineColor(kBlack)
-      
+
       frame1 = pad1.DrawFrame(fitmin,0.01,fitmax,htmp.GetMaximum()*8)
       frame1.SetTitle("")
       frame1.SetXTitle("Dijet invariant mass [GeV]")
@@ -231,7 +214,7 @@ for ii in range (0,ntoys):
       frame1.GetXaxis().SetNdivisions(405)
       hsig.Draw("histSAME")
       hB.Draw("HISTsame")
-      
+
       x=[]
       y=[]
       exl=[]
@@ -256,7 +239,7 @@ for ii in range (0,ntoys):
         eDATA_H = (h-n)
         eyl.append( (n-l) )
         eyh.append( (h-n) )
-        
+
       vx = array("f",x)
       vy = array("f",y)
       vexl = array("f",exl)
@@ -329,319 +312,370 @@ for ii in range (0,ntoys):
   cmd = "root -l -q MiniTreeProducerVV13TeV.C"
   print cmd
   os.system(cmd)
-  cmd = "python ProduceWorkspaces13TeV.py"
+  cmd = "python ProduceWorkspaces13TeV.py -m %i" %masspoint
   print cmd
   os.system(cmd)
 
-  i =-1
-  for ch in channels:
-    i += 1
-    cmd = "combine datacards/CMS_jj_WZ_1400_13TeV_CMS_jj_%s.txt  -M MaxLikelihoodFit -v2 -m 1400 --rMax 100 --rMin -100 > tmp.txt"%ch
-    print cmd
-    os.system(cmd)
-    cmd = "combine -M ProfileLikelihood -n %sObsSignif -m 1400  --signif --pvalue -d datacards/CMS_jj_WZ_1400_13TeV_CMS_jj_%s.txt > tmp2.txt"%(ch,ch)
-    print cmd
-    os.system(cmd)
-    cmd = "combine -M ProfileLikelihood -n %sExpSignif -m 1400  -s 1 --signif --pvalue --expectSignal=1 -t -1 --toysFreq -d datacards/CMS_jj_WZ_1400_13TeV_CMS_jj_%s.txt > tmp3.txt" %(ch,ch)
-    print cmd
-    os.system(cmd)
-    valid_input = True
-    with open("tmp.txt") as f:
+  cmd = "combine datacards/CMS_jj_WZ_%i_13TeV_CMS_jj_%s.txt  -M MaxLikelihoodFit -v2 -m %i --rMax 1000 --rMin 0.001 > tmp.txt"%(masspoint,ch,masspoint)
+  print cmd
+  os.system(cmd)
+  cmd = "combine -M ProfileLikelihood -n %sObsSignif -m %i  --signif --pvalue -d datacards/CMS_jj_WZ_%i_13TeV_CMS_jj_%s.txt > tmp2.txt"%(ch,masspoint,masspoint,ch)
+  print cmd
+  os.system(cmd)
+  cmd = "combine -M ProfileLikelihood -n %sExpSignif -m %i  -s 1 --signif --pvalue --expectSignal=1 -t -1 --toysFreq -d datacards/CMS_jj_WZ_%i_13TeV_CMS_jj_%s.txt > tmp3.txt" %(ch,masspoint,masspoint,ch)
+  print cmd
+  os.system(cmd)
+  
+  cmd = "combine datacards/CMS_jj_WZ_%i_13TeV_CMS_jj_%s.txt  -M MaxLikelihoodFit -v2 -m %i --rMax 1000 --rMin 0.001 --freezeNuisances CMS_bkg_fit_slope1_CMS_jj_WZHP_13TeV > tmp4.txt"%(masspoint,ch,masspoint)
+  print cmd
+  os.system(cmd)
+  cmd = "combine -M ProfileLikelihood -n %sObsSignif -m %i  --signif --pvalue -d datacards/CMS_jj_WZ_%i_13TeV_CMS_jj_%s.txt --freezeNuisances CMS_bkg_fit_slope1_CMS_jj_WZHP_13TeV > tmp5.txt"%(ch,masspoint,masspoint,ch)
+  print cmd
+  os.system(cmd)
+  cmd = "combine -M ProfileLikelihood -n %sExpSignif -m %i  -s 1 --signif --pvalue --expectSignal=1 -t -1 --toysFreq -d datacards/CMS_jj_WZ_%i_13TeV_CMS_jj_%s.txt --freezeNuisances CMS_bkg_fit_slope1_CMS_jj_WZHP_13TeV > tmp6.txt" %(ch,masspoint,masspoint,ch)
+  print cmd
+  os.system(cmd)
+  
+  
+  valid_input = True
+  with open("tmp.txt") as f:
+    for line in f.readlines():
+      # if "Minimized function has error status." in line: valid_input = False
+      if "Best fit" in line:
+        rate = line
+  with open("tmp2.txt") as f:
+    for line in f.readlines():
+      # if "Minimized function has error status." in line: valid_input = False
+      if "Significance" in line:
+        obssig = line
+  with open("tmp3.txt") as f:
+    for line in f.readlines():
+      # if "Minimized function has error status." in line: valid_input = False
+      if "Significance" in line:
+        expsig = line
+  if valid_input :
+    ObsSig = float ((obssig.split("= ")[1]).replace(")",""))
+    ExpSig = float ((expsig.split("= ")[1]).replace(")",""))
+    r = float(rate.split(" ")[3])
+    err = rate.split(" ")[5]
+    eH = err.split("/")[1]
+    if (eH.find("+-")!=-1):
+      eH = float(eH.split("-")[1])
+    else:
+      eH = float(eH)
+    eL = err.split("/")[0]
+    if (eL.find("+-")!=-1):
+      eL = float(eL.split("-")[1])
+    else:
+      eL = float(eL)
+    if r > 1.: e = eH
+    if r < 1.: e = eL
+    Pull = float((1.-r)/abs(e))
+    Residuals = float(1.-r)
+    
+    
+    with open("tmp4.txt") as f:
       for line in f.readlines():
         # if "Minimized function has error status." in line: valid_input = False
         if "Best fit" in line:
-          rate = line
-    with open("tmp2.txt") as f:
+          rate2 = line
+    with open("tmp5.txt") as f:
       for line in f.readlines():
         # if "Minimized function has error status." in line: valid_input = False
         if "Significance" in line:
-          obssig = line
-    with open("tmp3.txt") as f:
+          obssig2 = line
+    with open("tmp6.txt") as f:
       for line in f.readlines():
         # if "Minimized function has error status." in line: valid_input = False
         if "Significance" in line:
-          expsig = line
+          expsig2 = line
     if valid_input :
-      ObsSig = float ((obssig.split("= ")[1]).replace(")",""))
-      ExpSig = float ((expsig.split("= ")[1]).replace(")",""))
-      hlist_SigmaObs[i].Fill(ObsSig)
-      hlist_SigmaExp[i].Fill(ExpSig)
-      r = float(rate.split(" ")[3])
-      hlist_Bias[i].Fill(r)
-      err = rate.split(" ")[5]
-      eH = err.split("/")[1]
-      if (eH.find("+-")!=-1): 
-        eH = float(eH.split("-")[1])
+      ObsSig2 = float ((obssig2.split("= ")[1]).replace(")",""))
+      ExpSig2 = float ((expsig2.split("= ")[1]).replace(")",""))
+      r2 = float(rate2.split(" ")[3])
+      err2 = rate2.split(" ")[5]
+      eH2 = err2.split("/")[1]
+      if (eH2.find("+-")!=-1):
+        eH2 = float(eH2.split("-")[1])
       else:
-        eH = float(eH)  
-      eL = err.split("/")[0]
-      if (eL.find("+-")!=-1): 
-        eL = float(eL.split("-")[1])
+        eH2 = float(eH2)
+      eL2 = err2.split("/")[0]
+      if (eL2.find("+-")!=-1):
+        eL2 = float(eL2.split("-")[1])
       else:
-        eL = float(eL)
-        
-      if r > 1.: e = eH
-      if r < 1.: e = eL
-      Pull = float((1.-r)/abs(e))
-      Residuals = float(1.-r)
-      hlist_Pull[i].Fill(Pull)
-      hlist_RSS[i].Fill(Residuals)
-      with open("Output_%s.txt"%ch, "a") as text_file:
-        text_file.write("Toy nr:  {}  \n".format(ii))
-        text_file.write("r:  {}\n".format(rate))
-        text_file.write("Obs. sign.:  {}\n".format(obssig))
-        text_file.write("Exp. sign.:  {}\n".format(expsig))
-        text_file.write("Pull:  {}\n".format(Pull))
-        text_file.write("Residuals:  {}\n".format(Residuals))
-        text_file.write("My r:  {}\n".format(r))
-        text_file.write("My eH:  {}\n".format(eH))
-        text_file.write("My eL:  {}\n".format(eL))
-      print ""
-      print "" 
-      print "Rate r == %f +- %f/%f" %(r,eH,eL)
-      print "Pull = %f" %Pull
-      print "Residuals = %f" %Residuals
-      print "Expected significance == %f" %(ExpSig)
-      print "Observed significance == %f" %(ObsSig)
-      print ""
-      print ""
-      # biasname = "%s_bias" %ch
-      # pullname = "%s_pull" %ch
-      # rssname = "%s_rss" %ch
-      # expsigmaname = "%s_ExpSignificance" %ch
-      # obssigmaname = "%s_ObsSignificance" %ch
-      # hlist_Bias[i].SetName(biasname)
-      # hlist_Pull[i].SetName(pullname)
-      # hlist_RSS[i].SetName(rssname)
-      # hlist_SigmaExp[i].SetName(expsigmaname)
-      # hlist_SigmaObs[i].SetName(obssigmaname)
-      # cmd = "rm tmp.txt && rm tmp2.txt && rm tmp3.txt && rm roostats*"
-      # print cmd
-      # os.system(cmd)
+        eL2 = float(eL2)
+      if r2 > 1.: e2 = eH2
+      if r2 < 1.: e2 = eL2
+      Pull2 = float((1.-r2)/abs(e2))
+      Residuals2 = float(1.-r2)
+      
+      
+      
+    with open("Output_%i_%s.txt"%(masspoint,ch), "a") as text_file:
+      text_file.write("Toy nr:  {}  \n".format(ii))
+      text_file.write("3 par r:  {}\n".format(rate))
+      text_file.write("3 par Obs. sign.:  {}\n".format(obssig))
+      text_file.write("3 par Exp. sign.:  {}\n".format(expsig))
+      text_file.write("3 par Pull:  {}\n".format(Pull))
+      text_file.write("3 par Residuals:  {}\n".format(Residuals))
+      text_file.write("3 par My r:  {}\n".format(r))
+      text_file.write("3 par My eH:  {}\n".format(eH))
+      text_file.write("3 par My eL:  {}\n".format(eL))
+      text_file.write("2 par r:  {}\n".format(rate2))
+      text_file.write("2 par Obs. sign.:  {}\n".format(obssig2))
+      text_file.write("2 par Exp. sign.:  {}\n".format(expsig2))
+      text_file.write("2 par Pull:  {}\n".format(Pull2))
+      text_file.write("2 par Residuals:  {}\n".format(Residuals2))
+      text_file.write("2 par My r:  {}\n".format(r2))
+      text_file.write("2 par My eH:  {}\n".format(eH2))
+      text_file.write("2 par My eL:  {}\n".format(eL2))
+      
+    print ""
+    print "-----3 parameter fit-----"
+    print "Rate r == %f +- %f/%f" %(r,eH,eL)
+    print "Pull = %f" %Pull
+    print "Residuals = %f" %Residuals
+    print "Expected significance == %f" %(ExpSig)
+    print "Observed significance == %f" %(ObsSig)
+    print ""
+    print "-----2 parameter fit-----"
+    print "Rate r == %f +- %f/%f" %(r2,eH2,eL2)
+    print "Pull = %f" %Pull2
+    print "Residuals = %f" %Residuals2
+    print "Expected significance == %f" %(ExpSig2)
+    print "Observed significance == %f" %(ObsSig2)
+    print ""
+    print ""
+    cmd = "rm tmp.txt && rm tmp2.txt && rm tmp3.txt && rm tmp4.txt && rm tmp5.txt && rm tmp6.txt && rm roostats*"
+    print cmd
+    os.system(cmd)
 
-pullcanv = []
-rsscanv = []
-biascanv = []
-sigmaexpcanv = []
-sigmaobscanv = []
-
-W = 600
-H = 700
-H_ref = 700
-W_ref = 600
-T = 0.08*H_ref
-B = 0.12*H_ref
-L = 0.12*W_ref
-R = 0.04*W_ref
-
-
-
-l1 = TLatex()
-l1.SetNDC()
-l1.SetTextAlign(12)
-l1.SetTextFont(42)
-l1.SetTextSize(0.025)
-
-i = -1
-for ch in channels:
-  i +=1
-
-  addInfo = TPaveText(0.2147651,0.7842262,0.4832215,0.8900595,"NDC")
-  addInfo.SetFillColor(0)
-  addInfo.SetLineColor(0)
-  addInfo.SetFillStyle(0)
-  addInfo.SetBorderSize(0)
-  addInfo.SetTextFont(42)
-  addInfo.SetTextSize(0.040)
-  addInfo.SetTextAlign(12)
-  addInfo.AddText("W'(1.4 TeV)#rightarrowWZ (#sigma = 1 pb)")
-  addInfo.AddText("%s category"%ch)
   
-  c2 = TCanvas("pullCanv%s"%ch,"pullCanv%s"%ch,W,H)
-  c2.GetWindowHeight()
-  c2.GetWindowWidth()
-  c2.SetLeftMargin(0.2)
-  c2.SetBottomMargin(0.2)
-  
-  hlist_Pull[i].SetTitle("")
-  hlist_Pull[i].GetXaxis().SetTitle("Nr. toys")
-  hlist_Pull[i].GetXaxis().SetTitle("#frac{r_{in}-r_{out}}{#sigma}")
-  hlist_Pull[i].GetXaxis().SetTitleSize(0.06)
-  hlist_Pull[i].GetXaxis().SetTitleOffset(0.95)
-  hlist_Pull[i].GetXaxis().SetLabelSize(0.05)
-  hlist_Pull[i].GetYaxis().SetTitleSize(0.06)
-  hlist_Pull[i].GetYaxis().SetTitleOffset(1.0)
-  hlist_Pull[i].GetYaxis().SetLabelSize(0.05)
-  hlist_Pull[i].SetMarkerSize(0.9)
-  hlist_Pull[i].SetMarkerStyle(20)
-  hlist_Pull[i].SetLineColor(kRed)
-  hlist_Pull[i].GetXaxis().SetNdivisions(405)
-  hlist_Pull[i].Draw("pe0")
-  hlist_Pull[i].GetXaxis().SetRangeUser(hlist_Pull[i].GetXaxis().GetXmin(),hlist_Pull[i].GetXaxis().GetXmax())
-  hlist_Pull[i].SetMaximum(hlist_Pull[i].GetMaximum()*2.0)
-  l1.DrawLatex(0.2147651,0.70, "Mean: %.2f, RMS: %.2f (%i toys)" %(hlist_Pull[i].GetMean(),hlist_Pull[i].GetRMS(),ntoys))
-  addInfo.Draw('same')
-  c2.Update()
-  pullcanv.append(c2)
-  cname = ch + "_pull.pdf"
-  c2.SaveAs(cname)
-
-  c1 = TCanvas("bias_%s"%ch,"bias_%s"%ch,W,H)
-  c1.GetWindowHeight()
-  c1.GetWindowWidth()
-  c1.SetLeftMargin(0.2)
-  c1.SetBottomMargin(0.2)
-  hlist_Bias[i].SetTitle("")
-  hlist_Bias[i].GetXaxis().SetTitle("Signal strength r")
-  hlist_Bias[i].GetYaxis().SetTitle("Nr. toys")
-  hlist_Bias[i].GetXaxis().SetTitleSize(0.06)
-  hlist_Bias[i].GetXaxis().SetTitleOffset(0.95)
-  hlist_Bias[i].GetXaxis().SetLabelSize(0.05)
-  hlist_Bias[i].GetYaxis().SetTitleSize(0.06)
-  hlist_Bias[i].GetYaxis().SetTitleOffset(1.0)
-  hlist_Bias[i].GetYaxis().SetLabelSize(0.05)
-  hlist_Bias[i].SetMarkerSize(0.9)
-  hlist_Bias[i].SetMarkerStyle(20)
-  hlist_Bias[i].SetLineColor(kRed)
-  hlist_Bias[i].GetXaxis().SetNdivisions(405)
-  hlist_Bias[i].Draw("pe0")
-  hlist_Bias[i].GetXaxis().SetRangeUser(hlist_Bias[i].GetXaxis().GetXmin(),hlist_Bias[i].GetXaxis().GetXmax())
-  hlist_Bias[i].SetMaximum(hlist_Bias[i].GetMaximum()*1.5)
-  l1.DrawLatex(0.2147651,0.70, "Mean: %.2f, RMS: %.2f (%i toys)" %(hlist_Bias[i].GetMean(),hlist_Bias[i].GetRMS(),ntoys))
-  addInfo.Draw('same')
-  c1.Update()
-  # line = TLine(bias.GetMean(1),0,bias.GetMean(1),bias.GetMaximum())
-  # line.SetVertical()
-  # line.SetLineColor(kRed)
-  # line.SetLineWidth(2)
-  # line.Draw("same")
-  # c1.Update()
-  biascanv.append(c1)
-  cname = ch + "_r.pdf"
-  c1.SaveAs(cname)
-
-
-  c3 = TCanvas("sigmaObs_%s"%ch,"sigmaObs_%s"%ch,W,H)
-  c3.GetWindowHeight()
-  c3.GetWindowWidth()
-  c3.SetLeftMargin(0.2)
-  c3.SetBottomMargin(0.2)
-  hlist_SigmaObs[i].SetTitle("")
-  hlist_SigmaObs[i].GetXaxis().SetTitle("Observed significance #sigma")
-  hlist_SigmaObs[i].GetYaxis().SetTitle("Nr. toys")
-  hlist_SigmaObs[i].GetXaxis().SetTitleSize(0.06)
-  hlist_SigmaObs[i].GetXaxis().SetTitleOffset(0.95)
-  hlist_SigmaObs[i].GetXaxis().SetLabelSize(0.05)
-  hlist_SigmaObs[i].GetYaxis().SetTitleSize(0.06)
-  hlist_SigmaObs[i].GetYaxis().SetTitleOffset(1.0)
-  hlist_SigmaObs[i].GetYaxis().SetLabelSize(0.05)
-  hlist_SigmaObs[i].SetMarkerSize(0.9)
-  hlist_SigmaObs[i].SetMarkerStyle(20)
-  hlist_SigmaObs[i].SetLineColor(kRed)
-  hlist_SigmaObs[i].GetXaxis().SetNdivisions(405)
-  hlist_SigmaObs[i].Draw("pe0")
-  hlist_SigmaObs[i].GetXaxis().SetRangeUser(hlist_SigmaObs[i].GetXaxis().GetXmin(),hlist_SigmaObs[i].GetXaxis().GetXmax())
-  hlist_SigmaObs[i].SetMaximum(hlist_SigmaObs[i].GetMaximum()*1.5)
-  l1.DrawLatex(0.2147651,0.70, "Mean: %.2f, RMS: %.2f (%i toys)" %(hlist_SigmaObs[i].GetMean(),hlist_SigmaObs[i].GetRMS(),ntoys))
-  addInfo.Draw('same')
-  c3.Update()
-  # line = TLine(Sigma.GetMean(1),0,Sigma.GetMean(1),Sigma.GetMaximum())
-  # line.SetVertical()
-  # line.SetLineColor(kRed)
-  # line.SetLineWidth(2)
-  # line.Draw("same")
-  # c3.Update()
-  sigmaobscanv.append(c3)
-  cname = ch + "_sigmaObs.pdf"
-  c3.SaveAs(cname)
-
-  c4 = TCanvas("sigmaExp_%s"%ch,"sigmaExp_%s"%ch,W,H)
-  c4.GetWindowHeight()
-  c4.GetWindowWidth()
-  c4.SetLeftMargin(0.2)
-  c4.SetBottomMargin(0.2)
-  hlist_SigmaExp[i].SetTitle("")
-  hlist_SigmaExp[i].GetXaxis().SetTitle("Expected significance #sigma")
-  hlist_SigmaExp[i].GetYaxis().SetTitle("Nr. toys")
-  hlist_SigmaExp[i].GetXaxis().SetTitleSize(0.06)
-  hlist_SigmaExp[i].GetXaxis().SetTitleOffset(0.95)
-  hlist_SigmaExp[i].GetXaxis().SetLabelSize(0.05)
-  hlist_SigmaExp[i].GetYaxis().SetTitleSize(0.06)
-  hlist_SigmaExp[i].GetYaxis().SetTitleOffset(1.0)
-  hlist_SigmaExp[i].GetYaxis().SetLabelSize(0.05)
-  hlist_SigmaExp[i].SetMarkerSize(0.9)
-  hlist_SigmaExp[i].SetMarkerStyle(20)
-  hlist_SigmaExp[i].SetLineColor(kRed)
-  hlist_SigmaExp[i].GetXaxis().SetNdivisions(405)
-  hlist_SigmaExp[i].Draw("pe0")
-  hlist_SigmaExp[i].GetXaxis().SetRangeUser(hlist_SigmaExp[i].GetXaxis().GetXmin(),hlist_SigmaExp[i].GetXaxis().GetXmax())
-  hlist_SigmaExp[i].SetMaximum(hlist_SigmaExp[i].GetMaximum()*1.5)
-  l1.DrawLatex(0.2147651,0.70, "Mean: %.2f, RMS: %.2f (%i toys)" %(hlist_SigmaExp[i].GetMean(),hlist_SigmaExp[i].GetRMS(),ntoys))
-  addInfo.Draw('same')
-  c4.Update()
-  # line = TLine(Sigma.GetMean(1),0,Sigma.GetMean(1),Sigma.GetMaximum())
-  # line.SetVertical()
-  # line.SetLineColor(kRed)
-  # line.SetLineWidth(2)
-  # line.Draw("same")
-  # c4.Update()
-  sigmaexpcanv.append(c4)
-  cname = ch + "_sigmaExp.pdf"
-  c4.SaveAs(cname)
-  
-  c5 = TCanvas("rssCanv_%s"%ch,"rssCanv_%s"%ch,W,H)
-  c5.GetWindowHeight()
-  c5.GetWindowWidth()
-  c5.SetLeftMargin(0.2)
-  c5.SetBottomMargin(0.2)
-  hlist_RSS[i].SetTitle("")
-  hlist_RSS[i].GetXaxis().SetTitle("r_{in}-r_{out}")
-  hlist_RSS[i].GetYaxis().SetTitle("Nr. toys")
-  hlist_RSS[i].GetXaxis().SetTitleSize(0.06)
-  hlist_RSS[i].GetXaxis().SetTitleOffset(0.95)
-  hlist_RSS[i].GetXaxis().SetLabelSize(0.05)
-  hlist_RSS[i].GetYaxis().SetTitleSize(0.06)
-  hlist_RSS[i].GetYaxis().SetTitleOffset(1.0)
-  hlist_RSS[i].GetYaxis().SetLabelSize(0.05)
-  hlist_RSS[i].SetMarkerSize(0.9)
-  hlist_RSS[i].SetLineColor(kRed)
-  hlist_RSS[i].SetMarkerStyle(20)
-  hlist_RSS[i].GetXaxis().SetNdivisions(405)
-  hlist_RSS[i].Draw("pe0")
-  hlist_RSS[i].GetXaxis().SetRangeUser(hlist_RSS[i].GetXaxis().GetXmin(),hlist_RSS[i].GetXaxis().GetXmax())
-  hlist_RSS[i].SetMaximum(hlist_RSS[i].GetMaximum()*1.5)
-  l1.DrawLatex(0.2147651,0.70, "Mean: %.2f, RMS: %.2f (%i toys)" %(hlist_RSS[i].GetMean(),hlist_RSS[i].GetRMS(),ntoys))
-  addInfo.Draw('same')
-  c5.Update()
-  rsscanv.append(c5)
-  cname = ch + "_rss.pdf"
-  c5.SaveAs(cname)
-
-f = TFile("bias-studies-Wprime%spb.root"%scaleS,'RECREATE')
-for i in range (0,len(channels)):
-  biascanv[i].Write()
-  pullcanv[i].Write()
-  rsscanv[i].Write()
-  sigmaexpcanv[i].Write()
-  sigmaobscanv[i].Write()
-  hlist_Bias[i].Write()
-  hlist_Pull[i].Write()
-  hlist_RSS[i].Write()
-  hlist_SigmaExp[i].Write()
-  hlist_SigmaObs[i].Write()
-for c in range(0,len(mjjcanv)):
-  mjjcanv[c].Write()
-f.Write()
-f.Close()
-filetmpS.Close()
-del histS
-del biascanv
-del pullcanv
-del mjjcanv
-del sigmaexpcanv
-del sigmaobscanv
-del hlist_Bias
-del hlist_Pull
-del hlist_RSS
-del hlist_SigmaExp
-del hlist_SigmaObs
+# pullcanv = []
+# rsscanv = []
+# biascanv = []
+# sigmaexpcanv = []
+# sigmaobscanv = []
+#
+# W = 600
+# H = 700
+# H_ref = 700
+# W_ref = 600
+# T = 0.08*H_ref
+# B = 0.12*H_ref
+# L = 0.12*W_ref
+# R = 0.04*W_ref
+#
+#
+#
+# l1 = TLatex()
+# l1.SetNDC()
+# l1.SetTextAlign(12)
+# l1.SetTextFont(42)
+# l1.SetTextSize(0.025)
+#
+#
+#
+# # cmd = "cd final-biasstudy/4TeV/2par"
+# # print cmd
+# # os.system(cmd)
+#
+# i = -1
+# for ch in channels:
+#   i +=1
+#
+#   addInfo = TPaveText(0.2147651,0.7842262,0.4832215,0.8900595,"NDC")
+#   addInfo.SetFillColor(0)
+#   addInfo.SetLineColor(0)
+#   addInfo.SetFillStyle(0)
+#   addInfo.SetBorderSize(0)
+#   addInfo.SetTextFont(42)
+#   addInfo.SetTextSize(0.040)
+#   addInfo.SetTextAlign(12)
+#   addInfo.AddText("W'(4 TeV)#rightarrowWZ (#sigma = 0.1 pb)")
+#   addInfo.AddText("%s category"%ch)
+#
+#   c2 = TCanvas("pullCanv%s"%ch,"pullCanv%s"%ch,W,H)
+#   c2.GetWindowHeight()
+#   c2.GetWindowWidth()
+#   # c2.SetLeftMargin(0.2)
+#   # c2.SetBottomMargin(0.2)
+#
+#   hlist_Pull[i].SetTitle("")
+#   hlist_Pull[i].GetXaxis().SetTitle("Nr. toys")
+#   hlist_Pull[i].GetXaxis().SetTitle("#frac{r_{in}-r_{out}}{#sigma}")
+#   hlist_Pull[i].GetXaxis().SetTitleSize(0.06)
+#   hlist_Pull[i].GetXaxis().SetTitleOffset(0.95)
+#   hlist_Pull[i].GetXaxis().SetLabelSize(0.05)
+#   hlist_Pull[i].GetYaxis().SetTitleSize(0.06)
+#   hlist_Pull[i].GetYaxis().SetTitleOffset(1.0)
+#   hlist_Pull[i].GetYaxis().SetLabelSize(0.05)
+#   hlist_Pull[i].SetMarkerSize(0.9)
+#   hlist_Pull[i].SetMarkerStyle(20)
+#   hlist_Pull[i].SetLineColor(kRed)
+#   hlist_Pull[i].GetXaxis().SetNdivisions(405)
+#   hlist_Pull[i].Draw("pe0")
+#   hlist_Pull[i].SetMaximum(hlist_Pull[i].GetMaximum()*2.0)
+#   l1.DrawLatex(0.2147651,0.70, "Mean: %.3f, RMS: %.3f (%i toys)" %(hlist_Pull[i].GetMean(),hlist_Pull[i].GetRMS(),ntoys))
+#   addInfo.Draw('same')
+#   c2.Update()
+#   pullcanv.append(c2)
+#   cname = ch +"%i"%masspoint+ "_pull.pdf"
+#   c2.SaveAs(cname)
+#
+#   c1 = TCanvas("bias_%s"%ch,"bias_%s"%ch,W,H)
+#   c1.GetWindowHeight()
+#   c1.GetWindowWidth()
+#   c1.SetLeftMargin(0.2)
+#   c1.SetBottomMargin(0.2)
+#   hlist_Bias[i].SetTitle("")
+#   hlist_Bias[i].GetXaxis().SetTitle("Signal strength r")
+#   hlist_Bias[i].GetYaxis().SetTitle("Nr. toys")
+#   hlist_Bias[i].GetXaxis().SetTitleSize(0.06)
+#   hlist_Bias[i].GetXaxis().SetTitleOffset(0.95)
+#   hlist_Bias[i].GetXaxis().SetLabelSize(0.05)
+#   hlist_Bias[i].GetYaxis().SetTitleSize(0.06)
+#   hlist_Bias[i].GetYaxis().SetTitleOffset(1.0)
+#   hlist_Bias[i].GetYaxis().SetLabelSize(0.05)
+#   hlist_Bias[i].SetMarkerSize(0.9)
+#   hlist_Bias[i].SetMarkerStyle(20)
+#   hlist_Bias[i].SetLineColor(kRed)
+#   hlist_Bias[i].GetXaxis().SetNdivisions(405)
+#   hlist_Bias[i].Draw("pe0")
+#   hlist_Bias[i].SetMaximum(hlist_Bias[i].GetMaximum()*1.5)
+#   l1.DrawLatex(0.2147651,0.70, "Mean: %0.3f, RMS: %0.3f (%i toys)" %(hlist_Bias[i].GetMean(),hlist_Bias[i].GetRMS(),ntoys))
+#   addInfo.Draw('same')
+#   c1.Update()
+#   # line = TLine(bias.GetMean(1),0,bias.GetMean(1),bias.GetMaximum())
+#   # line.SetVertical()
+#   # line.SetLineColor(kRed)
+#   # line.SetLineWidth(2)
+#   # line.Draw("same")
+#   # c1.Update()
+#   biascanv.append(c1)
+#   cname = ch +"%i"%masspoint+ "_r.pdf"
+#   c1.SaveAs(cname)
+#
+#
+#   c3 = TCanvas("sigmaObs_%s"%ch,"sigmaObs_%s"%ch,W,H)
+#   c3.GetWindowHeight()
+#   c3.GetWindowWidth()
+#   c3.SetLeftMargin(0.2)
+#   c3.SetBottomMargin(0.2)
+#   hlist_SigmaObs[i].SetTitle("")
+#   hlist_SigmaObs[i].GetXaxis().SetTitle("Observed significance #sigma")
+#   hlist_SigmaObs[i].GetYaxis().SetTitle("Nr. toys")
+#   hlist_SigmaObs[i].GetXaxis().SetTitleSize(0.06)
+#   hlist_SigmaObs[i].GetXaxis().SetTitleOffset(0.95)
+#   hlist_SigmaObs[i].GetXaxis().SetLabelSize(0.05)
+#   hlist_SigmaObs[i].GetYaxis().SetTitleSize(0.06)
+#   hlist_SigmaObs[i].GetYaxis().SetTitleOffset(1.0)
+#   hlist_SigmaObs[i].GetYaxis().SetLabelSize(0.05)
+#   hlist_SigmaObs[i].SetMarkerSize(0.9)
+#   hlist_SigmaObs[i].SetMarkerStyle(20)
+#   hlist_SigmaObs[i].SetLineColor(kRed)
+#   hlist_SigmaObs[i].GetXaxis().SetNdivisions(405)
+#   hlist_SigmaObs[i].Draw("pe0")
+#   hlist_SigmaObs[i].SetMaximum(hlist_SigmaObs[i].GetMaximum()*1.5)
+#   l1.DrawLatex(0.2147651,0.70, "Mean: %0.3f, RMS: %0.3f (%i toys)" %(hlist_SigmaObs[i].GetMean(),hlist_SigmaObs[i].GetRMS(),ntoys))
+#   addInfo.Draw('same')
+#   c3.Update()
+#   # line = TLine(Sigma.GetMean(1),0,Sigma.GetMean(1),Sigma.GetMaximum())
+#   # line.SetVertical()
+#   # line.SetLineColor(kRed)
+#   # line.SetLineWidth(2)
+#   # line.Draw("same")
+#   # c3.Update()
+#   sigmaobscanv.append(c3)
+#   cname = ch +"%i"%masspoint+ "_sigmaObs.pdf"
+#   c3.SaveAs(cname)
+#
+#   c4 = TCanvas("sigmaExp_%s"%ch,"sigmaExp_%s"%ch,W,H)
+#   c4.GetWindowHeight()
+#   c4.GetWindowWidth()
+#   c4.SetLeftMargin(0.2)
+#   c4.SetBottomMargin(0.2)
+#   hlist_SigmaExp[i].SetTitle("")
+#   hlist_SigmaExp[i].GetXaxis().SetTitle("Expected significance #sigma")
+#   hlist_SigmaExp[i].GetYaxis().SetTitle("Nr. toys")
+#   hlist_SigmaExp[i].GetXaxis().SetTitleSize(0.06)
+#   hlist_SigmaExp[i].GetXaxis().SetTitleOffset(0.95)
+#   hlist_SigmaExp[i].GetXaxis().SetLabelSize(0.05)
+#   hlist_SigmaExp[i].GetYaxis().SetTitleSize(0.06)
+#   hlist_SigmaExp[i].GetYaxis().SetTitleOffset(1.0)
+#   hlist_SigmaExp[i].GetYaxis().SetLabelSize(0.05)
+#   hlist_SigmaExp[i].SetMarkerSize(0.9)
+#   hlist_SigmaExp[i].SetMarkerStyle(20)
+#   hlist_SigmaExp[i].SetLineColor(kRed)
+#   hlist_SigmaExp[i].GetXaxis().SetNdivisions(405)
+#   hlist_SigmaExp[i].Draw("pe0")
+#   hlist_SigmaExp[i].SetMaximum(hlist_SigmaExp[i].GetMaximum()*1.5)
+#   l1.DrawLatex(0.2147651,0.70, "Mean: %0.3f, RMS: %0.3f (%i toys)" %(hlist_SigmaExp[i].GetMean(),hlist_SigmaExp[i].GetRMS(),ntoys))
+#   addInfo.Draw('same')
+#   c4.Update()
+#   # line = TLine(Sigma.GetMean(1),0,Sigma.GetMean(1),Sigma.GetMaximum())
+#   # line.SetVertical()
+#   # line.SetLineColor(kRed)
+#   # line.SetLineWidth(2)
+#   # line.Draw("same")
+#   # c4.Update()
+#   sigmaexpcanv.append(c4)
+#   cname = ch +"%i"%masspoint+ "_sigmaExp.pdf"
+#   c4.SaveAs(cname)
+#
+#   c5 = TCanvas("rssCanv_%s"%ch,"rssCanv_%s"%ch,W,H)
+#   c5.GetWindowHeight()
+#   c5.GetWindowWidth()
+#   c5.SetLeftMargin(0.2)
+#   c5.SetBottomMargin(0.2)
+#   hlist_RSS[i].SetTitle("")
+#   hlist_RSS[i].GetXaxis().SetTitle("r_{in}-r_{out}")
+#   hlist_RSS[i].GetYaxis().SetTitle("Nr. toys")
+#   hlist_RSS[i].GetXaxis().SetTitleSize(0.06)
+#   hlist_RSS[i].GetXaxis().SetTitleOffset(0.95)
+#   hlist_RSS[i].GetXaxis().SetLabelSize(0.05)
+#   hlist_RSS[i].GetYaxis().SetTitleSize(0.06)
+#   hlist_RSS[i].GetYaxis().SetTitleOffset(1.0)
+#   hlist_RSS[i].GetYaxis().SetLabelSize(0.05)
+#   hlist_RSS[i].SetMarkerSize(0.9)
+#   hlist_RSS[i].SetLineColor(kRed)
+#   hlist_RSS[i].SetMarkerStyle(20)
+#   hlist_RSS[i].GetXaxis().SetNdivisions(405)
+#   hlist_RSS[i].Draw("pe0")
+#   hlist_RSS[i].SetMaximum(hlist_RSS[i].GetMaximum()*1.5)
+#   l1.DrawLatex(0.2147651,0.70, "Mean: %0.3f, RMS: %0.3f (%i toys)" %(hlist_RSS[i].GetMean(),hlist_RSS[i].GetRMS(),ntoys))
+#   addInfo.Draw('same')
+#   c5.Update()
+#   rsscanv.append(c5)
+#   cname = ch +"%i"%masspoint+ "_rss.pdf"
+#   c5.SaveAs(cname)
+#
+# f = TFile("bias-studies-Wprime%i%spb.root"%(masspoint,scaleS),'RECREATE')
+# for i in range (0,len(channels)):
+#   biascanv[i].Write()
+#   pullcanv[i].Write()
+#   rsscanv[i].Write()
+#   sigmaexpcanv[i].Write()
+#   sigmaobscanv[i].Write()
+#   hlist_Bias[i].Write()
+#   hlist_Pull[i].Write()
+#   hlist_RSS[i].Write()
+#   hlist_SigmaExp[i].Write()
+#   hlist_SigmaObs[i].Write()
+# for c in range(0,len(mjjcanv)):
+#   mjjcanv[c].Write()
+# f.Write()
+# f.Close()
+# filetmpS.Close()
+#
+# del histS
+# del biascanv
+# del pullcanv
+# del mjjcanv
+# del sigmaexpcanv
+# del sigmaobscanv
+# del hlist_Bias
+# del hlist_Pull
+# del hlist_RSS
+# del hlist_SigmaExp
+# del hlist_SigmaObs
