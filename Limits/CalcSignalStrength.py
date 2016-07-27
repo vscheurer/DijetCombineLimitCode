@@ -34,6 +34,7 @@ muPlusWZ=[]
 
 
 channels=["WW","ZZ","WZ"]
+channels=["WZ"]
 bins=[0,1,2,"012"]
 
 efficiencyScale=30000.*0.005/19.6000 # fb
@@ -56,10 +57,11 @@ for bin in bins:
         print "chan =",chan
 
         masses =[1000.0, 1100.0, 1200.0, 1300.0, 1400.0, 1500.0, 1600.0, 1700.0, 1800.0, 1900.0, 2000.0, 2100.0, 2200.0, 2300.0]
+        masses =[1700.0, 1800.0, 1900.0, 2000.0, 2100.0, 2200.0]
         for mass in masses:
             print "mass =",mass
 
-            fileOut="Limits/Xvv.mX"+str(mass)+"_" + chan + "_MaxLikelihoodFit_8TeV_channel"+str(bin)+".out"
+            fileOut="Limits/Xvv.mX"+str(mass)+"_" + chan + "_MaxLikelihoodFit_13TeV_channel"+str(bin)+".out"
             proc="combine datacards/Xvv.mX"+str(mass)+"_" + chan + "_8TeV_channel"+str(bin)+".txt -M MaxLikelihoodFit -v2 -m "+str(mass) + " --rMax 100 --rMin -100 &>"+fileOut
             print proc
             os.system(proc)
@@ -110,14 +112,14 @@ for bin in bins:
     sZZ=[(masses[i],muZZ[i],muMinusZZ[i],muPlusZZ[i]) for i in range(len(masses))]
     sWZ=[(masses[i],muWZ[i],muMinusWZ[i],muPlusWZ[i]) for i in range(len(masses))]
 
-    fWW = open("Xvv_WW_8TeV_channel"+str(bin)+".txt", "w")
+    fWW = open("Xvv_WW_13TeV_channel"+str(bin)+".txt", "w")
     fWW.write(str(sWW))
     fWW.close()
     
-    fZZ = open("Xvv_ZZ_8TeV_channel"+str(bin)+".txt", "w")
+    fZZ = open("Xvv_ZZ_13TeV_channel"+str(bin)+".txt", "w")
     fZZ.write(str(sZZ))
     fZZ.close()
     
-    fWZ = open("Xvv_WZ_8TeV_channel"+str(bin)+".txt", "w")
+    fWZ = open("Xvv_WZ_13TeV_channel"+str(bin)+".txt", "w")
     fWZ.write(str(sWZ))
     fWZ.close()

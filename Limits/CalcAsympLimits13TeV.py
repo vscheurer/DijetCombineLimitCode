@@ -21,7 +21,7 @@ gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
 channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
-channels=["WZ"]
+channels=["BulkWW","BulkZZ","WZ","ZprimeWW"]
 fullToys=False
 
 freezeCMD="--freezeNuisances CMS_bkg_fit_slope1_CMS_jj_ZZHP_13TeV"
@@ -34,8 +34,12 @@ for chan in channels:
        bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
        masses =[m*100 for m in range(12,40+1)]
-       bins=["CMS_jj_WWHP","CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVnew","CMS_jj_VVHPnew","CMS_jj_VVLPnew","CMS_jj_VV"]
-       bins=["CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVnew","CMS_jj_VVHPnew","CMS_jj_VVLPnew","CMS_jj_VV"]       
+       # masses=[4000]
+       # bins=["CMS_jj_VVnew"]
+       bins = ["CMS_jj_WWHP","CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVHPnew","CMS_jj_VVLPnew","CMS_jj_VVnew",]
+       bins = ["CMS_jj_WWHP","CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVHPnew","CMS_jj_VVLPnew","CMS_jj_VVnew",]
+       bins = ["CMS_jj_WWHP","CMS_jj_ZZHP"]
+
     if fullToys:
       points=[]
       for p in range(1,10):
@@ -47,7 +51,8 @@ for chan in channels:
     	points+=[float(p*10.+5.)]
     else:
       points=[0.1]
-   
+    points=[0.1] 
+    masses =[1000,1200,1400,1800,2000,2500,3000,3500,4000]
     for bin in bins:
 
         for mass in masses:
@@ -60,27 +65,29 @@ for chan in channels:
             outputfile = open(outputname,'w')
             outputfile.write('#!/bin/bash\n')
             outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
-	    if fullToys:
+            if fullToys:
               outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --clsAcc 0 -T 100 -i 30 --singlePoint "+str(point)+" -s 10000"+str(int(point*100))+" --saveHybridResult --saveToys -m "+str(mass) + " -n "+chan+str(bin)+" &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_toy"+str(int(point*10))+"_fullCLs.out\n")
               outputfile.write("hadd -f grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root higgsCombine" + chan + str(bin)+".HybridNew.mH"+str(int(mass))+".10000*.root\n")
               outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_obs_fullCLs.out\n")
               outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.5 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_50_fullCLs.out\n")
-	      outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.16 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_16_fullCLs.out\n")
-	      outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.84 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_84_fullCLs.out\n")
-	      outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.025 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_025_fullCLs.out\n")
-	      outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.975 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_975_fullCLs.out\n")
+              outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.16 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_16_fullCLs.out\n")
+              outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.84 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_84_fullCLs.out\n")
+              outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.025 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_025_fullCLs.out\n")
+              outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew --frequentist --grid grid_mX"+str(mass)+"_" + chan + "_13TeV_"+bin+".root -m "+str(mass) + " -n "+chan+str(bin)+" --expectedFromGrid 0.975 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_975_fullCLs.out\n")
             else:
-                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M Asymptotic -v2 -m "+str(mass) + " -n "+chan+str(bin)+" --rMax 1000 --rMin 0.00001 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_asymptoticCLs.out\n")
+                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M Asymptotic -v2 -m "+str(mass) + " -n "+chan+str(bin)+" --rMax 100 --rMin 0.000001 &>CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+"_asymptoticCLs.out\n")
                 outputfile.write("mv higgsCombine"+chan+str(bin)+".Asymptotic.mH"+str(int(mass))+".root Limits/CMS_jj_"+str(mass)+"_"+chan+"_13TeV_"+bin+"_asymptoticCLs_new.root")
             outputfile.close()
   
             command="rm "+logname
-	    print command
+            print command
             os.system(command)
-	    if fullToys:
-                command="""bsub -q 8nh -o """+logname+" source "+outputname
+            if fullToys:
+              command="""bsub -q 8nh -o """+logname+" source "+outputname
+              # command="""qsub -q all.q """+outputname+" source "+outputname
+               # submitJobsOnT3batch.sh
             else:
-	        command="chmod 755 ./"+outputname+";./"+outputname
-	    print command
-            # os.system(command)
+              command="chmod 755 ./"+outputname+";./"+outputname
+            print command
+            os.system(command)
             os.system("chmod 755 ./"+outputname+";./"+outputname)

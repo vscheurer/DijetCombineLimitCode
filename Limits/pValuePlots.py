@@ -5,6 +5,19 @@ import sys
 from array import *
 import time
 
+import CMS_lumi, tdrstyle
+
+tdrstyle.setTDRStyle()
+rt.gStyle.SetOptFit(0) 
+CMS_lumi.lumi_13TeV = "2.6 fb^{-1}"
+CMS_lumi.writeExtraText = 1
+CMS_lumi.extraText = "Preliminary"
+CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+iPos = 0
+if( iPos==0 ): CMS_lumi.relPosX = 0.12
+iPeriod=4
+
+
 # define the plot canvas
 def setStyle(c,histo):
     # canvas style
@@ -14,26 +27,18 @@ def setStyle(c,histo):
     c.SetTickx(1)
     c.SetTicky(1)
     
-    c.SetRightMargin(0.14)
-    c.SetTopMargin(0.14)
-    c.SetLeftMargin(0.14)
-    c.SetBottomMargin(0.14)
-    
-    # set x axis
-    histo.GetXaxis().SetLabelFont(42)
-    histo.GetXaxis().SetLabelSize(0.04)
-    histo.GetXaxis().SetTitleFont(42)
+    # c.SetRightMargin(0.14)
+    # c.SetTopMargin(0.14)
+    # c.SetLeftMargin(0.14)
+    # c.SetBottomMargin(0.14)
+  
     histo.GetXaxis().SetTitleSize(0.05)
     histo.GetXaxis().SetTitleOffset(1.2)
-    histo.GetXaxis().CenterTitle(True)
 
-    # set y axis
-    histo.GetYaxis().SetLabelFont(42)
     histo.GetYaxis().SetLabelSize(0.04)
-    histo.GetYaxis().SetTitleFont(42)
     histo.GetYaxis().SetTitleSize(0.05)
-    histo.GetYaxis().SetTitleOffset(1.2)
-    histo.GetYaxis().CenterTitle(True)
+    histo.GetYaxis().SetTitleOffset(1.05)
+    # histo.GetYaxis().CenterTitle(True)
 
 def PlotPValue(filePVALNAME, label):
 
@@ -48,7 +53,9 @@ def PlotPValue(filePVALNAME, label):
         pval.append(entry[1])
 
     pvalGraph = rt.TGraph(len(mass), array('d',mass), array('d',pval))
-    c1 = rt.TCanvas("c1","c1", 300, 300)
+    pvalGraph.GetXaxis().SetLimits(1.1,4.1)
+    
+    c1 =rt.TCanvas("c1","",630,600)
     c1.SetLogy()
     pvalGraph.Draw("AL")
     htemp = pvalGraph.GetHistogram()
@@ -56,8 +63,11 @@ def PlotPValue(filePVALNAME, label):
     setStyle(c1,htemp)
     htemp.GetXaxis().SetTitle("Resonance Mass (TeV)")
     htemp.GetYaxis().SetTitle("p-value")
+    pvalGraph.SetLineColor(rt.kBlack)
+    pvalGraph.SetLineWidth(2)
     htemp.SetMinimum(1E-5)
     htemp.SetMaximum(1)
+    pvalGraph.GetXaxis().SetNdivisions(508)
 
     # sigmas
     sigmas = [0.8413447,0.9772499,0.9986501,0.9999683,0.9999997]
@@ -76,31 +86,9 @@ def PlotPValue(filePVALNAME, label):
         #text.SetTextSize(0.038)
         text[i-1].SetTextColor(2)
         text[i-1].Draw("SAME")
-
-    banner = TLatex(0.27,0.91,"CMS Preliminary, 2.4 fb^{-1}, #sqrt{s} = 13 TeV");
-    banner.SetNDC()
-    banner.SetTextSize(0.04)
-    banner.Draw(); 
-    
-    addInfo = rt.TPaveText(0.1644295,0.2185315,0.4328859,0.3426573,"NDC")
-    # if(label.find("BulkWW")!=-1):addInfo.AddText("G_{Bulk}#rightarrowWW")
-#     if(label.find("BulkZZ")!=-1):addInfo.AddText("G_{Bulk}#rightarrowZZ")
-#     if(label.find("WZin")!=-1):addInfo.AddText("W'#rightarrowWZ")
-    if(label.find("WW_high_purity")!=-1):addInfo.AddText("WW category")
-    if(label.find("WZ_high_purity")!=-1):addInfo.AddText("WZ category")
-    if(label.find("ZZ_high_purity")!=-1):addInfo.AddText("ZZ category")
-    if(label.find("VVnew_high_purity")!=-1):addInfo.AddText("WW+WZ+ZZ combined")
-    if(label.find("VVold_high_purity")!=-1):addInfo.AddText("VV category")
-    if(label.find("WW_low_purity")!=-1):addInfo.AddText("WW category")
-    if(label.find("WZ_low_purity")!=-1):addInfo.AddText("WZ category")
-    if(label.find("ZZ_low_purity")!=-1):addInfo.AddText("ZZ category")
-    if(label.find("VVnew_low_purity")!=-1):addInfo.AddText("WW+WZ+ZZ combined")
-    if(label.find("VVold_low_purity")!=-1):addInfo.AddText("VV category")
-    if(label.find("_combined_old")!=-1):addInfo.AddText("VV category")
-    if(label.find("_combined_new")!=-1):addInfo.AddText("WW+WZ+ZZ categories")
-    if(label.find("low_purity")!=-1):addInfo.AddText("LP")
-    if(label.find("high_purity")!=-1):addInfo.AddText("HP")
-    
+        
+        
+    addInfo = rt.TPaveText(0.1879195,0.2272727,0.4563758,0.3339161,"NDC")
     addInfo.SetFillColor(0)
     addInfo.SetLineColor(0)
     addInfo.SetFillStyle(0)
@@ -108,11 +96,27 @@ def PlotPValue(filePVALNAME, label):
     addInfo.SetTextFont(42)
     addInfo.SetTextSize(0.040)
     addInfo.SetTextAlign(12)
-    addInfo.Draw("same") 
+    if(label.find("WW_high_purity")!=-1):addInfo.AddText("WW enriched")
+    if(label.find("WZ_high_purity")!=-1):addInfo.AddText("WZ enriched")
+    if(label.find("ZZ_high_purity")!=-1):addInfo.AddText("ZZ enriched")
+    if(label.find("VVnew_high_purity")!=-1):addInfo.AddText("WW+WZ+ZZ combined")
+    if(label.find("VVold_high_purity")!=-1):addInfo.AddText("VV enriched")
+    if(label.find("WW_low_purity")!=-1):addInfo.AddText("WW enriched")
+    if(label.find("WZ_low_purity")!=-1):addInfo.AddText("WZ enriched")
+    if(label.find("ZZ_low_purity")!=-1):addInfo.AddText("ZZ enriched")
+    if(label.find("VVnew_low_purity")!=-1):addInfo.AddText("WW+WZ+ZZ combined")
+    if(label.find("VVold_low_purity")!=-1):addInfo.AddText("VV category")
+    if(label.find("_combined_old")!=-1):addInfo.AddText("VV category")
+    if(label.find("_combined_new")!=-1):addInfo.AddText("WW+WZ+ZZ categories")
+    if(label.find("low_purity")!=-1):addInfo.AddText("Low-purity")
+    if(label.find("high_purity")!=-1):addInfo.AddText("High-purity")
+    addInfo.Draw()
+    CMS_lumi.CMS_lumi(c1, iPeriod, iPos)
+    c1.Update()
     
     c1.Update()
-    c1.SaveAs("silverjson/pvalue/pvalue_%s.pdf" %label)
-    # time.sleep(10)
+    c1.SaveAs("silverjson/AllSystematics/pvalue/pvalue_%s_wPDF.pdf" %label)
+    time.sleep(10)
 
 def PlotMu(muFILENAME, label):
     
@@ -156,7 +160,7 @@ def PlotMu(muFILENAME, label):
     print muBAND
 
     muGraphBAND = rt.TGraph(len(massBAND), array('d',massBAND), array('d',muBAND))
-    c1 = rt.TCanvas("c1","c1", 300, 300)
+    c1 = rt.TCanvas("c1","c1", 630, 600)
     muGraphBAND.SetFillStyle(1001)
     muGraphBAND.SetFillColor(rt.kGreen)
     muGraphBAND.Draw("AF")
@@ -182,7 +186,8 @@ def PlotMu(muFILENAME, label):
 if __name__ == '__main__':
 
   channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
-  channels=["WZ","BulkWW"]
+  channels=["WZ","BulkWW","BulkZZ"]
+  # channels=["WZ"]
 
   for chan in channels:
       
@@ -206,20 +211,20 @@ if __name__ == '__main__':
     combinedplots_old="CMS_jj_"+chan+"_13TeV_CMS_jj_VV_pvalue.txt"
     combinedplots_new="CMS_jj_"+chan+"_13TeV_CMS_jj_VVnew_pvalue.txt"
     
-    HPnewplots="CMS_jj_"+chan+"_13TeV_CMS_jj_VVHPnew_pvalue.txt"
+    # HPnewplots="CMS_jj_"+chan+"_13TeV_CMS_jj_VVHPnew_pvalue.txt"
     # HPoldplots="CMS_jj_"+chan+"_13TeV_CMS_jj_VVHP_pvalue.txt"
-    LPnewplots="CMS_jj_"+chan+"_13TeV_CMS_jj_VVLPnew_pvalue.txt"
+    # LPnewplots="CMS_jj_"+chan+"_13TeV_CMS_jj_VVLPnew_pvalue.txt"
     # LPoldplots="CMS_jj_"+chan+"_13TeV_CMS_jj_VVLP_pvalue.txt"
 
     PlotPValue(WWHPplots,chan+"inWW_high_purity")
     PlotPValue(WWLPplots,chan+"inWW_low_purity")
-    
+
     PlotPValue(WZHPplots,chan+"inWZ_high_purity")
     PlotPValue(WZLPplots,chan+"inWZ_low_purity")
-    
+
     PlotPValue(ZZHPplots,chan+"inZZ_high_purity")
     PlotPValue(ZZLPplots,chan+"inZZ_low_purity")
-    
+
     PlotPValue(HPnewplots,chan+"inVVnew_high_purity")
     PlotPValue(LPnewplots,chan+"inVVnew_low_purity")
     # PlotPValue(HPoldplots,chan+"inVVold_high_purity")

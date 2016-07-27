@@ -21,7 +21,8 @@ gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
 channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
-channels=["WZ","BulkWW"]
+channels=["BulkWW","BulkZZ","ZprimeWW","WZ"]
+
 for chan in channels:
 
     if "q" in chan:
@@ -29,8 +30,9 @@ for chan in channels:
        masses = [1000,2000,3000,4000]
     else:
        masses =[m*50 for m in range(20,80+1)]
-       masses =[m*100 for m in range(34,40+1)]
-
+       masses =[m*100 for m in range(12,40+1)]
+    masses =[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500] 
+    masses =[1000,1200,1400,1800,2000,2500,3000,3500,4000]
     for mass in masses:
         print "mass = ",mass
 

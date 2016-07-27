@@ -6,3 +6,5 @@ Limits/*.pdf
 *.out
 *.log
 workspaces/*13TeV*
+input/*
+MiniTrees/

@@ -21,9 +21,7 @@ gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
 channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
-channels=["WZ"]
-# channels=["WZ","BulkWW"]
-
+channels=["BulkZZ","WZ","BulkWW"]
 fullToys=False
 
 for chan in channels:
@@ -34,11 +32,8 @@ for chan in channels:
        bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
        masses =[m*100 for m in range(12,40+1)]
-       bins=["CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVnew","CMS_jj_VVHPnew","CMS_jj_VVLPnew","CMS_jj_VV"]
-       bins=["CMS_jj_VVnew","CMS_jj_VV"]
-       bins=["CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVHPnew","CMS_jj_VVLPnew"]
-       bins=["CMS_jj_WWHP"]
-
+       bins=["CMS_jj_VV"]
+       masses=[3800,3900,4000]
     for bin in bins:
         sig=[]
         pval=[]
@@ -51,12 +46,12 @@ for chan in channels:
             outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
             if "CMS_jj_qV" in bin:
               freeze=" --freezeNuisances CMS_bkg_fit_slope3_CMS_jj_qVHP,CMS_bkg_fit_slope3_CMS_jj_qVLP"
-            if "CMS_jj_WWHP" in bin:
-                freeze=" --freezeNuisances CMS_bkg_fit_slope3_CMS_jj_VVHP,CMS_bkg_fit_slope3_CMS_jj_VVLP"
+            if "CMS_jj_ZZHP" in bin:
+                freeze=" --freezeNuisances CMS_bkg_fit_slope1_CMS_jj_ZZHP_13TeV"
             if fullToys:
-              outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew "+freeze+" --frequentist --fullBToys -T 3000 --fork 0 -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
+              outputfile.write("combine datacards_withPDFuncertainties/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M HybridNew "+freeze+" --frequentist --fullBToys -T 3000 --fork 0 -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
             else:
-                outputfile.write("combine datacards/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M ProfileLikelihood -v2 -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
+                outputfile.write("combine datacards_withPDFuncertainties/CMS_jj_"+chan+"_"+str(mass)+"_13TeV_"+bin+".txt -M ProfileLikelihood -v2 -m "+str(mass) + " -n "+chan+str(bin)+" --signif \n")
             outputfile.close()
   
             command="rm "+outfile

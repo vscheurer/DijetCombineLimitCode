@@ -21,8 +21,9 @@ gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
 channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
-channels=["WZ","BulkWW"]
 
+channels=["WZ","BulkWW","BulkZZ"]
+channels=["WZ"]
 for chan in channels:
     print "chan =",chan
 
@@ -31,9 +32,8 @@ for chan in channels:
        bins=["CMS_jj_qVHP","CMS_jj_qVLP","CMS_jj_qV"]
     else:
        masses =[m*100 for m in range(12,40+1)]
-       bins=["CMS_jj_VVHP","CMS_jj_VVLP","CMS_jj_VV"]
-       bins=["CMS_jj_WWHP","CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVHPnew","CMS_jj_VVLPnew"]
-
+       bins=["CMS_jj_WWHP","CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVnew","CMS_jj_VVHPnew","CMS_jj_VVLPnew","CMS_jj_VV"]
+       bins=["CMS_jj_WZHP"]    
     for bin in bins:
         sig=[]
         pval=[]
