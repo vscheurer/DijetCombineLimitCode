@@ -8,3 +8,6 @@ Limits/*.pdf
 workspaces/*13TeV*
 input/*
 MiniTrees/
+Limits/80X
+Limits/
+explimits80X/
