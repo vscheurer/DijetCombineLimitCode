@@ -19,32 +19,36 @@ iPeriod=4
 
 rt.gStyle.SetOptFit(1)
 
-massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 955, 1000, 1058, #944 to 955!
+massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 990, 1058,
              1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
-             4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
+             4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808] 
 
 xbins = array('d',massBins)
 
 
-fileIN = rt.TFile.Open("input/JetHT_VV.root")
+fileIN = rt.TFile.Open("input/JetHT_qV.root")
 
-alphas    = [8.34260e-01,2.26698,1.53339,1.17580,2.99999,2.2626,0.663441,0.800000]                       #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forBulkZZ),VVLP(forBulkZZ)
-sigfracs  = [4.58877e-01,3.00000e-01,2.94266e-07,1.64950e-02,0.867402,0.278371,6.42551e-01,5.00000e-01]     #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forBulkZZ),VVLP(forBulkZZ)
-gsigmas   = [7.27898e+01,1.06220e+02,49.3526,6.92449e+02,1.04783e+02,127.174,6.78921e+01,7.40979e+03]         #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forBulkZZ),VVLP(forBulkZZ)
-means     = [2.03797e+03,2.03398e+03,2045.73,2.01137e+03,2.05889e+03,2071.45,2.02521e+03,2.00000e+03]           #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forBulkZZ),VVLP(forBulkZZ)
-signs     = [1.28383e+02,2.01148e+00,32.3031,1.34384e+02,8.63245e+01,131.438,1.33056e+02,1.30000e+02]            #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forBulkZZ),VVLP(forBulkZZ)
-sigmas    = [5.73275e+01,6.08280e+01,67.4016,8.25785e+01,6.54552e+01,59.7554,1.03704e+02,1.00000e+02]           #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forBulkZZ),VVLP(forBulkZZ)
+scalesigmas= [4.35053e+00,3.33072e+00, 3.22366e+00,4.49552e+00] #qWHP,qWLP,qZHP,qZLP @ 4 TeV
+alphas     = [1.07854e+00,7.94829e-01, 9.29944e-01,9.75533e-01]
+sigfracs   = [1.56120e-01,1.95228e-01, 2.13429e-01,1.93622e-01]
+means      = [4.00728e+03,4.01984e+03, 4.01382e+03,4.02231e+03]
+signs      = [1.29946e+02,1.15277e+02, 1.24129e+02,1.21744e+02]
+sigmas     = [1.71478e+02,1.50507e+02, 1.54579e+02,1.77653e+02]    
 
-signalrate      = [1.68221,1.95172,3.38452,2.95105,1.26099,0.928928,3.00421,2.86817]
-scaleToExcluded = [1.43792,1.43792 ,2.9456 ,2.9456 ,1.947  ,1.947   ,1.947  ,1.947  ]
+signalrate      = [11.9712,8.56735,13.0257,6.47405]
+scaleToExcluded = [1. ,1. ,1. ,1.] #xsec*100, to account for assuming signal cross section of 0.01pb in workspace!
 
-parameters=[3,2,2,3,2,3] 
-xsec=[0.01437920,0.01437920,0.029456,0.029456,0.019470,0.019470,0.019470,0.019470]
-categories = ["WW, high-purity","WW, low-purity","WZ, high-purity","WZ, low-purity","ZZ, high-purity","ZZ, low-purity"]#,"VV, high-purity","VV, low-purity"]
-legends=["G(2 TeV)#rightarrowWW","G(2 TeV)#rightarrowWW","W'(2 TeV)#rightarrowWZ","W'(2 TeV)#rightarrowWZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ"]         
-histos = ["DijetMassHighPuriWW","DijetMassLowPuriWW","DijetMassHighPuriWZ", "DijetMassLowPuriWZ", "DijetMassHighPuriZZ","DijetMassLowPuriZZ"]#,"DijetMassHighPuriVV","DijetMassLowPuriVV"]
+parameters=[5,3,3,3] 
+xsec=[0.01] #pb
+categories = ["qW, high-purity","qW, low-purity","qZ, high-purity","qZ, low-purity"]
+legends=["q*(4 TeV)#rightarrowqW","q*(4 TeV)#rightarrowqW","q*(4 TeV)#rightarrowqZ","q*(4 TeV)#rightarrowqZ"]         
+histos = ["DijetMassHighPuriqW","DijetMassLowPuriqW","DijetMassHighPuriqZ", "DijetMassLowPuriqZ"]
 lumi = 12900
-maxVals =[2659,2895,2895,3416,3147,3600,3416,3416]
+
+# parameters=[4]
+# categories = ["qZ, high-purity"]
+# legends=["q^{*}(2 TeV)#rightarrowqZ"]
+# histos = ["DijetMassHighPuriqZ"]
 
 #
 ii = -1        
@@ -55,8 +59,9 @@ for h in histos:
     print fileIN.GetName()
     print h
     htmp = fileIN.Get(h)
+  
     
-    firstbin = 955.
+    firstbin = htmp.GetBinCenter(htmp.FindFirstBinAbove(0.99999))
     lastbin = htmp.GetBinCenter(htmp.FindLastBinAbove(0.99999))
     lower = (nsmallest(2, massBins, key=lambda x: abs(x-lastbin)))[0]
     higher  = (nsmallest(2, massBins, key=lambda x: abs(x-lastbin)))[1]
@@ -66,14 +71,14 @@ for h in histos:
       fFitXmax = higher
       
     print "Last non-zero bin is at x=%f. Closest dijet mass bins are L = %i  H = %i" %(lastbin,lower,higher)
-    print "Using x max = %i" %lastbin
-    print "Using x min = %i" %firstbin
+    print "Using x max = %i" %fFitXmax
     
 
 
     dataDistOLD = htmp.Rebin(len(xbins)-1,"hMass_rebinned",xbins)
-    minVal = firstbin
+    minVal = 990
     maxVal = fFitXmax
+    print "Using x min = %i  x max = %i" %(minVal,maxVal)
 
 
     bins = []
@@ -84,56 +89,59 @@ for h in histos:
 
     dataDist = htmp #rt.TH1F("dataDist", "dataDist", len(xbins)-1, array('d',xbins))
     # for i in range(0, dataDistOLD.GetXaxis().GetNbins()):
- #        binCenter = dataDistOLD.GetXaxis().GetBinCenter(i+1)
- #        binContent = dataDistOLD.GetBinContent(i+1)
- #        binWidth = dataDistOLD.GetBinWidth(i+1)
- #        if binCenter > minVal:
- #            iBin =  dataDist.GetXaxis().FindBin(binCenter)
- #            dataDist.SetBinContent(iBin, binContent)
-
-
-    p0 = rt.RooRealVar("p0", "p0", 8.5 , 0. , 2200.)
-    p1 = rt.RooRealVar("p1", "p1", 0.0, -100. , 1000.)
-    p2 = rt.RooRealVar("p2", "p2", 7.85115, 0., 1000.)
-    p3 = rt.RooRealVar("p3", "p3", 0., -12., 12.)
+#         binCenter = dataDistOLD.GetXaxis().GetBinCenter(i+1)
+#         binContent = dataDistOLD.GetBinContent(i+1)
+#         binWidth = dataDistOLD.GetBinWidth(i+1)
+#         if binCenter >= minVal:
+#             iBin =  dataDist.GetXaxis().FindBin(binCenter)
+#             dataDist.SetBinContent(iBin, binContent)
+#
+    
+                      
+    p1 = rt.RooRealVar("p1", "p1",9.28433e+00, -100. , 100.)
+    p2 = rt.RooRealVar("p2", "p2",1.03641e+01, -200, 200)
+    p3 = rt.RooRealVar("p3", "p3",2.35256e+00, -100., 100.)
+    p4 = rt.RooRealVar("p4", "p4",4.17695e-01, -100., 100.)
 
     mjj = rt.RooRealVar("mjjCMS","Dijet invariant mass (GeV)",len(bins)-1, bins[0], bins[-1])
 
-    bkg_fit = rt.RooGenericPdf("bkg_fitCMS", "pow(1-@0/13000., @1)/pow(@0/13000., @2+@3*log(@0))", rt.RooArgList(mjj, p1, p2,p3))
-    p3.setConstant(rt.kTRUE)
-    if(parameters[ii] == 2): 
-      print title
-      print "Setting parameter 1 constant"
-      p1.setConstant(rt.kTRUE)
+    # bkg_fit = rt.RooGenericPdf("bkg_fitCMS", "pow(1-@0/13000., @1)/pow(@0/13000., @2+@3*log(@0)+@4*pow(log(@0),2))", rt.RooArgList(mjj, p1, p2, p3, p4))
+    # bkg_fit = rt.RooGenericPdf("bkg_fitCMS", "pow(1-@0/13000., @1)/pow(@0/13000., @2+@3*log(@0/13000.))", rt.RooArgList(mjj, p1, p2,p3))
+    bkg_fit = rt.RooGenericPdf("bkg_fitCMS", "pow(1-@0/13000., @1)/pow(@0/13000., @2)", rt.RooArgList(mjj, p1, p2))
+    if ii == 0:  
+      bkg_fit = rt.RooGenericPdf("bkg_fitCMS", "pow(1-@0/13000., @1)/ ( pow(@0/13000., @2+@3*log(@0/13000.)+@4*pow(log(@0/13000.),2)) )", rt.RooArgList(mjj, p1, p2, p3, p4))
 
-    alpha = rt.RooRealVar("alpha","alpha",alphas[ii], 0., 4)
-    sigfrac = rt.RooRealVar("sigfrac","sigfrac",sigfracs[ii], 0.3, .90)
-    gsigma = rt.RooRealVar("gsigma","gsigma",gsigmas[ii], 0., 130)
-    mean = rt.RooRealVar("mean","mean",means[ii], 1900., 2100.)
-    sign = rt.RooRealVar("sign","sign",signs[ii], 0.0, 150)
-    sigma = rt.RooRealVar("sigma","sigma",sigmas[ii], 10., 100.)
 
+    alpha       = rt.RooRealVar("alpha","alpha",alphas[ii])
+    sigfrac     = rt.RooRealVar("sigfrac","sigfrac",sigfracs[ii])
+    scalesigma  = rt.RooRealVar("scalesigma","scalesigma",scalesigmas[ii])
+    mean        = rt.RooRealVar("mean","mean",means[ii])
+    # gmean       = rt.RooRealVar("gmean","gmean",gmeans[ii])
+    sign        = rt.RooRealVar("sign","sign",signs[ii])
+    sigma       = rt.RooRealVar("sigma","sigma",sigmas[ii])
+    gsigma      = rt.RooFormulaVar("gsigma","@0*@1", rt.RooArgList(sigma,scalesigma))
+    
     gauss = rt.RooGaussian("gauss", "gauss", mjj, mean, gsigma)
     cb    = rt.RooCBShape("cb", "cb",mjj, mean, sigma, alpha, sign)
     sig_fit = rt.RooAddPdf("sigP", "sigP",gauss, cb, sigfrac)
-
+    
+    scalesigma.setConstant(rt.kTRUE)
     sigfrac.setConstant(rt.kTRUE)
     alpha.setConstant(rt.kTRUE)
     sign.setConstant(rt.kTRUE)
     mean.setConstant(rt.kTRUE)
+    # gmean.setConstant(rt.kTRUE)
     sigma.setConstant(rt.kTRUE)
-    gsigma.setConstant(rt.kTRUE)
 
     syield = signalrate[ii]*scaleToExcluded[ii]
     nsig = rt.RooRealVar("NsExp", "Expected signal yield",syield, 0, 10)
     signalPDF = rt.RooExtendPdf("mysig","mysig",sig_fit,nsig)
     nsig.setConstant(rt.kTRUE)
 
-    s = rt.RooRealVar("Ns", "signal yield",0., 0., 0.)
-    b = rt.RooRealVar("Nb", "background yield", dataDist.Integral(), 0, dataDist.Integral()*10.)
+    s = rt.RooRealVar("Ns", "signal yield",0.)
+    b = rt.RooRealVar("Nb", "background yield", dataDist.Integral(), 0, dataDist.Integral()*2.)
 
-    sumPDF = rt.RooAddPdf("sum", "gaussian plus exponential PDF",
-                          rt.RooArgList(sig_fit, bkg_fit), rt.RooArgList(s, b))
+    sumPDF = rt.RooAddPdf("sum", "gaussian plus exponential PDF", rt.RooArgList(sig_fit, bkg_fit), rt.RooArgList(s, b))
 
     s.setConstant(rt.kTRUE)
 
@@ -141,12 +149,15 @@ for h in histos:
     mjj.setBinning(mjjbins)
 
     ws = rt.RooWorkspace("ws","ws")
-    getattr(ws,'import')(p0)
     getattr(ws,'import')(p1)
     getattr(ws,'import')(p2)
+    getattr(ws,'import')(p3)
+    getattr(ws,'import')(p4)
     getattr(ws,'import')(mjj)
     getattr(ws,'import')(mean)
+    # getattr(ws,'import')(gmean)
     getattr(ws,'import')(sigma)
+    getattr(ws,'import')(scalesigma)
     getattr(ws,'import')(s)
     getattr(ws,'import')(b)
     getattr(ws,'import')(sign)
@@ -154,12 +165,21 @@ for h in histos:
     getattr(ws,'import')(sigfrac)
     getattr(ws,'import')(sumPDF)
     getattr(ws,'import')(signalPDF)
-
+    getattr(ws,'import')(bkg_fit)
 
     dataset = rt.RooDataHist("dataCMS", "dataCMS", rt.RooArgList(mjj), rt.RooFit.Import(dataDist))
     getattr(ws,'import')(dataset)
-
+    
+    
+    currentlist = rt.RooLinkedList()
+    cmd=rt.RooFit.Save()
+    currentlist.Add(cmd)
+    
+    
+      # for r in range(0,10):
     fr = sumPDF.fitTo(dataset,rt.RooFit.Save())
+      # fr = sumPDF.chi2FitTo(dataset,currentlist)
+ 
 
 
     frame = mjj.frame()
@@ -167,11 +187,13 @@ for h in histos:
     sumPDF.plotOn(frame, rt.RooFit.VisualizeError(fr,1),rt.RooFit.FillColor(rt.kRed-7),rt.RooFit.LineColor(rt.kRed-7),rt.RooFit.Name("fiterr"), rt.RooFit.Binning(mjjbins))
     sumPDF.plotOn(frame,rt.RooFit.LineColor(rt.kRed+1),rt.RooFit.Name("sumPDF"))
     dataset.plotOn(frame,rt.RooFit.DataError(rt.RooAbsData.Poisson), rt.RooFit.Binning(mjjbins),rt.RooFit.Name("data"))
+    mjj.setRange("sigRegion",4000*0.8,4000*1.2) ;
+    signalPDF.plotOn(frame,rt.RooFit.LineColor(rt.kGreen+2),rt.RooFit.Binning(mjjbins),rt.RooFit.Name("sig"),rt.RooFit.Normalization(1, rt.RooAbsReal.RelativeExpected),rt.RooFit.Range("sigRegion"))
 
     frame3 = mjj.frame()
-    hpull = frame.pullHist()
+    hpull = frame.pullHist("data","sumPDF")
     frame3.addPlotable(hpull,"P")
-    signalPDF.plotOn(frame,rt.RooFit.LineColor(rt.kGreen+2),rt.RooFit.Binning(mjjbins),rt.RooFit.Name("sig"),rt.RooFit.Normalization(1, rt.RooAbsReal.RelativeExpected))
+    
 
     c1 =rt.TCanvas("c1","",800,800)
     c1.SetLogy()
@@ -192,7 +214,7 @@ for h in histos:
     frame.GetYaxis().SetTitleOffset(0.95)
     # frame.GetYaxis().SetLabelSize(0.09)
     frame.SetMinimum(0.2)
-    frame.SetMaximum(1E5)
+    frame.SetMaximum(1E7)
     frame.SetName("mjjFit")
     frame.GetYaxis().SetTitle("Events / 94.7 GeV")
     frame.SetTitle("")
@@ -218,7 +240,8 @@ for h in histos:
     legend2.SetMargin(0.35)
     legend.AddEntry(frame.findObject("data"),"CMS data","lpe")
     legend.AddEntry(frame.findObject("sumPDF"),"%i par. background fit"%parameters[ii],"l")
-    legend.AddEntry(frame.findObject("sig"),"%s (#sigma = %.3f pb)"%(legends[ii],xsec[ii]),"l")
+    xsec= scaleToExcluded[ii]*0.01
+    legend.AddEntry(frame.findObject("sig"),"%s (#sigma = %.2f pb)"%(legends[ii],xsec),"l")
     legend2.AddEntry("","","")
     legend2.AddEntry(frame.findObject("fiterr"),"","f")
     legend2.AddEntry("","","")
@@ -228,8 +251,8 @@ for h in histos:
 
     addInfo = rt.TPaveText(0.6210112,0.4666292,0.8902143,0.6523546,"NDC")
     addInfo.AddText(categories[ii])
-    addInfo.AddText("|#eta| #leq 2.5, p_{T} > 200 GeV")
-    addInfo.AddText("M_{jj} > 955 GeV, |#Delta#eta_{jj}| #leq 1.3")
+    addInfo.AddText("|#eta| < 2.5, p_{T} > 200 GeV")
+    addInfo.AddText("M_{jj} > 990 GeV, |#Delta#eta_{jj}| < 1.3")
     addInfo.SetFillColor(0)
     addInfo.SetLineColor(0)
     addInfo.SetFillStyle(0)
@@ -250,8 +273,8 @@ for h in histos:
     p11_2.SetRightMargin(0.05)
     p11_2.SetGridx()
     p11_2.SetGridy()
-    frame3.SetMinimum(-3.5)
-    frame3.SetMaximum(3.5)
+    frame3.SetMinimum(-4.5)
+    frame3.SetMaximum(4.5)
     frame3.SetTitle("")
     frame3.SetXTitle("Dijet invariant mass (GeV)")
     frame3.GetXaxis().SetTitleSize(0.06)
@@ -271,9 +294,8 @@ for h in histos:
     c1.Update()
 
     print title
-    canvname = "ftest_2016/MLBkgFit_%s.pdf"%histos[ii]
+    canvname = "80X/MLBkgFit_%s.pdf"%histos[ii]
     c1.SaveAs(canvname)
     c1.SaveAs(canvname.replace("pdf","root"),"root")
-    c1.SaveAs(canvname.replace("root","C"),"C")
 
-    time.sleep(5)
+    time.sleep(20)
