@@ -3,20 +3,21 @@
 MASSPOINT=$1
 SAMPLE=$2
 CHANNEL=$3
-POSTFIX=$4
+SAMPLE_ONE=$5
+SAMPLE_TWO=$6
 JOBLOGFILES="myout.txt myerr.txt"
-# OUTFILES="CMS_jj_${SAMPLE}_${MASSPOINT}_13TeV.root CMS_jj_bkg_13TeV.root CMS_jj_${SAMPLE}_${MASSPOINT}_13TeV_jj_ZZLP.txt"
+OUTFILES=""
 DBG=2
 SEUSERSUBDIR=""
 SEOUTFILES=""
 HN_NAME=`whoami`
 USER_SRM_HOME="srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/pnfs/psi.ch/cms/trivcat/store/user"
 TOPWORKDIR=/scratch/`whoami`
-JOBDIR="workspaceBatchProducer/"
+JOBDIR="workspaceBatchProducer_${MASSPOINT}${SAMPLE}${CHANNEL}/"
 CMSSW_DIR="/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5"
 BASEDIR=`pwd`
-LOGDIRNAME=${BASEDIR}/${JOBDIR}
-OUTDIR=${BASEDIR}/${JOBDIR}
+LOGDIRNAME=${BASEDIR}/workspaceBatchProducer
+OUTDIR=${BASEDIR}/workspaceBatchProducer
 
 #mkdir ${OUTDIR}
 ############ BATCH QUEUE DIRECTIVES ##############################
@@ -38,8 +39,9 @@ OUTDIR=${BASEDIR}/${JOBDIR}
 
 # here you could change location of the job report stdout/stderr files
 #  if you did not want them in the submission directory
-#$ -o $JOBDIR
-#$ -e $JOBDIR
+# 
+#$ -o /mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/workspaceBatchProducer
+#$ -e /mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/workspaceBatchProducer
 #################################################################
 
 ##### MONITORING/DEBUG INFORMATION ###############################
@@ -97,9 +99,11 @@ SERESULTDIR=$SERESULTDIR
 EOF
 
 ###########################################################################
-## YOUR FUNCTIONALITY CODE GOES HERE
-RUN_SCRIPT=$BASEDIR/R2JJFitter13TeV.cc
-
+if (( ${SAMPLE}==6 )) ; then
+  RUN_SCRIPT=$BASEDIR/X2qVFitter.cc
+else
+  RUN_SCRIPT=$BASEDIR/X2VVFitter.cc
+fi  
 # set up CMS environment
 source $VO_CMS_SW_DIR/cmsset_default.sh
 
@@ -111,10 +115,10 @@ if test $? -ne 0; then
 fi
 
 cd $WORKDIR
-cp -r $CMSSW_DIR/src/DijetCombineLimitCode/Xvv_models_Bkg_13TeV.rs .
-echo "root -b -q '$RUN_SCRIPT(${MASSPOINT},${SAMPLE},${CHANNEL},\"${POSTFIX}\")'" >> myout.txt 2>>myerr.txt
-root -b -q "$RUN_SCRIPT(${MASSPOINT},${SAMPLE},${CHANNEL},\"${POSTFIX}\")">> myout.txt 2>>myerr.txt
-
+cp -r $CMSSW_DIR/src/DijetCombineLimitCode/qv_models_Bkg_13TeV.rs .
+cp -r $CMSSW_DIR/src/DijetCombineLimitCode/vv_models_Bkg_13TeV.rs .
+echo "root -b -q '$RUN_SCRIPT(${MASSPOINT},${SAMPLE},${CHANNEL},\"\")'" >> myout.txt 2>>myerr.txt
+root -b -q "$RUN_SCRIPT(${MASSPOINT},${SAMPLE},${CHANNEL},\"\")">> myout.txt 2>>myerr.txt
 
 #### RETRIEVAL OF OUTPUT FILES AND CLEANING UP ############################
 cd $WORKDIR
@@ -176,5 +180,8 @@ echo "Job finished at " `date`
 echo "Wallclock running time: $RUNTIME s"
 
 cd ${BASEDIR}
-mv workspace_job.o$JOB_ID workspace_job.e$JOB_ID $LOGDIRNAME/.
+mv workspace_job.o$JOB_ID $LOGDIRNAME/
+mv workspace_job.e$JOB_ID $LOGDIRNAME/
+# mv ${OUTDIR}/CMS_jj*.txt datacards/
+# mv ${OUTDIR}/*.root workspaces/
 exit 0
