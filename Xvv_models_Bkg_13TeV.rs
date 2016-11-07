@@ -1,4 +1,4 @@
-mgg13TeV[955,4500];
+mgg13TeV[990,6200];
 
 bkg_fit_slope[1.0,0, 1];
 bkg_fit_slope1[7,0.0, 100.0];
@@ -20,8 +20,8 @@ bkg_fit_slope3_CMS_jj_VVLP[0.,-50.0, 50.0];
 
 
 bkg_fit_slope_CMS_jj_WWHP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_WWHP[-1.69653e+01, -10.0, 500.0];
-bkg_fit_slope2_CMS_jj_WWHP[ 1.02558e+01, 0.0, 500.0];
+bkg_fit_slope1_CMS_jj_WWHP[-1.69653e+01, -100.0, 500.0];
+bkg_fit_slope2_CMS_jj_WWHP[ 1.02558e+01, -100.0, 500.0];
 
 bkg_fit_slope_CMS_jj_WZHP[1000.0,0, 10000000];
 bkg_fit_slope1_CMS_jj_WZHP[8.44017e+00, 0., 500.0];
@@ -36,8 +36,8 @@ bkg_fit_slope1_CMS_jj_WWLP[7.82125e+00, 0., 500.0];
 
 
 bkg_fit_slope_CMS_jj_WZLP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_WZLP[3.69991e+00,0.0, 500.0];
-bkg_fit_slope2_CMS_jj_WZLP[7.63372e+00,0.0, 100.0];
+bkg_fit_slope1_CMS_jj_WZLP[3.69991e+00,-100.0, 500.0];
+bkg_fit_slope2_CMS_jj_WZLP[7.63372e+00,-100.0, 100.0];
 
 
 bkg_fit_slope_CMS_jj_ZZLP[1000.0,0, 10000000];
@@ -59,24 +59,24 @@ bkg_fit_slope3_CMS_jj_qVLP[0.,-50.0, 50.0];
 
 
 bkg_fit_slope_CMS_jj_qWHP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_qWHP[6.21278e+00, 0., 100.0];
-bkg_fit_slope2_CMS_jj_qWHP[1.13205e+01, 0., 100.0];
-bkg_fit_slope3_CMS_jj_qWHP[2.38207e+00, 0., 50.0];
+bkg_fit_slope1_CMS_jj_qWHP[6.21278e+00, -500., 500.0];
+bkg_fit_slope2_CMS_jj_qWHP[1.13205e+01, -500., 500.0];
+bkg_fit_slope3_CMS_jj_qWHP[2.38207e+00, -500., 500.0];
 bkg_fit_slope4_CMS_jj_qWHP[3.88175e-01,-10.0, 10.0];
 
 bkg_fit_slope_CMS_jj_qZHP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_qZHP[3.73729e+00, 0.0, 100.0];
-bkg_fit_slope2_CMS_jj_qZHP[7.01524e+00, 0.0, 100.0];
+bkg_fit_slope1_CMS_jj_qZHP[3.73729e+00, -500.0, 500.0];
+bkg_fit_slope2_CMS_jj_qZHP[7.01524e+00, -500.0, 500.0];
 bkg_fit_slope3_CMS_jj_qZHP[0.,-50.0, 50.0];
 
-bkg_fit_slope_CMS_jj_qWLP [1000.0      ,0    , 10000000];
-bkg_fit_slope1_CMS_jj_qWLP[7.25463e+00, 0.  , 100.0];
-bkg_fit_slope2_CMS_jj_qWLP[5.98119e+00, 0.  , 100.0];
+bkg_fit_slope_CMS_jj_qWLP [1000.0      ,-100    , 10000000];
+bkg_fit_slope1_CMS_jj_qWLP[7.25463e+00, -500.  , 500.0];
+bkg_fit_slope2_CMS_jj_qWLP[5.98119e+00, -500.  , 500.0];
 bkg_fit_slope3_CMS_jj_qWLP[0.         ,-50.0, 50.0];
 
-bkg_fit_slope_CMS_jj_qZLP[1000.0,0, 10000000];
-bkg_fit_slope1_CMS_jj_qZLP[6.88441e+00, 0.0, 100.0];
-bkg_fit_slope2_CMS_jj_qZLP[6.10154e+00, 0.0, 100.0];
+bkg_fit_slope_CMS_jj_qZLP[1000.0      , -100.0, 10000000];
+bkg_fit_slope1_CMS_jj_qZLP[6.88441e+00, -500.0, 500.0];
+bkg_fit_slope2_CMS_jj_qZLP[6.10154e+00, -500.0, 500.0];
 bkg_fit_slope3_CMS_jj_qZLP[0.,-50.0, 50.0];
 
 
