@@ -5,12 +5,29 @@ import os,sys
 import time
 
 
+# For qV
+rmin=1.
+rmax=2000.
+
+# For qVHP
 rmin=0.1
-rmax=100
+rmax=200
+
+# # For VV
+# rmin = 0.01
+# rmax=100
+#
+# # For BulkWW,ZprimeWW ZZLP
+# rmin = 1.
+# rmax=800
+#
+# # For BulkZZ,WZ WWLP and Zprime ZZHP
+# rmin = 0.1
+# rmax= 250
 
 channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
 channels=["BulkWW","BulkZZ","WZ","ZprimeWW"]
-channels=["qZ","qW"]
+channels=["qW"]
 fullToys=False
 postfix =""
 freezeCMD="--freezeNuisances CMS_bkg_fit_slope1_CMS_jj_ZZHP_13TeV"
@@ -19,25 +36,12 @@ for chan in channels:
   print "chan =",chan
   if "q" in chan:
     masses =[m*100 for m in range(12,62+1)]
-    bins = ["CMS_jj_qVnew","CMS_jj_qWHP","CMS_jj_qWLP","CMS_jj_qZHP","CMS_jj_qZLP"]
-    bins = ["CMS_jj_qVnew"]#,"CMS_jj_qWHP","CMS_jj_qWLP","CMS_jj_qZLP"]
-    # masses =[1600,1900,2100,2300,2400,2500,2600,2700,2900,3100,3700,4200,4600,5100,5400,5800,5900,6000,6100]
-    # masses = [2500,2900,5100,2600,5400,5800,5900,2300]
-    # masses = [1900,2000,2100,2300,2400,2500,2600,2700,2900]
-
-
-    
-    
-    
-  
-    
-    
+    bins = ["CMS_jj_qVnew","CMS_jj_qWHP","CMS_jj_qZHP","CMS_jj_qWLP","CMS_jj_qZLP"]
+    bins = ["CMS_jj_qVHPnew"]
   else:
-    masses =[m*100 for m in range(11,45+1)]
+    masses =[m*100 for m in range(11,40+1)]
     bins = ["CMS_jj_WWHP","CMS_jj_WZHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_WZLP","CMS_jj_ZZLP","CMS_jj_VVHPnew","CMS_jj_VVLPnew","CMS_jj_VVnew"]
-    # bins = ["CMS_jj_WWHP","CMS_jj_ZZHP","CMS_jj_WWLP","CMS_jj_ZZLP"]
     bins = ["CMS_jj_ZZLP"]
-    masses =[1100]
     
   if fullToys:
     points=[]
