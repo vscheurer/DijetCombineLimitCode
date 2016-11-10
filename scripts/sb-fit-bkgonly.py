@@ -35,13 +35,15 @@ means     = [2.03797e+03,2.03398e+03,2045.73,2.01137e+03,2.05889e+03,2071.45,2.0
 signs     = [1.28383e+02,2.01148e+00,32.3031,1.34384e+02,8.63245e+01,131.438,1.33056e+02,1.30000e+02]            #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forBulkZZ),VVLP(forBulkZZ)
 sigmas    = [5.73275e+01,6.08280e+01,67.4016,8.25785e+01,6.54552e+01,59.7554,1.03704e+02,1.00000e+02]           #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forBulkZZ),VVLP(forBulkZZ)
 
-signalrate      = [1.68221,1.95172,3.38452,2.95105,1.26099,0.928928,3.00421,2.86817]
-scaleToExcluded = [1.43792,1.43792 ,2.9456 ,2.9456 ,1.947  ,1.947   ,1.947  ,1.947  ]
+# signalrate      = [1.68221,1.95172,3.38452,2.95105,1.26099,0.928928,3.00421,2.86817]#8TeV
+signalrate      = [7.8398,6.6185,18.9913,13.0669,16.3109,9.3828] #2016 exp expected signalrate for signal with 0.01pb xSec in each category (#WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP)
+scaleToExcluded = [2.,2.,0.9,0.9,0.8,0.8]#2016 exp
 
 parameters=[3,2,2,3,2,3] 
-xsec=[0.01437920,0.01437920,0.029456,0.029456,0.019470,0.019470,0.019470,0.019470]
+# xsec=[0.01437920,0.01437920,0.029456,0.029456,0.019470,0.019470,0.019470,0.019470] #8TeV
+xsec=[0.02,0.02,0.009,0.009,0.008,0.008] #2016 exp excluded xsec in combined category!
 categories = ["WW, high-purity","WW, low-purity","WZ, high-purity","WZ, low-purity","ZZ, high-purity","ZZ, low-purity"]#,"VV, high-purity","VV, low-purity"]
-legends=["G(2 TeV)#rightarrowWW","G(2 TeV)#rightarrowWW","W'(2 TeV)#rightarrowWZ","W'(2 TeV)#rightarrowWZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ"]         
+legends=["G(2 TeV)#rightarrowWW","G(2 TeV)#rightarrowWW","W'(2 TeV)#rightarrowWZ","W'(2 TeV)#rightarrowWZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ"]         
 histos = ["DijetMassHighPuriWW","DijetMassLowPuriWW","DijetMassHighPuriWZ", "DijetMassLowPuriWZ", "DijetMassHighPuriZZ","DijetMassLowPuriZZ"]#,"DijetMassHighPuriVV","DijetMassLowPuriVV"]
 lumi = 12900
 maxVals =[2659,2895,2895,3416,3147,3600,3416,3416]
@@ -99,12 +101,11 @@ for h in histos:
 
     mjj = rt.RooRealVar("mjjCMS","Dijet invariant mass (GeV)",len(bins)-1, bins[0], bins[-1])
 
-    bkg_fit = rt.RooGenericPdf("bkg_fitCMS", "pow(1-@0/13000., @1)/pow(@0/13000., @2+@3*log(@0))", rt.RooArgList(mjj, p1, p2,p3))
-    p3.setConstant(rt.kTRUE)
+    bkg_fit = rt.RooGenericPdf("bkg_fitCMS", "pow(1-@0/13000., @1)/pow(@0/13000., @2)", rt.RooArgList(mjj, p1, p2))
     if(parameters[ii] == 2): 
       print title
       print "Setting parameter 1 constant"
-      p1.setConstant(rt.kTRUE)
+      bkg_fit = rt.RooGenericPdf("bkg_fitCMS", "(1-@0/13000.)/pow(@0/13000., @1)", rt.RooArgList(mjj, p2))
 
     alpha = rt.RooRealVar("alpha","alpha",alphas[ii], 0., 4)
     sigfrac = rt.RooRealVar("sigfrac","sigfrac",sigfracs[ii], 0.3, .90)
@@ -163,15 +164,17 @@ for h in histos:
 
 
     frame = mjj.frame()
-    dataset.plotOn(frame,rt.RooFit.DataError(rt.RooAbsData.Poisson), rt.RooFit.Binning(mjjbins),rt.RooFit.Name("data"))
+    dataset.plotOn(frame,rt.RooFit.DataError(rt.RooAbsData.Poisson), rt.RooFit.Binning(mjjbins),rt.RooFit.Name("data"),rt.RooFit.Invisible())
     sumPDF.plotOn(frame, rt.RooFit.VisualizeError(fr,1),rt.RooFit.FillColor(rt.kRed-7),rt.RooFit.LineColor(rt.kRed-7),rt.RooFit.Name("fiterr"), rt.RooFit.Binning(mjjbins))
     sumPDF.plotOn(frame,rt.RooFit.LineColor(rt.kRed+1),rt.RooFit.Name("sumPDF"))
-    dataset.plotOn(frame,rt.RooFit.DataError(rt.RooAbsData.Poisson), rt.RooFit.Binning(mjjbins),rt.RooFit.Name("data"))
-
     frame3 = mjj.frame()
-    hpull = frame.pullHist()
-    frame3.addPlotable(hpull,"P")
-    signalPDF.plotOn(frame,rt.RooFit.LineColor(rt.kGreen+2),rt.RooFit.Binning(mjjbins),rt.RooFit.Name("sig"),rt.RooFit.Normalization(1, rt.RooAbsReal.RelativeExpected))
+    hpull = frame.pullHist("data","sumPDF",True)
+    frame3.addPlotable(hpull,"X0 P E1")
+    
+    dataset.plotOn(frame,rt.RooFit.DataError(rt.RooAbsData.Poisson), rt.RooFit.Binning(mjjbins),rt.RooFit.Name("data"),rt.RooFit.XErrorSize(0))
+
+    mjj.setRange("sigRegion",2000*0.8,2000*1.2) ;
+    signalPDF.plotOn(frame,rt.RooFit.LineColor(rt.kBlack),rt.RooFit.LineStyle(rt.kDashed),rt.RooFit.Binning(mjjbins),rt.RooFit.Name("sig"),rt.RooFit.Normalization(1, rt.RooAbsReal.RelativeExpected),rt.RooFit.Range("sigRegion"))
 
     c1 =rt.TCanvas("c1","",800,800)
     c1.SetLogy()
@@ -182,24 +185,24 @@ for h in histos:
     p11_1.SetPad(0.01,0.26,0.99,0.98)
     p11_1.SetLogy()
     p11_1.SetRightMargin(0.05)
-    p11_1.SetTopMargin(0.07)
+    p11_1.SetTopMargin(0.1)
     p11_1.SetBottomMargin(0.02)
     p11_1.SetFillColor(0)
     p11_1.SetBorderMode(0)
     p11_1.SetFrameFillStyle(0)
     p11_1.SetFrameBorderMode(0)
-    frame.GetYaxis().SetTitleSize(0.05)
-    frame.GetYaxis().SetTitleOffset(0.95)
+    frame.GetYaxis().SetTitleSize(0.06)
+    frame.GetYaxis().SetTitleOffset(0.98)
     # frame.GetYaxis().SetLabelSize(0.09)
     frame.SetMinimum(0.2)
     frame.SetMaximum(1E5)
     frame.SetName("mjjFit")
-    frame.GetYaxis().SetTitle("Events / 94.7 GeV")
+    frame.GetYaxis().SetTitle("Events / 100 GeV")
     frame.SetTitle("")
     frame.Draw()
 
-    legend = rt.TLegend(0.52097293,0.69183362,0.6681766,0.919833)
-    legend2 = rt.TLegend(0.52097293,0.69183362,0.6681766,0.919833)
+    legend = rt.TLegend(0.52097293,0.64183362,0.6681766,0.879833)
+    legend2 = rt.TLegend(0.52097293,0.64183362,0.6681766,0.879833)
     legend.SetTextSize(0.038)
     legend.SetLineColor(0)
     legend.SetShadowColor(0)
@@ -226,7 +229,7 @@ for h in histos:
     legend2.Draw("same")
     legend.Draw("same")
 
-    addInfo = rt.TPaveText(0.6210112,0.4666292,0.8902143,0.6523546,"NDC")
+    addInfo = rt.TPaveText(0.6110112,0.4166292,0.8502143,0.6123546,"NDC")
     addInfo.AddText(categories[ii])
     addInfo.AddText("|#eta| #leq 2.5, p_{T} > 200 GeV")
     addInfo.AddText("M_{jj} > 955 GeV, |#Delta#eta_{jj}| #leq 1.3")
@@ -248,32 +251,31 @@ for h in histos:
     p11_2.SetPad(0.01,0.02,0.99,0.27)
     p11_2.SetBottomMargin(0.35)
     p11_2.SetRightMargin(0.05)
-    p11_2.SetGridx()
-    p11_2.SetGridy()
-    frame3.SetMinimum(-3.5)
-    frame3.SetMaximum(3.5)
+    # p11_2.SetGridx()
+    # p11_2.SetGridy()
+    frame3.SetMinimum(-2.9)
+    frame3.SetMaximum(2.9)
     frame3.SetTitle("")
     frame3.SetXTitle("Dijet invariant mass (GeV)")
     frame3.GetXaxis().SetTitleSize(0.06)
-    frame3.SetYTitle("#frac{Data-Fit}{#sigma}")
+    frame3.SetYTitle("#frac{Data-Fit}{#sigma_{data}}")
     frame3.GetYaxis().SetTitleSize(0.15)
     frame3.GetYaxis().CenterTitle()
-    frame3.GetYaxis().SetTitleOffset(0.20)
-    frame3.GetYaxis().SetLabelSize(0.09)
-    frame3.GetXaxis().SetTitleSize(0.15)
-    frame3.GetXaxis().SetTitleOffset(0.90)
+    frame3.GetYaxis().SetTitleOffset(0.30)
+    frame3.GetYaxis().SetLabelSize(0.15)
+    frame3.GetXaxis().SetTitleSize(0.17)
+    frame3.GetXaxis().SetTitleOffset(0.91)
     frame3.GetXaxis().SetLabelSize(0.12)
     frame3.GetXaxis().SetNdivisions(906)
-    frame3.GetYaxis().SetNdivisions(306)
+    frame3.GetYaxis().SetNdivisions(305)
     frame3.Draw("same")
     line = rt.TLine(minVal,0,frame3.GetXaxis().GetXmax(),0)
     line.Draw("same")
     c1.Update()
 
     print title
-    canvname = "ftest_2016/MLBkgFit_%s.pdf"%histos[ii]
+    canvname = "80X/MLBkgFit_%s.pdf"%histos[ii]
     c1.SaveAs(canvname)
-    c1.SaveAs(canvname.replace("pdf","root"),"root")
-    c1.SaveAs(canvname.replace("root","C"),"C")
+    c1.SaveAs(canvname.replace("pdf","C"),"C")
 
     time.sleep(5)
