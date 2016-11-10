@@ -8,12 +8,12 @@
  normWeight = 1.;
 
 
- string sInFile = "/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/input/DATA_sb.root";
+ string sInFile = "/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/input/JetHT_qV.root";
  cout << sInFile.c_str() << endl;
  TFile file0(sInFile.c_str(), "read");
  
 
- string sOutFile("MiniTrees/Data_VV_13TeV/dijetVV_13TeV_miniTree.root");
+ string sOutFile("MiniTrees/Data_qV_13TeV/dijetVV_13TeV_miniTree.root");
  TFile f1(sOutFile.c_str(), "recreate");
  f1.cd();
  
@@ -25,7 +25,7 @@
  
  TCVARS->Branch("categories",&categories,"categories/I");
  
- for (int iCat = 0; iCat < 8; iCat++){
+ for (int iCat = 8; iCat < 14; iCat++){
    TH1D* hMass = (TH1D*) file0.Get("DijetMassHighPuriVV;1");
    if (iCat == 1) hMass = (TH1D*) file0.Get("DijetMassLowPuriVV;1");
    
@@ -37,15 +37,15 @@
    
    if (iCat == 6) hMass = (TH1D*) file0.Get("DijetMassHighPuriZZ;1");
    if (iCat == 7) hMass = (TH1D*) file0.Get("DijetMassLowPuriZZ;1");
-   //
-   // if (iCat == 8) hMass = (TH1D*) file0.Get("DijetMassHighPuriqV;1");
-   // if (iCat == 9) hMass = (TH1D*) file0.Get("DijetMassLowPuriqV;1");
-   //
-   // if (iCat == 10) hMass = (TH1D*) file0.Get("DijetMassHighPuriqW;1");
-   // if (iCat == 11) hMass = (TH1D*) file0.Get("DijetMassLowPuriqW;1");
-   //
-   // if (iCat == 12) hMass = (TH1D*) file0.Get("DijetMassHighPuriqZ;1");
-   // if (iCat == 13) hMass = (TH1D*) file0.Get("DijetMassLowPuriqZ;1");
+
+   if (iCat == 8) hMass = (TH1D*) file0.Get("DijetMassHighPuriqV;1");
+   if (iCat == 9) hMass = (TH1D*) file0.Get("DijetMassLowPuriqV;1");
+
+   if (iCat == 10) hMass = (TH1D*) file0.Get("DijetMassHighPuriqW;1");
+   if (iCat == 11) hMass = (TH1D*) file0.Get("DijetMassLowPuriqW;1");
+
+   if (iCat == 12) hMass = (TH1D*) file0.Get("DijetMassHighPuriqZ;1");
+   if (iCat == 13) hMass = (TH1D*) file0.Get("DijetMassLowPuriqZ;1");
    //
    // if (iCat == 14) hMass = (TH1D*) file0.Get("DijetMassNoPuriVV;1");
    // if (iCat == 15) hMass = (TH1D*) file0.Get("DijetMassNoPuriWW;1");
