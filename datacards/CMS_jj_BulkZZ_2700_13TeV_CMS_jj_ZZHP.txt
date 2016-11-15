@@ -26,8 +26,6 @@ CMS_sig_p1_jes_13TeV                param   0.0   1.0   # dijet mass shift due t
 CMS_sig_p2_jer_13TeV                param   0.0   1.0   # dijet mass resolution shift due to JER uncertainty
 CMS_bkg_fit_CMS_jj_ZZHP_13TeV_norm           flatParam  # Normalization uncertainty on background slope
 CMS_bkg_fit_slope1_CMS_jj_ZZHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
-CMS_bkg_fit_slope2_CMS_jj_ZZHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
-CMS_bkg_fit_slope3_CMS_jj_ZZHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
 --------------------------------
 
 CMS_mass_scale_j_13TeV       lnN      1.01555/0.97063      1.01555/0.97063      -                          
@@ -35,4 +33,5 @@ CMS_mass_res_j_13TeV         lnN      0.91103/1.06795      0.91103/1.06795      
 CMS_scale_j_13TeV            lnN      0.99654/1.0      0.99654/1.0      -  # jet energy scale      
 CMS_res_j_13TeV              lnN      0.99942/1.00144      0.99942/1.00144      -  # jet energy resolution 
 
-CMS_xww_XS_BulkG_ZZ_13TeV lnN      1.38      1.38      -
+CMS_XS_gg_PDF                lnN				    1.383        1.383        -
+CMS_XS_gg_scale              lnN				    1.181        1.181        -
