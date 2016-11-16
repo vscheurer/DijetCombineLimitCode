@@ -1537,11 +1537,11 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
   
     outFile << "lumi_13TeV                          lnN  1.062  1.062    - " << endl;
     if( iChan==8 ||iChan==10 ||iChan==12 ){
-      outFile << "CMS_eff_vtag_tau21_sf_13TeV        lnN  1.075  0.925      - # tau21 efficiency" << endl;
+      outFile << "CMS_eff_vtag_tau21_sf_13TeV        lnN  0.925/1.075  0.925/1.075      - # tau21 efficiency" << endl;
     } 
     else {
       // anti-correlated the high purity (1.076) and low purity (0.54) categories
-      outFile << "CMS_eff_vtag_tau21_sf_13TeV        lnN  0.726  1.274      - # tau21 efficiency" << endl;
+      outFile << "CMS_eff_vtag_tau21_sf_13TeV        lnN  1.274/0.726  1.274/0.726     - # tau21 efficiency" << endl;
     }  
   } 
   
