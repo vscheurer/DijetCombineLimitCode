@@ -1,7 +1,7 @@
 Combination of CMS_jj_WWLP=/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/CMS_jj_BulkWW_2600_13TeV_CMS_jj_WWLP.txt  CMS_jj_WZLP=/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/CMS_jj_BulkWW_2600_13TeV_CMS_jj_WZLP.txt  CMS_jj_ZZLP=/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/CMS_jj_BulkWW_2600_13TeV_CMS_jj_ZZLP.txt
 imax 3 number of bins
 jmax 2 number of processes minus 1
-kmax 9 number of nuisance parameters
+kmax 10 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
 shapes BulkWW_jj    CMS_jj_WWLP  /mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2600_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_WWLP
 shapes BulkZZ_jj    CMS_jj_WWLP  /mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2600_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_WWLP
@@ -24,6 +24,7 @@ process                                        BulkWW_jj    BulkZZ_jj    bkg_fit
 process                                        -1           0            1            -1           0            1            -1           0            1          
 rate                                           6.2653       0.0000       1.0000       3.6701       0.0000       1.0000       0.5946       0.0000       1.0000     
 ----------------------------------------------------------------------------------------------------------------------------------
+CMS_eff_vtag_tau21_pt_13TeV   lnN              1.233/0.791  1.233/0.791  -            1.233/0.791  1.233/0.791  -            1.233/0.791  1.233/0.791  -          
 CMS_eff_vtag_tau21_sf_13TeV   lnN              0.780/1.178  0.780/1.178  -            0.780/1.178  0.780/1.178  -            0.780/1.178  0.780/1.178  -          
 CMS_mass_res_j_13TeV    lnN                    0.913/1.085  0.913/1.085  -            1.025/0.977  1.025/0.977  -            1.068/0.914  1.068/0.914  -          
 CMS_mass_scale_j_13TeV   lnN                   0.974/1.014  0.974/1.014  -            1.043/0.973  1.043/0.973  -            1.111/0.926  1.111/0.926  -          

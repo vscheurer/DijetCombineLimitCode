@@ -1,7 +1,7 @@
 Combination of CMS_jj_qWHP=/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/CMS_jj_qZ_1900_13TeV_CMS_jj_qWHP.txt  CMS_jj_qZHP=/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/CMS_jj_qZ_1900_13TeV_CMS_jj_qZHP.txt  CMS_jj_qWLP=/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/CMS_jj_qZ_1900_13TeV_CMS_jj_qWLP.txt  CMS_jj_qZLP=/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/CMS_jj_qZ_1900_13TeV_CMS_jj_qZLP.txt
 imax 4 number of bins
 jmax 2 number of processes minus 1
-kmax 9 number of nuisance parameters
+kmax 10 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
 shapes bkg_fit_jj   CMS_jj_qWHP  /mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_qV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_qWHP_13TeV
 shapes data_obs     CMS_jj_qWHP  /mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_qV_13TeV.root w_all:data_obs_CMS_jj_qWHP
@@ -28,7 +28,8 @@ process                                        qZ_jj        qW_jj        bkg_fit
 process                                        -1           0            1            -1           0            1            -1           0            1            -1           0            1          
 rate                                           6.8838       0.0000       1.0000       15.8768      0.0000       1.0000       5.8338       0.0000       1.0000       6.4252       0.0000       1.0000     
 ----------------------------------------------------------------------------------------------------------------------------------
-CMS_eff_vtag_tau21_sf_13TeV   lnN              0.925        1.075        -            0.925        1.075        -            1.274        0.726        -            1.274        0.726        -          
+CMS_eff_vtag_tau21_pt_13TeV   lnN              1.092/0.908  1.092/0.908  -            1.092/0.908  1.092/0.908  -            0.669/1.331  0.669/1.331  -            0.669/1.331  0.669/1.331  -          
+CMS_eff_vtag_tau21_sf_13TeV   lnN              1.075/0.925  1.075/0.925  -            1.075/0.925  1.075/0.925  -            0.726/1.274  0.726/1.274  -            0.726/1.274  0.726/1.274  -          
 CMS_mass_res_j_13TeV    lnN                    1.026/0.946  1.026/0.946  -            0.952/1.044  0.952/1.044  -            0.976/1.016  0.976/1.016  -            0.953/1.071  0.953/1.071  -          
 CMS_mass_scale_j_13TeV   lnN                   0.972/1.037  0.972/1.037  -            1.006/0.991  1.006/0.991  -            0.978/1.014  0.978/1.014  -            1.019/0.991  1.019/0.991  -          
 CMS_pu_13TeV            lnN                    1.015        1.015        -            1.015        1.015        -            1.015        1.015        -            1.015        1.015        -          

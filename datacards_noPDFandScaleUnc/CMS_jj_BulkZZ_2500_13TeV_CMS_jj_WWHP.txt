@@ -33,3 +33,5 @@ CMS_mass_scale_j_13TeV       lnN      0.92995/1.10858      0.92995/1.10858      
 CMS_mass_res_j_13TeV         lnN      1.0648/0.91594      1.0648/0.91594      -                          
 CMS_scale_j_13TeV            lnN      1.01751/1.01401      1.01751/1.01401      -  # jet energy scale      
 CMS_res_j_13TeV              lnN      1.01051/1.01751      1.01051/1.01751      -  # jet energy resolution 
+
+CMS_eff_vtag_tau21_pt_13TeV  lnN       0.677/1.239           0.677/1.239        -

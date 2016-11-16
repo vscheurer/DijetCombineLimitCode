@@ -18,7 +18,7 @@ rate                    0          6.37074        1
 --------------------------------
 # signal scaled by 0.00129 to a cross section of 10/fb and also scale factor of 0.88 are applied.
 lumi_13TeV                          lnN  1.062  1.062    - 
-CMS_eff_vtag_tau21_sf_13TeV        lnN  0.726  1.274      - # tau21 efficiency
+CMS_eff_vtag_tau21_sf_13TeV        lnN  0.726/1.274  0.726/1.274     - # tau21 efficiency
 CMS_pu_13TeV                        lnN  1.0150  1.0150      - # pileup
 --------------------------------
 # Parametric shape uncertainties, entered by hand.
@@ -33,3 +33,5 @@ CMS_mass_scale_j_13TeV       lnN      0.98526/1.01017      0.98526/1.01017      
 CMS_mass_res_j_13TeV         lnN      0.97051/1.00356      0.97051/1.00356      -                          
 CMS_scale_j_13TeV            lnN      1.00153/0.99746      1.00153/0.99746      -  # jet energy scale      
 CMS_res_j_13TeV              lnN      0.99644/1.00356      0.99644/1.00356      -  # jet energy resolution 
+
+CMS_eff_vtag_tau21_pt_13TeV  lnN       0.496/1.504           0.496/1.504        -

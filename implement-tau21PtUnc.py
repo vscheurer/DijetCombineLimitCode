@@ -18,6 +18,7 @@ def get_sys_pt_vv(mass):
 def get_sys_pt_qv(mass):
  fsys = []
  systhp = 5.90094*math.log(mass/2./200.)/100.
+ print systhp
  fsys.append( (1+systhp) )
  fsys.append( (1-systhp) )
  tothp = math.sqrt(0.03*0.03+0.04*0.04+0.06*0.06)/1.03
@@ -31,9 +32,8 @@ def get_sys_pt_qv(mass):
 indir = 'datacards/'
 outdir = 'datacards_test/'
 
-signals=["BulkWW","BulkZZ","WZ","ZprimeWW"]
+signals  = ["BulkWW","BulkZZ","WZ","ZprimeWW","qW","qZ"]
 purities = ["LP","HP"]
-
 
 for signal in signals:  
   masses =[m*100 for m in range(11,42+1)]
@@ -44,26 +44,40 @@ for signal in signals:
   for purity in purities:
     for ch in channels:
        for m in masses:
+         
+         
+         fname_datacard_in  = indir  + "CMS_jj_%s_%i"%(signal,m)+"_13TeV_CMS_jj_"+ch+purity+".txt"
+         fname_datacard_out = outdir + "CMS_jj_%s_%i"%(signal,m)+"_13TeV_CMS_jj_"+ch+purity+".txt"
+
+         lines = []
+         
+         print "For input datacard:" ,fname_datacard_in
  
-         newline  = '\nCMS_eff_vtag_tau21_pt_13TeV                lnN				    '
+         newline  = '\nCMS_eff_vtag_tau21_pt_13TeV  lnN       '
            
          if signal.find("q")!=-1:
-           if   purity.find("HP"): newline += "%.3f/%.3f        %.3f/%.3f        -" %( get_sys_pt_qv(m)[0] ,get_sys_pt_qv(m)[1] ,get_sys_pt_qv(m)[0] ,get_sys_pt_qv(m)[1] )
-           elif purity.find("LP"): newline += "%.3f/%.3f        %.3f/%.3f        -" %( get_sys_pt_qv(m)[2] ,get_sys_pt_qv(m)[3] ,get_sys_pt_qv(m)[2] ,get_sys_pt_qv(m)[3] )
-           else: print "THIS CATEGORY DOES NOT EXIST!!"
-         else:
-           if   purity.find("HP"): newline += "%.3f/%.3f        %.3f/%.3f        -" %( get_sys_pt_vv(m)[0] ,get_sys_pt_vv(m)[1] ,get_sys_pt_vv(m)[0] ,get_sys_pt_vv(m)[1] )
-           elif purity.find("LP"): newline += "%.3f/%.3f        %.3f/%.3f        -" %( get_sys_pt_vv(m)[2] ,get_sys_pt_vv(m)[3] ,get_sys_pt_vv(m)[2] ,get_sys_pt_vv(m)[3] )
+          
+           sysqV = get_sys_pt_qv(m)
+           if   purity.find("HP") !=-1: 
+            
+             print "%.3f/%.3f           %.3f/%.3f        -" %( sysqV[0] ,sysqV[1] ,sysqV[0] ,sysqV[1] )
+             newline += "%.3f/%.3f           %.3f/%.3f        -" %( sysqV[0] ,sysqV[1] ,sysqV[0] ,sysqV[1] )
+           elif purity.find("LP") !=-1: 
+             
+             newline += "%.3f/%.3f           %.3f/%.3f        -" %( sysqV[2] ,sysqV[3] ,sysqV[2] ,sysqV[3] )
+           else: print "THIS CATEGORY DOES NOT EXIST!!"            
+         else: 
+        
+           sysVV = get_sys_pt_vv(m)                                                  
+           if   purity.find("HP") !=-1: newline += "%.3f/%.3f           %.3f/%.3f        -" %( sysVV[0] ,sysVV[1] ,sysVV[0] ,sysVV[1] )
+           elif purity.find("LP") !=-1: newline += "%.3f/%.3f           %.3f/%.3f        -" %( sysVV[2] ,sysVV[3] ,sysVV[2] ,sysVV[3] )
            else: print "THIS CATEGORY DOES NOT EXIST!!"
          newline  +='\n'
          print newline   
          
      
 
-         fname_datacard_in  = indir  + "CMS_jj_%s_%i"%(signal,m)+"_13TeV_CMS_jj_"+ch+purity+".txt"
-         fname_datacard_out = outdir + "CMS_jj_%s_%i"%(signal,m)+"_13TeV_CMS_jj_"+ch+purity+".txt"
-         
-         lines = []   
+        
          try:
            print " Opening " , fname_datacard_in
            with open(fname_datacard_in) as infile:
@@ -78,24 +92,3 @@ for signal in signals:
                  outfile.write(line)
          except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
              print 'oops, datacard not found!'
-             
-             
- #
- #         infile = open(fname_datacard_in,"r")
- #         outfile = open('tmp.txt',"w")
-         
-   
-         #   lsplit = l.replace("  "," ").replace("  "," ").replace("  "," ").replace("  "," ").replace("  "," ").replace("  "," ").split(" ")
-         #   l = l.replace(lsplit[2],'%.3f'%get_sys(m))
-         #
-         #   newline = 'CMS_eff_vtag_tau21_pt_13TeV   lnN                1.028/0.972   -             -             1.028/0.972   -             1.028/0.972   -             -             1.028/0.972   -             1.028/0.972   -             -             1.028/0.972   -             1.028/0.972   -             -             1.028/0.972   -           '
-         #
-         #   newline = newline.replace('1.028/0.972','%.3f'%(1+syst))
-         #   newline+='\n'
-         #   l = l+newline
-         #
-         #  outfile.write(l)
-         #
-         # infile.close()
-         # outfile.close()
-         # os.system("mv tmp.txt %s"%(outdir+card))

@@ -36,3 +36,5 @@ CMS_res_j_13TeV              lnN      1.0/1.0      1.0/1.0      -  # jet energy 
 
 CMS_XS_qq_PDF                lnN				    1.097        1.097        -
 CMS_XS_qq_scale              lnN				    1.117        1.117        -
+
+CMS_eff_vtag_tau21_pt_13TeV  lnN       0.614/1.271           0.614/1.271        -

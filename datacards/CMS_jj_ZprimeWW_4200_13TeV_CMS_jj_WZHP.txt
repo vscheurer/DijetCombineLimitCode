@@ -35,3 +35,5 @@ CMS_res_j_13TeV              lnN      1.00392/0.99706      1.00392/0.99706      
 
 CMS_XS_qq_PDF                lnN				    1.152        1.152        -
 CMS_XS_qq_scale              lnN				    1.133        1.133        -
+
+CMS_eff_vtag_tau21_pt_13TeV  lnN       1.297/0.742           1.297/0.742        -

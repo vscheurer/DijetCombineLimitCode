@@ -25,11 +25,6 @@ def Plot(files, label, obs):
 
     radmasses = []
     for f in files:
-      # if f.find("2500")!=-1 or f.find("2500")!=-1: continue
-      fileIN = rt.TFile.Open(f)
-      if not fileIN:
-        continue
-      fileIN.Close()
       if not postfix:
         radmasses.append(float(f.replace("CMS_jj_","").split("_")[0])/1000.)
       else:
@@ -40,20 +35,24 @@ def Plot(files, label, obs):
     for mass in radmasses:
       efficiencies[mass]=0.01# assume 10/fb signal cross section #FOR Wprime=
       if "WZ" in label.split("_")[0]:
-        print "Taking care of V hadronic branching fractions for exclusive samples: 0.6991*0.6760!"
+        print "Taking care of WZ hadronic branching fractions for exclusive samples: 0.6991*0.6760!"
         efficiencies[mass]=0.01/((0.6991*0.6760)) #assume 10/fb signal and get rid of hadronic branching fraction)
-      elif "WW" in label.split("_")[0] or "Zprime" in label.split("_")[0]:
-        print "Taking care of WW hadronic branching fractions for exclusive samples: 0.6760*0.6760!"
-        efficiencies[mass]=0.01/((0.6760*0.6760))
-      elif "ZZ" in label.split("_")[0]:
+        
+      elif "BulkWW" in label.split("_")[0] or "Zprime" in label.split("_")[0]:
+        print "Taking care of WW hadronic branching fractions for inclusive samples: 1.!"
+        efficiencies[mass]=0.01
+        
+      elif "BulkZZ" in label.split("_")[0]:
         print "Taking care of ZZ hadronic branching fractions for exclusive samples: 0.0.6991*0.0.6991!"
         efficiencies[mass]=0.01/((0.6991*0.6991))
+        
       elif "qZ" in label.split("_")[0]:
-        print "Taking care of qZ hadronic branching fractions for exclusive samples: 0.0.6991!"
-        efficiencies[mass]=0.01/0.6991
+        print "Taking care of qZ hadronic branching fractions for inclusive samples: 1.!"
+        efficiencies[mass]=0.01
+        
       elif "qW" in label.split("_")[0]:
-        print "Taking care of qW hadronic branching fractions for exclusive samples: 0.6760!"
-        efficiencies[mass]=0.01/((0.6760))  
+        print "Taking care of qW hadronic branching fractions for inclusive samples: 1.!"
+        efficiencies[mass]=0.01
          
 
     fChain = []
@@ -336,9 +335,9 @@ def Plot(files, label, obs):
     leg2.SetMargin(0.35)
     leg.SetBorderSize(1)
 
-    if obs: leg.AddEntry(grobs, "Asymptotic CL_{S} Observed", "Lp")
-    leg.AddEntry(gryellow, "Asymptotic CL_{S} Expected #pm 1#sigma", "f")
-    leg.AddEntry(grgreen, "Asymptotic CL_{S} Expected #pm 2#sigma", "f")
+    if obs: leg.AddEntry(grobs, "Observed", "Lp")
+    leg.AddEntry(gryellow, "Expected #pm 1 std. deviation", "f")
+    leg.AddEntry(grgreen , "Expected #pm 2 std. deviation", "f")
     leg.AddEntry(gtheory, ltheory, "L")
 
     if obs: leg2.AddEntry(grobs, " ", "")
@@ -415,38 +414,43 @@ def Plot(files, label, obs):
     leg.Draw()
     leg2.Draw("same")
     
-    # fname = "2016/brazilianFlag_%s_13TeV.pdf" %label
- #    c1.SaveAs(fname)
- #    c1.SaveAs(fname.replace(".pdf" ,".C"  ))
+    fname = "withPDFandScale/brazilianFlag_%s_13TeV.pdf" %label
+    c1.SaveAs(fname)
+    c1.SaveAs(fname.replace(".pdf" ,".C"  ))
+    
+    # del c1
+ #    del leg
+ #    del leg2
+ #    del addInfo
+ #    del mg
 
-    f = rt.TFile("VVnoLP_graphs.root", "recreate")
-    gr2up  .SetName("gr2up  ")
-    gr1up  .SetName("gr1up  ")
-    grmean .SetName("grmean ")
-    gr1down.SetName("gr1down")
-    gr2down.SetName("gr2down")
-
-    gr2up  .Write()
-    gr1up  .Write()
-    grmean .Write()
-    gr1down.Write()
-    gr2down.Write()
-    if obs:
-      grobs.SetName("grobs")
-      grobs.Write()
-    f.Close()
+    # f = rt.TFile("VVnoLP_graphs.root", "recreate")
+    # gr2up  .SetName("gr2up  ")
+    # gr1up  .SetName("gr1up  ")
+    # grmean .SetName("grmean ")
+    # gr1down.SetName("gr1down")
+    # gr2down.SetName("gr2down")
+    #
+    # gr2up  .Write()
+    # gr1up  .Write()
+    # grmean .Write()
+    # gr1down.Write()
+    # gr2down.Write()
+    # if obs:
+    #   grobs.SetName("grobs")
+    #   grobs.Write()
+    # f.Close()
 
     
-    time.sleep(500)
+    time.sleep(5)
 
 if __name__ == '__main__':
   postfix = ""
 
   channels=["RS1WW","RS1ZZ","WZ","qW","qZ","BulkWW","BulkZZ"]
   channels=["ZprimeWW","WZ","BulkWW","BulkZZ"]
-  # channels=["ZprimeWW","BulkWW"]
-  # channels=["qZ",'qW']
-  channels=["qW"]
+  # channels=["BulkZZ"]
+  # channels=["qZ","qW"]
   for chan in channels:
     masses =[m*100 for m in range(11,42+1)]
     
@@ -475,35 +479,35 @@ if __name__ == '__main__':
     combinedplots_qV=[]
     
     for mass in masses: 
-       HPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_VVHPnew_asymptoticCLs.root"]
-       LPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_VVLPnew_asymptoticCLs.root"]
+       # HPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_VVHPnew_asymptoticCLs.root"]
+     #   LPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_VVLPnew_asymptoticCLs.root"]
        combinedplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_VVnew_asymptoticCLs.root"]
-       combinedplots_old+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_VV_asymptoticCLs.root"]
-       WWHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_WWHP_asymptoticCLs.root"]
-       WZHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_WZHP_asymptoticCLs.root"]
-       ZZHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_ZZHP_asymptoticCLs.root"]
-       WWLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_WWLP_asymptoticCLs.root"]
-       WZLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_WZLP_asymptoticCLs.root"]
-       ZZLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_ZZLP_asymptoticCLs.root"]
-       
-       qVHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qVHPnew_asymptoticCLs.root"]
-       qVLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qVLPnew_asymptoticCLs.root"]    
-       qWHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qWHP_asymptoticCLs.root"]
-       qZHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qZHP_asymptoticCLs.root"]
-       qWLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qWLP_asymptoticCLs.root"]
-       qZLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qZLP_asymptoticCLs.root"]
-       combinedplots_qV+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qVnew_asymptoticCLs.root"]
-       
+     #   combinedplots_old+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_VV_asymptoticCLs.root"]
+     #   WWHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_WWHP_asymptoticCLs.root"]
+     #   WZHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_WZHP_asymptoticCLs.root"]
+     #   ZZHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_ZZHP_asymptoticCLs.root"]
+     #   WWLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_WWLP_asymptoticCLs.root"]
+     #   WZLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_WZLP_asymptoticCLs.root"]
+     #   ZZLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_ZZLP_asymptoticCLs.root"]
+     #
+     #   qVHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qVHPnew_asymptoticCLs.root"]
+     #   qVLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qVLPnew_asymptoticCLs.root"]
+     #   qWHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qWHP_asymptoticCLs.root"]
+     #   qZHPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qZHP_asymptoticCLs.root"]
+     #   qWLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qWLP_asymptoticCLs.root"]
+     #   qZLPplots+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qZLP_asymptoticCLs.root"]
+       # combinedplots_qV+=[postfix+"CMS_jj_"+str(mass)+"_"+chan+"_13TeV_CMS_jj_qVnew_asymptoticCLs.root"]
+     #
  
     # Plot(WWHPplots,chan+"_WWHP", obs=True)
- #    Plot(WWLPplots,chan+"_WWLP", obs=True)
- #    Plot(WZHPplots,chan+"_WZHP", obs=True)
- #    Plot(WZLPplots,chan+"_WZLP", obs=True)
- #    Plot(ZZHPplots,chan+"_ZZHP", obs=True)
-    # Plot(ZZLPplots,chan+"_ZZLP", obs=True)
-   #  # Plot(LPplots,chan+"_VVLP_new_combined_purity", obs=True)
-   #  # Plot(HPplots,chan+"_VVHP_new_combined_purity", obs=True)
-    # Plot(combinedplots,chan+"_new_combined", obs=True)
+#     Plot(WWLPplots,chan+"_WWLP", obs=True)
+#     Plot(WZHPplots,chan+"_WZHP", obs=True)
+#     Plot(WZLPplots,chan+"_WZLP", obs=True)
+#     Plot(ZZHPplots,chan+"_ZZHP", obs=True)
+#     Plot(ZZLPplots,chan+"_ZZLP", obs=True)
+    # Plot(LPplots,chan+"_VVLP_new_combined_purity", obs=True)
+    # Plot(HPplots,chan+"_VVHP_new_combined_purity", obs=True)
+    Plot(combinedplots,chan+"_new_combined", obs=True)
 
     
     
@@ -512,7 +516,6 @@ if __name__ == '__main__':
     # Plot(qWLPplots,chan+"_qWLP", obs=True)
     # Plot(qZHPplots,chan+"_qZHP", obs=True)
     # Plot(qZLPplots,chan+"_qZLP", obs=True)
-    # # Plot(qVLPplots,chan+"_qVLP_new_combined_purity", obs=True)
-    Plot(qVHPplots,chan+"_qVHP_new_combined_purity", obs=True)
+    # # # Plot(qVLPplots,chan+"_qVLP_new_combined_purity", obs=True)
+    # # Plot(qVHPplots,chan+"_qVHP_new_combined_purity", obs=True)
     # Plot(combinedplots_qV,chan+"_new_combined", obs=True)
-    # # Plot(combinedplots_old,chan+"_old_combined", obs=False)
