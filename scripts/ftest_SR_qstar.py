@@ -13,7 +13,7 @@ from heapq import nsmallest
 
 tdrstyle.setTDRStyle()
 gStyle.SetOptFit(0) 
-CMS_lumi.lumi_13TeV = "12.9 fb^{-1}"
+CMS_lumi.lumi_13TeV = "36.4 fb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -280,6 +280,14 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
     elif fLabel.find("qZ") != -1 and fLabel.find("LP") != -1:
       BKGfit.SetParameter(0,1.50873e-07)
       BKGfit.SetParameter(1,8.03595e+00)
+    elif fLabel.find("qV") != -1 and fLabel.find("HP") != -1:
+      BKGfit.SetParameter(0,7.09589e-09)
+      BKGfit.SetParameter(1,8.54541e+00)
+    elif fLabel.find("qV") != -1 and fLabel.find("LP") != -1:
+      BKGfit.SetParameter(0,1.50873e-07)
+      BKGfit.SetParameter(1,8.03595e+00)
+      
+      
 
   if( FunctionType==0 ):
     print "Fitting three parameter default function!"
@@ -298,6 +306,14 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(1,4.11131e+00)
       BKGfit.SetParameter(2,6.97258e+00)
     elif fLabel.find("qZ") != -1 and fLabel.find("LP") != -1:
+      BKGfit.SetParameter(0,9.62968e-04)
+      BKGfit.SetParameter(1,6.99994e+00)
+      BKGfit.SetParameter(2,6.09152e+00)
+    elif fLabel.find("qV") != -1 and fLabel.find("HP") != -1:
+      BKGfit.SetParameter(0,9.62968e-04)
+      BKGfit.SetParameter(1,6.99994e+00)
+      BKGfit.SetParameter(2,6.09152e+00)
+    elif fLabel.find("qV") != -1 and fLabel.find("LP") != -1:
       BKGfit.SetParameter(0,9.62968e-04)
       BKGfit.SetParameter(1,6.99994e+00)
       BKGfit.SetParameter(2,6.09152e+00)
@@ -321,6 +337,15 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(2,6.97258e+00)
       BKGfit.SetParameter(3,0.0000)
     elif fLabel.find("qZ") != -1 and fLabel.find("LP") != -1:
+      BKGfit.SetParameter(0,9.62968e-04)
+      BKGfit.SetParameter(1,6.99994e+00)
+      BKGfit.SetParameter(2,6.09152e+00)
+    elif fLabel.find("qV") != -1 and fLabel.find("HP") != -1:
+      BKGfit.SetParameter(0,3.47742e-05)
+      BKGfit.SetParameter(1,4.11131e+00)
+      BKGfit.SetParameter(2,6.97258e+00)
+      BKGfit.SetParameter(3,0.0000)
+    elif fLabel.find("qV") != -1 and fLabel.find("LP") != -1:
       BKGfit.SetParameter(0,9.62968e-04)
       BKGfit.SetParameter(1,6.99994e+00)
       BKGfit.SetParameter(2,6.09152e+00)
@@ -351,6 +376,18 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(0,9.62968e-04)
       BKGfit.SetParameter(1,6.99994e+00)
       BKGfit.SetParameter(2,6.09152e+00)
+    elif fLabel.find("qV") != -1 and fLabel.find("HP") != -1:
+      BKGfit.SetParameter(0,3.47742e-05)
+      BKGfit.SetParameter(1,4.11131e+00)
+      BKGfit.SetParameter(2,6.97258e+00)
+      BKGfit.SetParameter(3,0.0000)
+      BKGfit.SetParameter(4,0.0000)
+    elif fLabel.find("qV") != -1 and fLabel.find("LP") != -1:
+      BKGfit.SetParameter(0,9.62968e-04)
+      BKGfit.SetParameter(1,6.99994e+00)
+      BKGfit.SetParameter(2,6.09152e+00)
+      BKGfit.SetParameter(3,0.0000)
+      BKGfit.SetParameter(4,0.0000)
       
   elif( FunctionType==4 ):
     print "Fitting four parameter alternate function!"
@@ -373,6 +410,16 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(3,0.0000)
       BKGfit.SetParameter(4,0.0000)
     elif fLabel.find("qZ") != -1 and fLabel.find("LP") != -1:
+      BKGfit.SetParameter(0, 8.96766e-04)
+      BKGfit.SetParameter(1, 6.70628e+00)
+      BKGfit.SetParameter(2, 6.11149e+00)
+      BKGfit.SetParameter(3, -7.82019e-02)
+    elif fLabel.find("qV") != -1 and fLabel.find("HP") != -1:
+      BKGfit.SetParameter(0,3.47742e-05)
+      BKGfit.SetParameter(1,4.11131e+00)
+      BKGfit.SetParameter(2,6.97258e+00)
+      BKGfit.SetParameter(3,0.0000)
+    elif fLabel.find("qV") != -1 and fLabel.find("LP") != -1:
       BKGfit.SetParameter(0, 8.96766e-04)
       BKGfit.SetParameter(1, 6.70628e+00)
       BKGfit.SetParameter(2, 6.11149e+00)
@@ -406,7 +453,18 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(1, 6.70628e+00)
       BKGfit.SetParameter(2, 6.11149e+00)
       BKGfit.SetParameter(3, -7.82019e-02)
-    
+    elif fLabel.find("qV") != -1 and fLabel.find("HP") != -1:
+      BKGfit.SetParameter(0,3.47742e-05)
+      BKGfit.SetParameter(1,4.11131e+00)
+      BKGfit.SetParameter(2,6.97258e+00)
+      BKGfit.SetParameter(3,0.0000)
+      BKGfit.SetParameter(4,0.0000)
+    elif fLabel.find("qV") != -1 and fLabel.find("LP") != -1:
+      BKGfit.SetParameter(0, 8.96766e-04)
+      BKGfit.SetParameter(1, 6.70628e+00)
+      BKGfit.SetParameter(2, 6.11149e+00)
+      BKGfit.SetParameter(3, -7.82019e-02)
+      BKGfit.SetParameter(4,0.0000)
       
       
       
@@ -424,15 +482,15 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
     if(fitStatus==0):
       stopProgram=0
       # r.Print("V")
-      break
+      #break
 
-  if(stopProgram==1):
-    print "######################"
-    print"######################"
-    print "ERROR : Fit %i failed!!!!" %FunctionType
-    print "######################"
-    print "######################"
-    sys.exit()
+  #if(stopProgram==1):
+    #print "######################"
+    #print"######################"
+    #print "ERROR : Fit %i failed!!!!" %FunctionType
+    #print "######################"
+    #print "######################"
+    #sys.exit()
   
   
   #Create a histogram to hold the confidence intervals
@@ -678,7 +736,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   addInfo = TPaveText(0.1397805,0.01676406,0.4371859,0.2227225,"NDC")
   addInfo.AddText(fLabel)
   addInfo.AddText("|#eta| #leq 2.5, p_{T} > 200 GeV")
-  addInfo.AddText("M_{jj} > 990 GeV, |#Delta#eta_{jj}| #leq 1.3")
+  addInfo.AddText("M_{jj} > 1055 GeV, |#Delta#eta_{jj}| #leq 1.3")
   addInfo.SetFillColor(0)
   addInfo.SetLineColor(0)
   addInfo.SetFillStyle(0)
@@ -815,16 +873,18 @@ if __name__ == '__main__':
   # sys.stdout = f
 
 
-  massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 990, 1058, #change bin 1000 to 990!!
+  massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 990, 1055, #change bin 1000 to 990 and 1058 to 1055!!
              1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
              4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
   
-  channels = ["qW",'qZ']
-  # channels = ["qW"]
+  #channels = ["qW",'qZ']
+  channels = ["qV"]
   fitmax = 7000
   for ch in channels:
-    performFit("input/JetHT_qV.root", "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 990, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
-    performFit("input/JetHT_qV.root", "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 990, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
+    #performFit("input/JetHT_qV.root", "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 990, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
+    #performFit("input/JetHT_qV.root", "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 990, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
+    performFit("../../ExoDiBosonAnalysis/results/Data_VV_qVSB_qV_36400ifb.root", "%sHP"%ch, len(massBins)-1, massBins, 990, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
+    performFit("../../ExoDiBosonAnalysis/results/Data_VV_qVSB_qV_36400ifb.root", "%sLP"%ch , len(massBins)-1, massBins, 990, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
   # sys.stdout = orig_stdout
 
  

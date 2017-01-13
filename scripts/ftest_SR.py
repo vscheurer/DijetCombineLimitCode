@@ -13,7 +13,7 @@ from heapq import nsmallest
 
 tdrstyle.setTDRStyle()
 gStyle.SetOptFit(0) 
-CMS_lumi.lumi_13TeV = "12.9 fb^{-1}"
+CMS_lumi.lumi_13TeV = "36.4 fb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -21,9 +21,12 @@ iPos = 11
 if( iPos==0 ): CMS_lumi.relPosX = 0.12
 iPeriod=4
 
-
+legend_text = "CMS data"
+suffix = "_MC_SR_test"
+if legend_text.find("CMS")!=-1:
+    suffix = "_SB"
 sqrtS = 13000.
-lumi = 12900.
+lumi =  36500.#12900.
 
 def get_palette(mode):
  palette = {}
@@ -48,10 +51,10 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   file =TFile(fInputFile,"READ")
   hMass = file.Get(fPlot)
   hMass.SetBinErrorOption(TH1.kPoisson)
-  
+  #hMass.Scale(13000/36400.)
   
   firstbin = hMass.GetBinCenter(hMass.FindFirstBinAbove(0.99999))
-  lastbin = hMass.GetBinCenter(hMass.FindLastBinAbove(0.99999))
+  lastbin = hMass.GetBinCenter(hMass.FindLastBinAbove(0.19999))   #contained 0.99999
   lower = (nsmallest(2, fBins, key=lambda x: abs(x-lastbin)))[0]
   higher  = (nsmallest(2, fBins, key=lambda x: abs(x-lastbin)))[1]
   if lower > higher:
@@ -94,6 +97,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   eyl=[]
   eyh=[]
   alpha = 1 - 0.6827
+  hMass_rebinned.SetBinErrorOption(TH1.kPoisson)
   for i in range(0,fNbins):
     n    = hMass_rebinned.GetBinContent(i+1)
     dm   = hMass_rebinned.GetBinWidth(i+1)
@@ -104,13 +108,29 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
     exl.append( dm/2.)
     exh.append( dm/2.)
     y.append( n / (dm))
+    test = n/dm
     # l = 0.5*TMath.ChisquareQuantile(alpha/2,2*n) #as used in dijet analysis
     # h = 0.5*TMath.ChisquareQuantile(1-alpha/2,2*(n+1))
-    if(n==0): l = 0
+    if(n==0): 
+        l = 0
     else: l = Math.gamma_quantile(alpha/2,n,1.) #as recommended in https://twiki.cern.ch/twiki/bin/view/CMS/PoissonErrorBars
     h = Math.gamma_quantile_c(alpha/2,n+1,1) 
     eyl.append( (n-l)/(dm) )
     eyh.append( (h-n)/(dm) )
+    
+    print "============================="
+    print mass
+    print "error l : %f"%((n-l)/dm)
+    print hMass_rebinned.GetBinErrorLow(i+1)/dm
+    print "error h : %f"%((h-n)/dm)
+    print hMass_rebinned.GetBinErrorUp(i+1)/dm
+    print " l : %f"%l
+    print "n : %f"%n
+    print n-l
+    print "dm %f"%dm
+    print "n/dm %f"%(n/dm)
+    print " sqrt(n)/dm : %f"%(TMath.Sqrt(n)/dm)
+    print " sqrt(n/dm) : %f"%TMath.Sqrt(n/dm)
   
   vx = array("f",x)
   vy = array("f",y)
@@ -158,7 +178,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
       result = FisherTest(rss[f-1],rss[f],dof[f-1],dof[f],nBins_fit)
       # if (f>3):
  #        result = FisherTest(rss[1],rss[f],dof[1],dof[f],nBins_fit) #now comparing alternate four paramter fit to 3 paramter fit
-      F = result[0]
+      F = (result[0])
       CL = result[1]
       fisher.append(F)
       ConfidenceLevel.append(CL)
@@ -269,6 +289,21 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
   if( FunctionType==-2 ):
     nPar=2
     BKGfit = TF1("BKGfit%i"%FunctionType," [0] / ( TMath::Power(x/13000,[1]) )",fFitXmin,fFitXmax)
+    # sideband region:
+    if fLabel.find("W") != -1 and fLabel.find("HP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,1.98680e-09)
+      BKGfit.SetParameter(1,8.66744e+00)
+    elif fLabel.find("W") != -1 and fLabel.find("LP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,1.13062e-07)
+      BKGfit.SetParameter(1,7.85359e+00)  
+    elif fLabel.find("Z") != -1 and fLabel.find("HP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,7.09589e-09)
+      BKGfit.SetParameter(1,8.54541e+00)
+    elif fLabel.find("Z") != -1 and fLabel.find("LP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,1.50873e-07)
+      BKGfit.SetParameter(1,8.03595e+00)
+ 
+     # signal region: 
     if fLabel.find("WW") != -1 and fLabel.find("HP") != -1:
       BKGfit.SetParameter(0,1.98680e-09)
       BKGfit.SetParameter(1,8.66744e+00)
@@ -291,7 +326,26 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
   if( FunctionType==0 ):
     print "Fitting three parameter default function!"
     nPar=3
-    BKGfit = TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)    
+    BKGfit = TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)
+    # sideband region:
+    if fLabel.find("W") != -1 and fLabel.find("HP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0, 9.01237e-12)
+      BKGfit.SetParameter(1,-1.58982e+01)
+      BKGfit.SetParameter(2, 1.02766e+01)
+    elif fLabel.find("W") != -1 and fLabel.find("LP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,3.75544e-07)
+      BKGfit.SetParameter(1,3.37623e+00)
+      BKGfit.SetParameter(2,7.49005e+00) 
+    elif fLabel.find("Z") != -1 and fLabel.find("HP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,1.82729e-09)
+      BKGfit.SetParameter(1,8.92196e+00)
+      BKGfit.SetParameter(2,9.48734e+00)
+    elif fLabel.find("Z") != -1 and fLabel.find("LP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,6.82046e-08)
+      BKGfit.SetParameter(2,8.08889e+00)
+      BKGfit.SetParameter(1,0.00000000 )
+    
+    # signal region:
     if fLabel.find("WW") != -1 and fLabel.find("HP") != -1:
       BKGfit.SetParameter(0, 9.01237e-12)
       BKGfit.SetParameter(1,-1.58982e+01)
@@ -322,7 +376,30 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
     print "Fitting four parameter default function!"
     nPar=4
     BKGfit = TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )",fFitXmin,fFitXmax)
+    # sideband region:
+    if fLabel.find("W") != -1 and fLabel.find("HP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0, 9.01257e-12)
+      BKGfit.SetParameter(1,-1.09759e+01)
+      BKGfit.SetParameter(2, 8.55014e+00)
+      BKGfit.SetParameter(3,-2.54954e-01)
+    elif fLabel.find("W") != -1 and fLabel.find("LP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,3.72696e-07)
+      BKGfit.SetParameter(1,3.35574e+00)
+      BKGfit.SetParameter(2,7.49238e+00)
+      BKGfit.SetParameter(3,-4.10905e-07)
+    elif fLabel.find("Z") != -1 and fLabel.find("HP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,1.82729e-09)
+      BKGfit.SetParameter(1,8.92196e+00)
+      BKGfit.SetParameter(2, 4.76973e+00)
+      BKGfit.SetParameter(3,-7.21037e-01)
+    elif fLabel.find("Z") != -1 and fLabel.find("LP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,6.82046e-08)
+      BKGfit.SetParameter(2,8.08889e+00)
+      BKGfit.SetParameter(1,0.00000000 )
+      BKGfit.SetParameter(3,0.00000000 )
     
+    
+    # signal region: 
     if fLabel.find("WW") != -1 and fLabel.find("HP") != -1:
       BKGfit.SetParameter(0, 9.01257e-12)
       BKGfit.SetParameter(1,-1.09759e+01)
@@ -359,6 +436,29 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
     print "Fitting four parameter alternate function!"
     nPar=4
     BKGfit =  TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000 + [3]*TMath::Power(x/13000,2),[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)
+    #sideband region:
+    if fLabel.find("W") != -1 and fLabel.find("HP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,2.21926e-13) 
+      BKGfit.SetParameter(1,2.25629e+00) 
+      BKGfit.SetParameter(2,1.15338e+01) 
+      BKGfit.SetParameter(3,2.11319e+02) 
+    elif fLabel.find("W") != -1 and fLabel.find("LP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0,1.44775e-05 ) 
+      BKGfit.SetParameter(1,2.05225e+01 ) 
+      BKGfit.SetParameter(2,6.50590e+00 ) 
+      BKGfit.SetParameter(3,1.86664e+00 ) 
+    elif fLabel.find("Z") != -1 and fLabel.find("HP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0, 1.82729e-09)
+      BKGfit.SetParameter(1, 8.92196e+00)
+      BKGfit.SetParameter(2, 4.76973e+00)
+      BKGfit.SetParameter(3,-7.21037e-01)
+    elif fLabel.find("Z") != -1 and fLabel.find("LP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
+      BKGfit.SetParameter(0, 1.74162e-06)
+      BKGfit.SetParameter(1,-8.47400e-01)
+      BKGfit.SetParameter(2, 7.05095e+00)
+      BKGfit.SetParameter(3, 1.79446e+02)
+    
+    # signal region:
     if fLabel.find("WW") != -1 and fLabel.find("HP") != -1:
       BKGfit.SetParameter(0,2.21926e-13) 
       BKGfit.SetParameter(1,2.25629e+00) 
@@ -400,14 +500,34 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       stopProgram=0
       # r.Print("V")
       break
-
-  if(stopProgram==1):
-    print "######################"
-    print"######################"
-    print "ERROR : Fit %i failed!!!!" %FunctionType
-    print "######################"
-    print "######################"
-    sys.exit()
+  c1 = TCanvas("c3","fit",600,400)
+  hMassNEW.Draw();
+  suffix ="WHP";
+  if fLabel.find('W')!=-1:
+      suffix ="W"
+  if fLabel.find('Z')!=-1:
+      suffix ="Z"
+  if fLabel.find('Z')!=-1:
+      suffix ="Z"
+  if fLabel.find('WW')!=-1:
+      suffix ="WW"
+  if fLabel.find('WZ')!=-1:
+      suffix ="WZ"
+  if fLabel.find('ZZ')!=-1:
+      suffix ="WZ"
+      
+  if fLabel.find('HP')!=-1:
+      suffix +="HP"
+  if fLabel.find('LP')!=-1:
+      suffix +="LP"
+  c1.SaveAs("ftest_2016/test_"+suffix+".pdf");
+  #if(stopProgram==1):
+   # print "######################"
+   # print"######################"
+   # print "ERROR : Fit %i failed!!!!" %FunctionType
+   # print "######################"
+   # print "######################"
+   # sys.exit()
   
   
   #Create a histogram to hold the confidence intervals
@@ -457,12 +577,18 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
          err_tot = err_data_high
        else:
          err_tot = err_data_low
-       fit_residual = (data - fit) / err_tot
+       if err_tot!=0:  
+            fit_residual = (data - fit) / err_tot
+       else:
+           print "Warning: err_tot = 0 !"
+           fit_residual = 0
        err_fit_residual = 1
        
        if (hMassNEW.GetBinContent(bin)>0):
          NumberOfObservations_VarBin+=1
-         chi2_VarBin += pow( (data - fit) , 2 ) / pow( err_tot , 2 )	 
+         print "(data-fit)**2 = "+str(pow( (data - fit) , 2 ))+" err_tot : "+str(err_tot)
+         print chi2_VarBin
+         chi2_VarBin += pow( (data - fit) , 2 ) / pow( err_tot , 2 )
          chi2_VarBin_notNorm += pow( (data - fit) , 2 )
 
        hist_fit_residual_vsMass.SetBinContent(bin,fit_residual)
@@ -476,7 +602,7 @@ def FisherTest(RSS_1,RSS_2,dof_1,dof_2,N):
   RSS2 = RSS_2
   n1 = N - dof_1 - 1
   n2 = N - dof_2 - 1
-  F = ((RSS1-RSS2)/(n2-n1)) / (RSS2/(N-n2))
+  F = (((RSS1-RSS2)/(n2-n1)) / (RSS2/(N-n2)))
   F_dist = TF1("F_distr","TMath::Sqrt( (TMath::Power([0]*x,[0]) * TMath::Power([1],[1])) / (TMath::Power([0]*x + [1],[0]+[1])) ) / (x*TMath::Beta([0]/2,[1]/2))",0,1000)
   F_dist.SetParameter(0, n2-n1)
   F_dist.SetParameter(1, N-n2)
@@ -559,7 +685,7 @@ def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin
   legend.SetFillColor(0)
   legend.SetFillStyle(0)
   legend.SetMargin(0.35)
-  legend.AddEntry(g,"CMS data","lpe")
+  legend.AddEntry(g,legend_text,"lpe")
   legend.AddEntry(M1Bkg[0], "Fit","l")
   # legend.AddEntry(M1Bkg[3], "Fit","l")
   legend.Draw("same")
@@ -653,7 +779,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   addInfo = TPaveText(0.1397805,0.01676406,0.4371859,0.2227225,"NDC")
   addInfo.AddText(fLabel)
   addInfo.AddText("|#eta| #leq 2.5, p_{T} > 200 GeV")
-  addInfo.AddText("M_{jj} > 955 GeV, |#Delta#eta_{jj}| #leq 1.3")
+  addInfo.AddText("M_{jj} > 1055 GeV, |#Delta#eta_{jj}| #leq 1.3")
   addInfo.SetFillColor(0)
   addInfo.SetLineColor(0)
   addInfo.SetFillStyle(0)
@@ -701,7 +827,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   legend.SetFillColor(0)
   legend.SetFillStyle(0)
   legend.SetMargin(0.35)
-  legend.AddEntry(g, "CMS data","lpe")
+  legend.AddEntry(g, legend_text,"lpe")
   if (doSigmaBand): 
     legend.AddEntry(M1Bkg[0], "2 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[0],dof[0]),"lp")
     legend.AddEntry(histoCI[1], " #pm 1 #sigma (3 par. default fit)","f")
@@ -770,7 +896,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   c2.cd(1)
   p11_1.RedrawAxis()
   
-  cname = fOutputFile+".pdf"
+  cname = fOutputFile+suffix+".pdf"
   c2.SaveAs(cname)
   c2.SaveAs(cname.replace("pdf","root"),"root")
   c2.SaveAs(cname.replace("pdf","C"),"C")
@@ -785,16 +911,25 @@ if __name__ == '__main__':
   # sys.stdout = f
 
 
-  massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 955, 1000, 1058, #change bin 944 to 955!!
+  massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 955, 1000, 1055, #change bin 944 to 955!! and 1058 to 1055
              1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
              4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
   
-  channels = ["WW",'WZ','ZZ']
-  # channels = ['ZZ']
+  #channels = ["WW",'WZ','ZZ']
+  channels = ['WW','ZZ']
+  #channels = ['qV']
   fitmax = 7000
+  # file for data sideband: Data_VV_qV_SB_Run2016All.root
+  # file for QCD pythia 8: QCD_pythia8_VV.root
+  outdir = '/mnt/t3nfs01/data01/shome/dschafer/AnalysisOutput/figures/bkgfit/testSB/'
+  infile = "../../ExoDiBosonAnalysis/results/Data_VVdijet_test40GeV_SB.root"
+  #infile = "../../ExoDiBosonAnalysis/results/Data_qVdijet_SB.root"
   for ch in channels:
-    performFit("input/JetHT_VV.root", "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 955, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
-    performFit("input/JetHT_VV.root", "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 955, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
+    #performFit("input/JetHT_VV.root", "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 955, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
+    #performFit("input/JetHT_VV.root", "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 955, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
+    performFit(infile, "DijetMassHighPuri%s"%ch , len(massBins)-1, massBins, 1058, fitmax, "%s category, HP"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = False)
+    performFit(infile, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1058, fitmax, "%s category, LP"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = False)
+    
   # sys.stdout = orig_stdout
 
  
