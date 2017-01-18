@@ -13,7 +13,7 @@ from heapq import nsmallest
 
 tdrstyle.setTDRStyle()
 gStyle.SetOptFit(0) 
-CMS_lumi.lumi_13TeV = "36.4 fb^{-1}"
+CMS_lumi.lumi_13TeV = "36.8 fb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -51,7 +51,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   file =TFile(fInputFile,"READ")
   hMass = file.Get(fPlot)
   hMass.SetBinErrorOption(TH1.kPoisson)
-  #hMass.Scale(13000/36400.)
+
   
   firstbin = hMass.GetBinCenter(hMass.FindFirstBinAbove(0.99999))
   lastbin = hMass.GetBinCenter(hMass.FindLastBinAbove(0.19999))   #contained 0.99999
@@ -62,7 +62,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   if higher > lower:
     fFitXmax = higher
   fFitXmax = lastbin    
-  fFitXmin = firstbin
+  #fFitXmin = firstbin
   print "Last non-zero bin is at x=%f. Closest dijet mass bins are L = %i  H = %i" %(lastbin,lower,higher)
   print "Using x max = %i" %fFitXmax
   print "Using x min = %i" %fFitXmin
@@ -564,7 +564,7 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
   hist_fit_residual_vsMass =  TH1D("hist_fit_residual_vsMass","hist_fit_residual_vsMass",fNbins,xbins)
   
   for bin in range (1,hMassNEW.GetNbinsX()):
-    if( hMassNEW.GetXaxis().GetBinLowEdge(bin+1)>=fFitXmin and hMassNEW.GetXaxis().GetBinUpEdge(bin-1)<=fFitXmax ):
+    if( hMassNEW.GetXaxis().GetBinLowEdge(bin)>=fFitXmin and hMassNEW.GetXaxis().GetBinUpEdge(bin)<=fFitXmax ):
        NumberOfVarBins += 1
        data = hMassNEW.GetBinContent(bin)
        # data = g.Integral(hMassNEW.GetXaxis().GetBinLowEdge(bin) , hMassNEW.GetXaxis().GetBinUpEdge(bin) )
@@ -905,13 +905,13 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
  
 # ---------------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-  
-  # orig_stdout = sys.stdout
-  # f = file("Sideband-fits-Ftest2.txt", 'w')
-  # sys.stdout = f
+  outdir = '/mnt/t3nfs01/data01/shome/dschafer/AnalysisOutput/figures/bkgfit/testSB/ReReco2016/'
+  orig_stdout = sys.stdout
+  f = file(outdir+"Sideband-fits-Ftest2.txt", 'w')
+  sys.stdout = f
 
 
-  massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 955, 1000, 1055, #change bin 944 to 955!! and 1058 to 1055
+  massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, #change bin 944 to 955!! and 1058 to 1055
              1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
              4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
   
@@ -921,14 +921,15 @@ if __name__ == '__main__':
   fitmax = 7000
   # file for data sideband: Data_VV_qV_SB_Run2016All.root
   # file for QCD pythia 8: QCD_pythia8_VV.root
-  outdir = '/mnt/t3nfs01/data01/shome/dschafer/AnalysisOutput/figures/bkgfit/testSB/'
-  infile = "../../ExoDiBosonAnalysis/results/Data_VVdijet_test40GeV_SB.root"
+  
+  #infile = "../../ExoDiBosonAnalysis/results/Data_VVdijet_test40GeV_SB.root"
+  infile = "../../ExoDiBosonAnalysis/results/ReRecoData_VVdijet_SB.root"
   #infile = "../../ExoDiBosonAnalysis/results/Data_qVdijet_SB.root"
   for ch in channels:
     #performFit("input/JetHT_VV.root", "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 955, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
     #performFit("input/JetHT_VV.root", "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 955, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
-    performFit(infile, "DijetMassHighPuri%s"%ch , len(massBins)-1, massBins, 1058, fitmax, "%s category, HP"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = False)
-    performFit(infile, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1058, fitmax, "%s category, LP"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = False)
+    performFit(infile, "DijetMassHighPuri%s"%ch , len(massBins)-1, massBins, 1118, fitmax, "%s category, HP"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = False)
+   # performFit(infile, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1058, fitmax, "%s category, LP"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = False)
     
   # sys.stdout = orig_stdout
 
