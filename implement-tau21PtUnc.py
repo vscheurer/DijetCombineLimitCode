@@ -8,8 +8,8 @@ def get_sys_pt_vv(mass):
  systhp = 5.90094*math.log(mass/2./200.)/100.
  fsys.append( (1+systhp)*(1+systhp) )
  fsys.append( (1-systhp)*(1-systhp) )
- tothp = math.sqrt(0.03*0.03+0.04*0.04+0.06*0.06)/1.03
- totlp = math.sqrt(0.12*0.12+0.17*0.17+0.12*0.12)/0.88
+ tothp = math.sqrt(0.03*0.03+0.04*0.04+0.06*0.06)/1.03 # efficiency scale factor HP = 1.03 +- 0.03 (stat -> fit unc.) +- 0.04 (sys->herwig vs pythia) +- 0.06 (sys -> different fit methods)
+ totlp = math.sqrt(0.12*0.12+0.17*0.17+0.12*0.12)/0.88 # same for LP category
  systlp = systhp*totlp/tothp
  fsys.append( (1+systhp)*(1-systlp) )
  fsys.append( (1-systhp)*(1+systlp) )

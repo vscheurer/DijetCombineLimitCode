@@ -13,7 +13,8 @@ USER_SRM_HOME="srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/pnfs/psi.ch/cms/trivc
 TOPWORKDIR=/scratch/`whoami`
 
 JOBDIR=interpolateAll-$JOB_ID
-CMSSW_DIR="/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5"
+#CMSSW_DIR="/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5"
+CMSSW_DIR="/cvmfs/cms.cern.ch/slc6_amd64_gcc530/cms/cmssw/CMSSW_8_0_20/"
 BASEDIR=`pwd`
 LOGDIRNAME=${BASEDIR}/${JOBDIR}
 OUTDIR=${BASEDIR}/${JOBDIR}

@@ -1,7 +1,7 @@
 from ROOT import *
 import fileinput
 
-path = "/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/JESJERsystematics/"
+path = "/mnt/t3nfs01/data01/shome/dschafer/ExoDiBosonAnalysis/forSystematics/"
 
 prefixDCin = "datacards/CMS_jj_"
 prefixDCout = "datacards/CMS_jj_"

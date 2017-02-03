@@ -11,6 +11,7 @@ For F-test in data SR
 ```
 python scripts/ftest_SR_qstar.py //qV analysis
 python scripts/ftest_SR.py //VV analysis
+same files can also be used to do the sideband fits in data
 ```
 Remember to change input file! And name of out .tex file!
 
@@ -26,7 +27,7 @@ To interpolate signal MC, take as input .root files of signal MC.  with 1 GeV bi
 These scripts are designed to run on the PSI T3 batch system (qsub protocol)! Needs adaption to run on alternate systems.
 Modify interpolateAll.py to signal sample and masspoints you wish to run on
 ```
-python interpolateAll.py
+python interpolateAll.py -> if you want to do them manually do: python interpolateVV13TeV.py input/ZprimeWW_13TeV_ 2100 GeV
 ```
 Create data and signal MC minitrees
 ```

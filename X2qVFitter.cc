@@ -259,7 +259,7 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
     ncat = 7;
   }
 
-  TString inDir   = "/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/MiniTrees/Signal_qV_13TeV/";
+  TString inDir   = "/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/MiniTrees/Signal_qV_13TeV/";
 
   Float_t MASS(mass);
   // Float_t sqrts(21);
@@ -410,7 +410,7 @@ void AddBkgData(RooWorkspace* w, std::vector<string> cat_names) {
     ncat = 7;
   }
 
-  TString inDir   = "/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/MiniTrees/Data_qV_13TeV/";
+  TString inDir   = "/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/MiniTrees/Data_qV_13TeV/";
 
   // common preselection cut
   TString mainCut("1");
@@ -947,8 +947,8 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
     int iMass = abs(mass);
 
     //ctmp->SaveAs("plots/sigmodel_"+signalname+TString::Format("%d_%s.png", iMass, cat_names.at(c).c_str()));
-    ctmp->SaveAs("/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/plots/sigmodel_"+signalname+TString::Format("%d_%s.pdf", iMass, cat_names.at(c).c_str()));
-    ctmp->SaveAs("/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/plots/sigmodel_"+signalname+TString::Format("%d_%s.root", iMass, cat_names.at(c).c_str()));
+    ctmp->SaveAs("/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/plots/sigmodel_"+signalname+TString::Format("%d_%s.pdf", iMass, cat_names.at(c).c_str()));
+    ctmp->SaveAs("/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/plots/sigmodel_"+signalname+TString::Format("%d_%s.root", iMass, cat_names.at(c).c_str()));
 
 
   }
@@ -979,7 +979,7 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
   }
 
 
-  c4->SaveAs(TString::Format("/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/plots/backgrounds_log.pdf",c));
+  c4->SaveAs(TString::Format("/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/plots/backgrounds_log.pdf",c));
 
 
   TCanvas* c5 = new TCanvas("c5","jj Background Categories",0,0,2000,2000);
@@ -998,7 +998,7 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
     plotbkg_fit[c]->Draw();  
   }
 
-  c5->SaveAs(TString::Format("/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/plots/backgrounds.pdf",c));
+  c5->SaveAs(TString::Format("/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/plots/backgrounds.pdf",c));
   //c5->SaveAs(TString::Format("plots/backgrounds.C",c));
 
 }
@@ -1006,7 +1006,7 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
 
 void MakeSigWS(RooWorkspace* w, const char* fileBaseName, TString signalname, std::vector<string> cat_names) {
   
-  TString wsDir   = "/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/workspaces/"+filePOSTfix;
+  TString wsDir   = "/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/workspaces/"+filePOSTfix;
   // TString wsDir   = filePOSTfix;
   // Int_t ncat = NCAT;
   Int_t ncat_min = NCAT;
@@ -1107,7 +1107,7 @@ void MakeSigWS(RooWorkspace* w, const char* fileBaseName, TString signalname, st
 
 void MakeBkgWS(RooWorkspace* w, const char* fileBaseName, std::vector<string> cat_names) {
   
-  TString wsDir   = "/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/workspaces/"+filePOSTfix;
+  TString wsDir   = "/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/workspaces/"+filePOSTfix;
   // TString wsDir   = filePOSTfix;
   // Int_t ncat = NCAT;
   Int_t ncat_min = NCAT;
@@ -1339,7 +1339,7 @@ Double_t effSigma(TH1 *hist) {
 
 void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char* fileBkgName, int iChan, TString signalname, int signalsample, std::vector<string> cat_names, double mass) {
   
-  TString cardDir = "/mnt/t3nfs01/data01/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/datacards/"+filePOSTfix;
+  TString cardDir = "/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/datacards/"+filePOSTfix;
   // TString cardDir = filePOSTfix;
   // Int_t ncat = NCAT;
   Int_t ncat_min = NCAT;

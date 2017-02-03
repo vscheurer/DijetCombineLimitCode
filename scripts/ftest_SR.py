@@ -12,7 +12,7 @@ from ROOT import TVirtualFitter
 from heapq import nsmallest
 
 tdrstyle.setTDRStyle()
-gStyle.SetOptFit(0) 
+#gStyle.SetOptFit(0) 
 CMS_lumi.lumi_13TeV = "36.8 fb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
@@ -246,7 +246,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   # print "Fishers3Alt4 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(fisher[3],ConfidenceLevel[3])
   print "\hline"
   print "\end{tabular}"
-  print "\caption{Residuals, \chi^{2}, and degrees of freedom for %s category. A %i parameter fit is needed to describe these data.}"%(fLabel,prmt)
+  print "\caption{Residuals, $\chi^{2}$, and degrees of freedom for %s category. A %i parameter fit is needed to describe these data.}"%(fLabel,prmt)
   print "\label{tab:%s}"%fLabel
   print "\end{table}"
   with open("ftest_2016/f-test_VV.tex", "a") as text_file:
@@ -802,7 +802,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   g.SetMarkerSize(0.9)
   g.SetMarkerStyle(20)
   g.Draw("pe0 same")
-  if (doSigmaBand): histoCI[0].Draw("same3")
+  if (doSigmaBand): histoCI[1].Draw("same3")
   g.Draw("pe0 same")
 
   linestyles = [1,2,7,3,3]
@@ -917,19 +917,18 @@ if __name__ == '__main__':
   
   #channels = ["WW",'WZ','ZZ']
   channels = ['WW','ZZ']
-  #channels = ['qV']
   fitmax = 7000
   # file for data sideband: Data_VV_qV_SB_Run2016All.root
   # file for QCD pythia 8: QCD_pythia8_VV.root
   
   #infile = "../../ExoDiBosonAnalysis/results/Data_VVdijet_test40GeV_SB.root"
   infile = "../../ExoDiBosonAnalysis/results/ReRecoData_VVdijet_SB.root"
-  #infile = "../../ExoDiBosonAnalysis/results/Data_qVdijet_SB.root"
+  
   for ch in channels:
     #performFit("input/JetHT_VV.root", "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 955, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
     #performFit("input/JetHT_VV.root", "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 955, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
-    performFit(infile, "DijetMassHighPuri%s"%ch , len(massBins)-1, massBins, 1118, fitmax, "%s category, HP"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = False)
-   # performFit(infile, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1058, fitmax, "%s category, LP"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = False)
+    performFit(infile, "DijetMassHighPuri%s"%ch , len(massBins)-1, massBins, 1058, fitmax, "%s category, HPSB"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = False)
+    #performFit(infile, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1058, fitmax, "%s category, LPSB"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = True)
     
   # sys.stdout = orig_stdout
 

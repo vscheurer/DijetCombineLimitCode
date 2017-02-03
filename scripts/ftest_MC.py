@@ -13,7 +13,7 @@ from heapq import nsmallest
 
 tdrstyle.setTDRStyle()
 gStyle.SetOptFit(0) 
-CMS_lumi.lumi_13TeV = "36.4 fb^{-1}"
+CMS_lumi.lumi_13TeV = "36.8 fb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Simulation Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -21,9 +21,10 @@ iPos = 11
 if( iPos==0 ): CMS_lumi.relPosX = 0.12
 iPeriod=4
 
-
+outdir = "../../AnalysisOutput/figures/bkgfit/"
+mjjcut = "1055"
 sqrtS = 13000.
-lumi = 3640.
+lumi = 36814.
 
 def get_palette(mode):
  palette = {}
@@ -234,9 +235,10 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   print "4 par & %.3f & %.3f & %i \\\\"%(rss[2],chi2[2],dof[2])
   if fInputFile.find("q")!=-1:
     print "5 par & %.3f & %.3f & %i \\\\"%(rss[3],chi2[3],dof[3])
-  print "Alt. 4 par& %.3f & %.3f & %i \\"%(rss[4],chi2[4],dof[4])
-  if fInputFile.find("q")!=-1:
+    print "Alt. 4 par& %.3f & %.3f & %i \\"%(rss[4],chi2[4],dof[4])
     print "Alt. 5 par& %.3f & %.3f & %i \\"%(rss[5],chi2[5],dof[5])
+  else:
+      print "Alt. 4 par& %.3f & %.3f & %i \\"%(rss[3],chi2[3],dof[3])
   print "\hline"
   print "\hline"
   print "Fishers23 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\\\"%(fisher[0],ConfidenceLevel2[0])
@@ -246,12 +248,12 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
      #print "Fishers3Alt4 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(fisher[3],ConfidenceLevel[3])
   print "\hline"
   print "\end{tabular}"
-  print "\caption{Residuals, \chi^{2}, and degrees of freedom for %s category. A %i parameter fit is needed to describe these data.}"%(fLabel,prmt)
+  print "\caption{Residuals, $\chi^{2}$, and degrees of freedom for %s category. A %i parameter fit is needed to describe these data.}"%(fLabel,prmt)
   print "\label{tab:%s}"%fLabel
   print "\end{table}"
-  outfile = "ftest_qcdSR/f-test_VV"+suffix+".tex"
+  outfile = outdir+"f-test_VV"+suffix+".tex"
   if fInputFile.find("q")!=-1:
-     outfile = "ftest_qcdSR/f-test_qV"+suffix+".tex" 
+     outfile = outdir+"f-test_qV"+suffix+".tex" 
   with open(outfile, "a") as text_file:
     text_file.write("\\begin{table}[htb]\n")
     text_file.write("\centering\n")
@@ -292,12 +294,13 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
   if( FunctionType==-2 ):
     nPar=2
     BKGfit = TF1("BKGfit%i"%FunctionType," [0] / ( TMath::Power(x/13000,[1]) )",fFitXmin,fFitXmax)
-    BKGfit.SetParameter(0,4.92405e-09   ) #WWHP
-    BKGfit.SetParameter(1,7.90584e+00   ) #WWHP
+    BKGfit.SetParameter(0, 1.76820e-08 )#4.92405e-09   ) #WWHP
+    BKGfit.SetParameter(1, 8.25223e+00 )#7.90584e+00   ) #WWHP
     if fLabel.find("qV") != -1:
       BKGfit.SetParameter(0,  3.72282e-12 )
       BKGfit.SetParameter(1, -5.30842e+00 )
-    if fLabel.find("WW") != -1 and fLabel.find("LP") != -1: BKGfit.SetParameter(0,3.54934e-07   ) #WWLP
+    if fLabel.find("WW") != -1 and fLabel.find("LP") != -1: 
+        BKGfit.SetParameter(0,3.54934e-07   ) #WWLP
 
     
   if( FunctionType==0 ):
@@ -308,15 +311,45 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(0,  3.72282e-12 )
       BKGfit.SetParameter(1, -5.30842e+00 )
       BKGfit.SetParameter(2,  1.82771e+01 )
-    BKGfit.SetParameter(0,5.83605e-09   ) #WWHP
-    BKGfit.SetParameter(1,4.83899e-01   ) #WWHP
-    BKGfit.SetParameter(2,7.85446e+00   ) #WWHP
+    if fLabel.find("qW")!=-1 or fLabel.find("qZ")!=-1:
+        BKGfit.SetParameter(0,5.83605e-09   ) #WWHP
+        BKGfit.SetParameter(1,4.83899e-01   ) #WWHP
+        BKGfit.SetParameter(2,7.85446e+00   ) #WWHP
+    if fLabel.find("WW") != -1 and fLabel.find("HP") != -1:
+        print "takes right parameters"
+        BKGfit.SetParameter(0, 1.76820e-08 )
+        BKGfit.SetParameter(1, 8.25223e+00)
+        BKGfit.SetParameter(2, 0.0)
+        BKGfit.SetParLimits(2,8,8.8)
+        
     if fLabel.find("WW") != -1 and fLabel.find("LP") != -1:
-      BKGfit.SetParameter(0,4.54934e-07   ) #WWLP
+        BKGfit.SetParameter(0, 1.91544e-07 ) #WWLP
+        BKGfit.SetParameter(1,-7.48572e-01 ) #WWHP
+        BKGfit.SetParameter(2, 8.07181e+00 ) #WWHP
+      
     if fLabel.find("ZZ") != -1 and fLabel.find("HP") != -1:
-      BKGfit.SetParameter(0, 8.66361e-09   ) #ZZHP
-      # BKGfit.SetParLimits(0, 1.66361e-09,9.66361e-07   ) #ZZHP
-      BKGfit.SetParameter(1, 8.24515e+00   ) #ZZHP
+        BKGfit.SetParameter(0, 8.66361e-09   ) #ZZHP
+        BKGfit.SetParameter(2, 7.85446e+00   ) #WWHP
+        BKGfit.SetParLimits(2, 0,10   ) #ZZHP
+        BKGfit.SetParameter(1, 8.24515e+00   ) #ZZHP
+    if fLabel.find("ZZ") != -1 and fLabel.find("LP") != -1:
+        BKGfit.SetParameter(0,5.83605e-09   ) #WWHP
+        BKGfit.SetParameter(1,4.83899e-01   ) #WWHP
+        BKGfit.SetParameter(2,7.85446e+00   ) #WWHP
+    if fLabel.find("WZ") != -1 and fLabel.find("HP") != -1:
+        print "WZHP"
+        BKGfit.SetParameter(0, 1.35257e-08)
+        BKGfit.SetParameter(1, 8.74474e+00)
+        #BKGfit.SetParLimits(0,0,1e-07)
+        #BKGfit.SetParLimits(1,5,8)
+        BKGfit.SetParLimits(2,8.8,12)
+        #BKGfit.SetParameter(0,0)#1.76820e-08)#5.83605e-09   ) #WWHP
+        #BKGfit.SetParameter(1,0)#8.25223e+00)#4.83899e-01   ) #WWHP
+        #BKGfit.SetParameter(2,0)#7.85446e+00   ) #WWHP
+    if fLabel.find("WZ") != -1 and fLabel.find("LP") != -1:
+        BKGfit.SetParameter(0,5.83605e-09   ) #WWHP
+        BKGfit.SetParameter(1,4.83899e-01   ) #WWHP
+        BKGfit.SetParameter(2,7.85446e+00   ) #WWHP
 
   elif( FunctionType==1 ):
     print "Fitting four parameter default function!"
@@ -328,39 +361,44 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(2,  1.82771e+01 )
       BKGfit.SetParameter(3,  2.27782e+00 )
     if fLabel.find("WZ") != -1 and fLabel.find("HP") != -1:
-      BKGfit.SetParameter(0,  8.57838e+07  )
-      BKGfit.SetParLimits(0,  1.57838e+07,1.57838e+08  )
-      BKGfit.SetParameter(1,  5.17587e+01  ) 
-      BKGfit.SetParameter(2, -1.34293e+01  )
-      BKGfit.SetParameter(3, -3.38372e+00  )
+      #BKGfit.SetParLimits(0,  1.57838e+07,1.57838e+08  )
+      BKGfit.SetParameter(0,  2.93331e-14   )
+      BKGfit.SetParameter(1, -1.50024e+01   ) 
+      BKGfit.SetParameter(2,  1.69784e+01  )
+      BKGfit.SetParameter(3, 1.41238e+00   )
+      BKGfit.SetParLimits(3,0,5)
     if fLabel.find("WW") != -1 and fLabel.find("HP") != -1:
-      BKGfit.SetParameter(0,  8.57838e+07  )
-      BKGfit.SetParLimits(0,  1.57838e+07,1.57838e+08  )
-      BKGfit.SetParameter(1,  5.17587e+01  ) 
-      BKGfit.SetParameter(2, -1.34293e+01  )
-      BKGfit.SetParameter(3, -3.38372e+00  )
+      BKGfit.SetParameter(0, 8.37328e-19)                 
+      #BKGfit.SetParLimits(0,  1.57838e+07 ,1.57838e+08  )                 
+      BKGfit.SetParameter(1,  -2.28718e+01)                 
+      BKGfit.SetParameter(2, 2.41611e+01)             
+      BKGfit.SetParameter(3, 2.87335e+00)
     if fLabel.find("WW") != -1 and fLabel.find("LP") != -1:
-      BKGfit.SetParameter(0, 1.47497e+08) #WWLP
-      BKGfit.SetParameter(1,5.01221e+01 ) #WWLP
-      BKGfit.SetParameter(2,-1.21037e+01) #WWLP
-      BKGfit.SetParameter(3,-3.10164e+00) #WWLP
+      BKGfit.SetParameter(0, 1.34232e-02 )#WWLP
+      BKGfit.SetParameter(1, 1.35564e+01 ) #WWLP
+      BKGfit.SetParameter(2, 1.29328e+00 )#WWLP
+      BKGfit.SetParameter(3,-1.12300e+00 )#WWLP
     if fLabel.find("WZ") != -1 and fLabel.find("LP") != -1:
-      BKGfit.SetParameter(0, 1.47497e+08) #WWLP
-      BKGfit.SetParameter(1,5.01221e+01 ) #WWLP
-      BKGfit.SetParameter(2,-1.21037e+01) #WWLP
-      BKGfit.SetParameter(3,-3.10164e+00) #WWLP  
+      BKGfit.SetParameter(0, 1.40401e-06)#1.45686e-06)#WWLP
+      BKGfit.SetParameter(1, 2.78968e+00)#2.86174e+00) #WWLP
+      BKGfit.SetParameter(2, 7.70104e+00)#7.68425e+00) #WWLP
+      BKGfit.SetParameter(3, -1) #WWLP  
+      BKGfit.SetParLimits(3,-10,-0.005)
     if fLabel.find("ZZ") != -1 and fLabel.find("HP") != -1:
-      BKGfit.SetParameter(0, 9.66361e-07 )
       # BKGfit.SetParLimits(0, 9.66361e-08,9.66361e-06 )
-      BKGfit.SetParameter(1, 1.40998e+01)
-      BKGfit.SetParameter(2, 6.84759e+00)
-      BKGfit.SetParameter(3, 0.00000)
+      BKGfit.SetParameter(0, 8.36717e-09)# 2.89070e-02 )   
+      BKGfit.SetParameter(1, 3.24176e-01)# 2.15362e+01 )   
+      BKGfit.SetParameter(2, 8.77945e+00)# 4.17894e-02 )   
+      BKGfit.SetParameter(3, 1        )#-1.37676e+00 ) 
+      BKGfit.SetParLimits(3,10,1)
     if fLabel.find("ZZ") != -1 and fLabel.find("LP") != -1:
-      BKGfit.SetParameter(0, 2.04782e-06)
-      BKGfit.SetParLimits(0, 9.66361e-08,9.66361e-04 )
-      BKGfit.SetParameter(1, 9.20192e+00) 
-      BKGfit.SetParameter(2, 7.03678e+00) 
-      BKGfit.SetParameter(3, -1.) 
+        #BKGfit.SetParLimits(0, 1)#9.66361e-08,9.66361e-04 )
+      BKGfit.SetParameter(0, 6.27404e-07 )#6.92267e-04 )                            
+      BKGfit.SetParameter(1, 2.69667e+00 )#1.18029e+01 )                                                                   
+      BKGfit.SetParameter(2, 7.73807e+00 )# 3.50726e+00)                             
+      BKGfit.SetParameter(3, 1         )#-6.96555e-01 ) 
+      BKGfit.SetParLimits(3,0,2)
+      
   
   elif( FunctionType==2 ):
     print "Fitting five parameter default function!"
@@ -404,16 +442,21 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
     print "Fitting four parameter alternate function!"
     nPar=4
     BKGfit =  TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000 + [3]*TMath::Power(x/13000,2),[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)
-    if fLabel.find("qV") != -1:
+    if fLabel.find("q") != -1:
         BKGfit.SetParameter(0, 3.45939e+02 )
         BKGfit.SetParameter(1,-4.45967e+00 )
         BKGfit.SetParameter(2, 1.31413e+00 )
         BKGfit.SetParameter(3, 1.91782e+02  )
+    if fLabel.find("qV")!=-1 and fLabel.find("HP")!=-1:
+        BKGfit.SetParameter(0, 3.45939e+02 )
+        BKGfit.SetParameter(1,-4.45967e+00 )
+        BKGfit.SetParameter(2, 1.31413e+00 )
+        BKGfit.SetParameter(3, 0.0)
     if fLabel.find("WW") != -1 and fLabel.find("LP") != -1:
-      BKGfit.SetParameter(0, 1.47497e+08) #WWLP
-      BKGfit.SetParameter(1,5.01221e+01 ) #WWLP
-      # BKGfit.SetParameter(2,-1.21037e+01) #WWLP
-      # BKGfit.SetParameter(3,-3.10164e+00) #WWLP
+      BKGfit.SetParameter(0, 4.48531e-07 )# 1.47497e+08) #WWLP
+      BKGfit.SetParameter(1, -7.96655e-01)#5.01221e+01 ) #WWLP
+      BKGfit.SetParameter(2, 7.43952e+00 )#-1.21037e+01) #WWLP
+      BKGfit.SetParameter(3,0.)#-3.10164e+00) #WWLP
     if fLabel.find("ZZ") != -1 and fLabel.find("LP") != -1:
       BKGfit.SetParameter(0, 4.48531e-07   ) #ZZLP
       BKGfit.SetParameter(1, -7.96655e-01 ) #WWLP
@@ -425,13 +468,16 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(2, 0.)
       
     if fLabel.find("WZ") != -1 and fLabel.find("HP") != -1:
-      BKGfit.SetParameter(0, 4.34790e-04 ) #ZZHP
-      BKGfit.SetParameter(1,-3.42687e+01 ) #ZZHP
+      BKGfit.SetParameter(0,  1.31274e-02) 
+      BKGfit.SetParameter(1, -2.42314e+00 )
+      BKGfit.SetParameter(2,  4.70224e+00 )
+      BKGfit.SetParameter(3,  5.41163e+02 )
+      
     if fLabel.find("WZ") != -1 and fLabel.find("LP") != -1:
-      BKGfit.SetParameter(0, 1.47497e+08) #WWLP
-      BKGfit.SetParameter(1,5.01221e+01 ) #WWLP
-      BKGfit.SetParameter(2,-1.21037e+01) #WWLP
-      BKGfit.SetParameter(3,-3.10164e+00) #WWLP
+      BKGfit.SetParameter(0,4.48531e-07 ) #WWLP
+      BKGfit.SetParameter(1,-7.96655e-01) #WWLP
+      BKGfit.SetParameter(2,7.43952e+00 ) #WWLP
+      BKGfit.SetParameter(3, 0.0) #WWLP
   
   
   elif( FunctionType==4 ):
@@ -462,6 +508,9 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(1, 6.70628e+00)
       BKGfit.SetParameter(2, 6.11149e+00)
       BKGfit.SetParameter(3, -7.82019e-02)
+      #BKGfit.SetParameter(3, 5.03605e+00)
+      BKGfit.SetParameter(4,-4.77303e-01)
+      BKGfit.SetParameter(5, 7.93174e-05)
     elif fLabel.find("qV") != -1 and fLabel.find("HP") != -1:
       BKGfit.SetParameter(0,3.47742e-05)
       BKGfit.SetParameter(1,4.11131e+00)
@@ -469,11 +518,14 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(3,0.0000)
       BKGfit.SetParameter(4,0.0000)
     elif fLabel.find("qV") != -1 and fLabel.find("LP") != -1:
-      BKGfit.SetParameter(0, 8.96766e-04)
-      BKGfit.SetParameter(1, 6.70628e+00)
-      BKGfit.SetParameter(2, 6.11149e+00)
-      BKGfit.SetParameter(3, -7.82019e-02)
-      BKGfit.SetParameter(4,0.0000)
+      #BKGfit.SetParameter(0, 8.96766e-04)
+      #BKGfit.SetParameter(1, 6.70628e+00)
+      #BKGfit.SetParameter(2, 6.11149e+00)
+      BKGfit.SetParameter(0,3.47742e-05)
+      BKGfit.SetParameter(1,4.11131e+00)
+      BKGfit.SetParameter(2,6.97258e+00)
+      BKGfit.SetParameter(3, 0.0)
+      BKGfit.SetParameter(4,0.0)
   
   stopProgram=1;
   for loop in range (0,30):
@@ -738,7 +790,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   addInfo.AddText("QCD, Pythia8")
   addInfo.AddText(fLabel)
   addInfo.AddText("|#eta| < 2.5, p_{T} > 200 GeV")
-  addInfo.AddText("M_{jj} > 1035 TeV, |#Delta#eta_{jj}| < 1.3")
+  addInfo.AddText("M_{jj} > "+mjjcut+" TeV, |#Delta#eta_{jj}| < 1.3")
   addInfo.SetFillColor(0)
   addInfo.SetLineColor(0)
   addInfo.SetFillStyle(0)
@@ -794,7 +846,9 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
     if fLabel.find("q")!=-1:
         legend.AddEntry(M1Bkg[3], "5 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[3],dof[3]),"l")
         legend.AddEntry(M1Bkg[5], "Alt. 5 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[5],dof[5]),"l")
-    legend.AddEntry(M1Bkg[4], "Alt. , 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[4],dof[4]),"l")
+        legend.AddEntry(M1Bkg[4], "Alt. , 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[4],dof[4]),"l")
+    else:
+        legend.AddEntry(M1Bkg[3], "Alt. , 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[3],dof[3]),"l")
   elif (not doSigmaBand): 
     legend.AddEntry(M1Bkg[0], "2 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[0],dof[0]),"l")
     legend.AddEntry(M1Bkg[1], "3 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[1],dof[1]),"l")
@@ -802,7 +856,9 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
     if fLabel.find("q")!=-1:
         legend.AddEntry(M1Bkg[3], "5 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[3],dof[3]),"l")
         legend.AddEntry(M1Bkg[5], "Alt. 5 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[5],dof[5]),"l")
-    legend.AddEntry(M1Bkg[4], "Alt. , 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[4],dof[4]),"l")
+        legend.AddEntry(M1Bkg[4], "Alt. , 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[4],dof[4]),"l")
+    else:
+        legend.AddEntry(M1Bkg[3], "Alt. , 4 par. (#chi^{2}/ndof = %.2f/%i)"%(chi2[3],dof[3]),"l")
   legend.Draw("same")
   addInfo.Draw("same")
   p11_1.RedrawAxis()
@@ -866,8 +922,8 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
  
 # ---------------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-  
-  cmd ="rm ftest_qcdSR/f-test_qV.tex"
+  outdir = "../../AnalysisOutput/figures/bkgfit/"
+  cmd ="rm "+outdir+"f-test_VV.tex"
   print cmd
   os.system(cmd)
   
@@ -876,29 +932,23 @@ if __name__ == '__main__':
              1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
              4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
   
-  #channels = ["WW","WZ",'ZZ']
+  channels = ["WW","WZ",'ZZ']
+  #channels = ["WZ"]
   channels = ['qV','qZ','qW']
   fitmax = 7000
+  mjjcut = "995"
   
-  #file1 = "../../ExoDiBosonAnalysis/results/QCD_pythia8_VV_Mjj995_VV.root" # use for VVdijet
-  #file1 = "../../ExoDiBosonAnalysis/results//QCD_pythia8_VV_test1_SB.root"  
-  #file1 = "../../ExoDiBosonAnalysis/results/QCD_qV_qV.root" # same MC for qVdijet
-  file1 = "../../ExoDiBosonAnalysis/results/QCD_pythia8_qV_summer16_SB_test2.root"
+  
+  file1 = "../../ExoDiBosonAnalysis/results/QCD_pythia8_qV_summer16.root"
+  #file1 = "../../ExoDiBosonAnalysis/results/QCD_pythia8_qV.root"
+  #file1 = "../../ExoDiBosonAnalysis/results/QCD_pythia8_VV_summer16.root"
   for ch in channels:
-    #if ch.find("bla") != -1:
-      #performFit("../../ExoDiBosonAnalysis/results/QCD_pythia8_VV.root",
-        #"DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1055, fitmax, "%s category, HP"%ch,
-        #"ftest_qcdSR/%sHP"%ch,doSigmaBand=False)
-    #else:
       performFit(file1,
       "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1058, fitmax, "%s category, HP"%ch,
-      "ftest_qcdSR/%sHP"%ch,"test2",doSigmaBand=False)
+      "%s%sHP"%(outdir,ch),"summer16",doSigmaBand=False)
       performFit(file1,
       "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1058, fitmax, "%s category, LP"%ch,
-      "ftest_qcdSR/%sLP"%ch,"test2" ,doSigmaBand=False)
-    # performFit("input/QCD_VV.root",
-#       "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 944, fitmax, "%s category, LP"%ch,
-#       "80X/ftest_qcdSR/%sLP"%ch,doSigmaBand=False)
-
+      "%s%sLP"%(outdir,ch),"summer16" ,doSigmaBand=False)
+   
  
  

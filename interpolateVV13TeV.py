@@ -72,8 +72,9 @@ if "WprimeWZ" in inputRoot:
   # masses=[1000,2000,3000,4000]
   ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
 
-if "ZprimeWW" in inputRoot:
+if "Zprime" in inputRoot:
   masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+  masses=[1200,1400,1800,2000,3000,3500,4000,4500]
   # masses=[1000,2000,3000,4000]
   ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
   

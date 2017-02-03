@@ -13,7 +13,7 @@ from heapq import nsmallest
 
 tdrstyle.setTDRStyle()
 gStyle.SetOptFit(0) 
-gROOT.SetBatch(True)
+#gROOT.SetBatch(True)
 CMS_lumi.lumi_13TeV = "36.8 fb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
@@ -114,7 +114,7 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
     h = Math.gamma_quantile_c(alpha/2,n+1,1) 
     eyl.append( (n-l)/(dm) )
     eyh.append( (h-n)/(dm) )
-    print "mass : "+str(mass)+"err : l "+str((n-l)/dm)+" h "+str((h-n)/dm)
+    #print "mass : "+str(mass)+"err : l "+str((n-l)/dm)+" h "+str((h-n)/dm)
   
   vx = array("f",x)
   vy = array("f",y)
@@ -353,7 +353,7 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(0,9.62968e-04)
       BKGfit.SetParameter(1,6.99994e+00)
       BKGfit.SetParameter(2,6.09152e+00)
-    
+      BKGfit.SetParameter(3,0.0000)
   
   
   elif( FunctionType==3 ):
@@ -424,10 +424,11 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(2,6.97258e+00)
       BKGfit.SetParameter(3,0.0000)
     elif fLabel.find("qV") != -1 and fLabel.find("LP") != -1:
-      BKGfit.SetParameter(0, 8.96766e-04)
-      BKGfit.SetParameter(1, 6.70628e+00)
-      BKGfit.SetParameter(2, 6.11149e+00)
-      BKGfit.SetParameter(3, -7.82019e-02)
+      BKGfit.SetParameter(0, 3.61006e+01)
+      BKGfit.SetParameter(1,-3.14135e+00)
+      BKGfit.SetParameter(2, 2.31349e+00 )
+      BKGfit.SetParameter(3, 1.32204e+02) 
+      #BKGfit.SetParameter(3,0.0000)
       
   elif( FunctionType==5 ):
     print "Fitting five parameter alternate function!"
@@ -458,17 +459,20 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(2, 6.11149e+00)
       BKGfit.SetParameter(3, -7.82019e-02)
     elif fLabel.find("qV") != -1 and fLabel.find("HP") != -1:
-      BKGfit.SetParameter(0,3.47742e-05)
-      BKGfit.SetParameter(1,4.11131e+00)
-      BKGfit.SetParameter(2,6.97258e+00)
-      BKGfit.SetParameter(3,0.0000)
-      BKGfit.SetParameter(4,0.0000)
+      BKGfit.SetParameter(0,3.47742e-05 )#3.47742e-05)
+      BKGfit.SetParameter(1,4.11131e+00 )#4.11131e+00)
+      BKGfit.SetParameter(2,6.97258e+00 )#6.97258e+00)
+      BKGfit.SetParameter(3, 0.0 )#0.0000)
+      BKGfit.SetParameter(4, 0.0)#0.0000)
+      BKGfit.SetParLimits(4,-5,5)
+      BKGfit.SetParLimits(3,-1.794,10)
     elif fLabel.find("qV") != -1 and fLabel.find("LP") != -1:
-      BKGfit.SetParameter(0, 8.96766e-04)
-      BKGfit.SetParameter(1, 6.70628e+00)
-      BKGfit.SetParameter(2, 6.11149e+00)
-      BKGfit.SetParameter(3, -7.82019e-02)
-      BKGfit.SetParameter(4,0.0000)
+      BKGfit.SetParameter(0, 3.61535e+01 )# 3.61006e+01 )# 8.96766e-04)
+      BKGfit.SetParameter(1,-3.14108e+00 )#-3.14135e+00 )# 6.70628e+00)
+      BKGfit.SetParameter(2, 2.31382e+00 )# 2.31349e+00 )# 6.11149e+00)
+      BKGfit.SetParameter(3, 1.32299e+02 )# 1.32204e+02 )#1.23384e+00 )# -7.82019e-02)
+      BKGfit.SetParameter(4, 2.08551e-04 )#0 )#0.0000)
+      BKGfit.SetParLimits(4,-10,0.001)
       
       
   
@@ -535,8 +539,8 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
   
   for bin in range (1,hMassNEW.GetNbinsX()):
     if( hMassNEW.GetXaxis().GetBinLowEdge(bin)>=fFitXmin and hMassNEW.GetXaxis().GetBinUpEdge(bin)<=fFitXmax ):
-       print "computing chi2"
-       print "bin: " + str(bin) + " content " + str(hMassNEW.GetBinContent(bin))
+       #print "computing chi2"
+       #print "bin: " + str(bin) + " content " + str(hMassNEW.GetBinContent(bin))
        NumberOfVarBins += 1
        data = hMassNEW.GetBinContent(bin)
        # data = g.Integral(hMassNEW.GetXaxis().GetBinLowEdge(bin) , hMassNEW.GetXaxis().GetBinUpEdge(bin) )
@@ -549,7 +553,10 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
          err_tot = err_data_high
        else:
          err_tot = err_data_low
-       fit_residual = (data - fit) / err_tot
+       if err_tot!=0:  
+            fit_residual = (data - fit) / err_tot
+       else: 
+           fit_residual = 0
        err_fit_residual = 1
        
        if (hMassNEW.GetBinContent(bin)>0):
@@ -768,7 +775,8 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   g.SetMarkerSize(0.9)
   g.SetMarkerStyle(20)
   g.Draw("pe0 same")
-  if (doSigmaBand): histoCI[0].Draw("same3")
+  n = 0
+  if (doSigmaBand): histoCI[n].Draw("same3")
   g.Draw("pe0 same")
 
   linestyles = [1,2,7,3,3]
@@ -796,7 +804,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   legend.AddEntry(g, "CMS data","lpe")
   if (doSigmaBand): 
     # legend.AddEntry(M1Bkg[0], "2 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[0],dof[0]),"l")
-    legend.AddEntry(histoCI[0], " #pm 1 #sigma (3 par. default fit)","f")
+    legend.AddEntry(histoCI[n], " #pm 1 #sigma (3 par. default fit)","f")
     legend.AddEntry(M1Bkg[0], "3 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[0],dof[0]),"l")
     
     legend.AddEntry(M1Bkg[1], "4 par.   (#chi^{2}/ndof = %.2f/%i)"%(chi2[1],dof[1]),"l")
@@ -877,12 +885,12 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
 # ---------------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
   outdir = "/mnt/t3nfs01/data01/shome/dschafer/AnalysisOutput/figures/bkgfit/testSB/ReReco2016/"
-  #orig_stdout = sys.stdout
-  #f = file(outdir+"Sideband-fits-FtestqV.txt", 'w')
-  #sys.stdout = f
+  orig_stdout = sys.stdout
+  f = file(outdir+"Sideband-fits-FtestqV.txt", 'w')
+  sys.stdout = f
 
 
-  massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 990, 1055, #change bin 1000 to 990 and 1058 to 1055!!
+  massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 990, 1058, #change bin 1000 to 990 and 1058 to 1055!!
              1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 
              4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
   
@@ -891,12 +899,13 @@ if __name__ == '__main__':
   fitmax = 7000
   filename = "../../ExoDiBosonAnalysis/results/Data_VV_qVSB_qV_36400ifb.root"
   filename = "../../ExoDiBosonAnalysis/results/ReRecoData_qVdijet_SB_testOld2.root"
+  infile = "../../ExoDiBosonAnalysis/results/ReRecoData_qVdijet_SB.root"
   
   for ch in channels:
     #performFit("input/JetHT_qV.root", "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 990, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
     #performFit("input/JetHT_qV.root", "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 990, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
-    performFit(filename, "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1055, fitmax, "%s category, HP"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = False)
-    performFit(filename, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1055, fitmax, "%s category, LP"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = False)
+    performFit(filename, "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1058, fitmax, "%s category, HP"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = True)
+    performFit(filename, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1058, fitmax, "%s category, LP"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = True)
   # sys.stdout = orig_stdout
 
  
