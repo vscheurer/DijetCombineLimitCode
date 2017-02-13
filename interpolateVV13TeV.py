@@ -56,25 +56,25 @@ histnames= [
             "DijetMassLowPuriZZ", # ZZ low purity
             "DijetMassNoPuriZZ", # ZZ no purity
             
-            # "DijetMassHighPuriqV", # qV high purity
-            # "DijetMassNoPuriqV", # qV medium purity
-            # "DijetMassLowPuriqV", # qV kow purity
-            # "DijetMassHighPuriqW", # qV high purity
-            # "DijetMassLowPuriqW", # qW low purity
-            # "DijetMassNoPuriqW", # qW no purity
-            # "DijetMassHighPuriqZ", # qZ high purity
-            # "DijetMassLowPuriqZ", # qZ low purity
-            # "DijetMassNoPuriqZ", # qZ no purity
+            #"DijetMassHighPuriqV", # qV high purity
+            #"DijetMassNoPuriqV", # qV medium purity
+            #"DijetMassLowPuriqV", # qV kow purity
+            #"DijetMassHighPuriqW", # qV high purity
+            #"DijetMassLowPuriqW", # qW low purity
+            #"DijetMassNoPuriqW", # qW no purity
+            #"DijetMassHighPuriqZ", # qZ high purity
+            #"DijetMassLowPuriqZ", # qZ low purity
+            #"DijetMassNoPuriqZ", # qZ no purity
             ]
 
-if "WprimeWZ" in inputRoot:
-  masses=[1000,1200,1400,1600,1800,2500,3000,3500,4000,4500]
+if "Wprime" in inputRoot:
+  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
   # masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
+  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
 
 if "Zprime" in inputRoot:
   masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
-  masses=[1200,1400,1800,2000,3000,3500,4000,4500]
+  #masses=[1200,1400,1800,2000,3000,3500,4000,4500]
   # masses=[1000,2000,3000,4000]
   ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
   
@@ -84,18 +84,18 @@ if "BulkZZ" in inputRoot:
   ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
   
 if "BulkWW" in inputRoot:
-  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+  masses=[1000,1200,1400,1600,1800,2000,2500,3500,4000,4500]
   # masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
+  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
   
 
 if "QstarQW" in inputRoot:
-  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500,5000,6000,7000]
   # masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
+  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
   
 if "QstarQZ" in inputRoot:
-  masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+  masses=[1000,1200,1400,1600,1800,2000,2500,3000,4500,6000]
   # masses=[1000,2000,3000,4000]
   ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
   

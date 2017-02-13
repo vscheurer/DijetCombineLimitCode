@@ -752,7 +752,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   addInfo = TPaveText(0.1397805,0.01676406,0.4371859,0.2227225,"NDC")
   addInfo.AddText(fLabel)
   addInfo.AddText("|#eta| #leq 2.5, p_{T} > 200 GeV")
-  addInfo.AddText("M_{jj} > 1055 GeV, |#Delta#eta_{jj}| #leq 1.3")
+  addInfo.AddText("M_{jj} > 1070 GeV, |#Delta#eta_{jj}| #leq 1.3")
   addInfo.SetFillColor(0)
   addInfo.SetLineColor(0)
   addInfo.SetFillStyle(0)
@@ -904,8 +904,8 @@ if __name__ == '__main__':
   for ch in channels:
     #performFit("input/JetHT_qV.root", "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 990, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
     #performFit("input/JetHT_qV.root", "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 990, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
-    performFit(filename, "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1058, fitmax, "%s category, HP"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = True)
-    performFit(filename, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1058, fitmax, "%s category, LP"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = True)
+    performFit(filename, "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1118, fitmax, "%s category, HP"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = False)
+    performFit(filename, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1118, fitmax, "%s category, LP"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = False)
   # sys.stdout = orig_stdout
 
  

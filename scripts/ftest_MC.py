@@ -934,20 +934,20 @@ if __name__ == '__main__':
   
   channels = ["WW","WZ",'ZZ']
   #channels = ["WZ"]
-  channels = ['qV','qZ','qW']
+  #channels = ['qV','qZ','qW']
   fitmax = 7000
-  mjjcut = "995"
+  mjjcut = "1050"
   
   
   file1 = "../../ExoDiBosonAnalysis/results/QCD_pythia8_qV_summer16.root"
   #file1 = "../../ExoDiBosonAnalysis/results/QCD_pythia8_qV.root"
-  #file1 = "../../ExoDiBosonAnalysis/results/QCD_pythia8_VV_summer16.root"
+  file1 = "../../ExoDiBosonAnalysis/results/QCD_pythia8_VV_summer16.root"
   for ch in channels:
       performFit(file1,
-      "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1058, fitmax, "%s category, HP"%ch,
+      "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 1118, fitmax, "%s category, HP"%ch,
       "%s%sHP"%(outdir,ch),"summer16",doSigmaBand=False)
       performFit(file1,
-      "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1058, fitmax, "%s category, LP"%ch,
+      "DijetMassLowPuri%s"%ch, len(massBins)-1, massBins, 1118, fitmax, "%s category, LP"%ch,
       "%s%sLP"%(outdir,ch),"summer16" ,doSigmaBand=False)
    
  
