@@ -1,6 +1,7 @@
 
 using namespace RooFit;
 using namespace RooStats ;
+using namespace std;
 
 static const Int_t NCAT = 8; //for VV and qV analysis together this should be 6--> Now 21!
 Double_t MMIN = 955.;
@@ -13,14 +14,22 @@ double scaleFactorLP=0.880; // tau21 and jet mass scale factors data/MC
 
 TColor *col = new TColor();
 
-void AddSigData(RooWorkspace*, Float_t);
-void AddBkgData(RooWorkspace*);
-void SigModelFit(RooWorkspace*, Float_t);
-RooFitResult*  BkgModelFitBernstein(RooWorkspace*, Bool_t);
-void MakePlots(RooWorkspace*, Float_t, RooFitResult* , TString signalname);
-void MakeSigWS(RooWorkspace* w, const char* filename);
-void MakeBkgWS(RooWorkspace* w, const char* filename);
+//void AddSigData(RooWorkspace*, Float_t);
+void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<string> cat_names);
+void AddBkgData(RooWorkspace* w, std::vector<string> cat_names);
+//void AddBkgData(RooWorkspace*);
+//void SigModelFit(RooWorkspace*, Float_t);
+void SigModelFit(RooWorkspace* w, Float_t mass, TString signalname, std::vector<string> cat_names);
+void MakeSigWS(RooWorkspace* w, const char* fileBaseName, TString signalname, std::vector<string> cat_names);
+//RooFitResult*  BkgModelFitBernstein(RooWorkspace*, Bool_t);
+vector<RooFitResult*> BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<string> cat_names);
+//void MakePlots(RooWorkspace*, Float_t, RooFitResult* , TString signalname);
+//void MakeSigWS(RooWorkspace* w, const char* filename);
+//void MakeBkgWS(RooWorkspace* w, const char* filename);
+void MakeBkgWS(RooWorkspace* w, const char* fileBaseName, std::vector<string> cat_names);
 void SetConstantParams(const RooArgSet* params);
+void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char* fileBkgName, int iChan, TString signalname, int signalsample, std::vector<string> cat_names, double mass);
+void MakePlots(RooWorkspace* w, Float_t mass, vector<RooFitResult*> fitresults, TString signalname, std::vector<string> cat_names);
 
 RooArgSet* defineVariables()
 {
@@ -118,7 +127,7 @@ void runfits(const Float_t mass=2000, int signalsample = 1, int channel = 1, Boo
   
   
   TString fileBaseName("CMS_jj_"+signalname+TString::Format("_%.0f_13TeV", mass));
-
+  std::cout << fileBaseName << std::endl;
   vector<string> cat_names;
   cat_names.push_back("CMS_jj_VVHP");
   cat_names.push_back("CMS_jj_VVLP");
@@ -148,7 +157,7 @@ void runfits(const Float_t mass=2000, int signalsample = 1, int channel = 1, Boo
   TString card_name("vv_models_Bkg_13TeV.rs");
   HLFactory hlf("HLFactory", card_name, false);
   RooWorkspace* w = hlf.GetWs();
-  RooFitResult* fitresults;
+  vector<RooFitResult*> fitresults;
 
   w->var("mgg13TeV")->setMin(MMIN);
   w->var("mgg13TeV")->setMax(MMAX);
@@ -275,37 +284,46 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
   RooRealVar weightVar("weightVar","",1,0,1000);
 
   //signal300_tree_radcut.root
-  int iMass = abs(mass);       
-  TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_RS1ZZOUT%d_miniTree.root", iMass)));  
+  int iMass = abs(mass); 
+  TString sigfilename = TString(Form("dijetVV_13TeV_RS1ZZOUT%d_miniTree.root", iMass));
+  //TFile sigFile1; //(inDir+TString(Form("dijetVV_13TeV_RS1ZZOUT%d_miniTree.root", iMass)));  
   if (signalsample==1) {
-    sigFile1.Close();
-    TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_RS1WWOUT%d_miniTree.root", iMass)));
+    //sigFile1.Close();
+    //TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_RS1WWOUT%d_miniTree.root", iMass)));
+    sigfilename = TString(Form("dijetVV_13TeV_RS1WWOUT%d_miniTree.root", iMass));
   }
   if (signalsample==2) {
-    sigFile1.Close();
-    TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_WZOUT%d_miniTree.root", iMass)));
+    //sigFile1.Close();
+    //TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_WZOUT%d_miniTree.root", iMass)));
+       sigfilename = TString(Form("dijetVV_13TeV_WZOUT%d_miniTree.root", iMass));
   }
   if (signalsample==3) {
-    sigFile1.Close();
-    TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_ZprimeWWOUT%d_miniTree.root", iMass)));
+   // sigFile1.Close();
+   // TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_ZprimeWWOUT%d_miniTree.root", iMass)));
+       sigfilename = TString(Form("dijetVV_13TeV_ZprimeWWOUT%d_miniTree.root", iMass));
   }
   if (signalsample==4) {
-    sigFile1.Close();
-    TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_BulkWWOUT%d_miniTree.root", iMass)));
+    //sigFile1.Close();
+    //TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_BulkWWOUT%d_miniTree.root", iMass)));
+       sigfilename = TString(Form("dijetVV_13TeV_BulkWWOUT%d_miniTree.root", iMass));
   }
   if (signalsample==5) {
-    sigFile1.Close();
-    TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_BulkZZOUT%d_miniTree.root", iMass)));
+    //sigFile1.Close();
+    //TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_BulkZZOUT%d_miniTree.root", iMass)));
+       sigfilename = TString(Form("dijetVV_13TeV_BulkZZOUT%d_miniTree.root", iMass));
   }
   if (signalsample==6) {
-    sigFile1.Close();
-    TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_QstarQWOUT%d_miniTree.root", iMass)));
+   // sigFile1.Close();
+   // TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_QstarQWOUT%d_miniTree.root", iMass)));
+       sigfilename = TString(Form("dijetVV_13TeV_QstarQWOUT%d_miniTree.root", iMass));
   }
   if (signalsample==7) {
-    sigFile1.Close();
-    TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_QstarQZOUT%d_miniTree.root", iMass)));
+   // sigFile1.Close();
+   // TFile sigFile1(inDir+TString(Form("dijetVV_13TeV_QstarQZOUT%d_miniTree.root", iMass)));
+       sigfilename = TString(Form("dijetVV_13TeV_QstarQZOUT%d_miniTree.root", iMass));
   }
-
+  TFile sigFile1(inDir+sigfilename);  
+  sigFile1.Print();
   std::cout<< "Opening signal file: " <<  sigFile1.GetName() << std::endl;
   TTree* sigTree1 = (TTree*) sigFile1.Get("TCVARS");
   std::cout<< "Opening signal tree: " <<  sigTree1->GetName() << std::endl;
@@ -353,8 +371,8 @@ void AddSigData(RooWorkspace* w, Float_t mass, int signalsample, std::vector<str
   // production processes according to their cross sections
   // no common preselection cut applied yet 
 
-  RooRealVar *weightVar1 = (RooRealVar*) (*ntplVars)["evWeight"] ;
-  RooRealVar *weightVar2 = (RooRealVar*) (*ntplVars)["normWeight"] ;
+  RooRealVar *weightVar1 = dynamic_cast<RooRealVar*>( &(*ntplVars)["evWeight"] );
+  RooRealVar *weightVar2 = dynamic_cast<RooRealVar*>(&(*ntplVars)["normWeight"]);
   RooFormulaVar *weightVar3 = new RooFormulaVar( "weight3", "", "@0*@1", RooArgList(*weightVar1, *weightVar2));
 
   weightVar.setVal(1.);
@@ -516,7 +534,7 @@ void SigModelFit(RooWorkspace* w, Float_t mass, TString signalname, std::vector<
     RooCBShape* cb      = new RooCBShape ( "jj_CBSig"   +signalname+TString::Format("_%s",cat_names.at(c).c_str()), "jj_CBSig"   +signalname+TString::Format("_%s",cat_names.at(c).c_str()), *w->var("mgg13TeV") ,*m0 , *sigma, *alpha, *sig_n);
     RooAddPdf* sigmodel = new RooAddPdf  ( signalname+"_jj"+TString::Format("_%s",cat_names.at(c).c_str())        , signalname+"_jj"+TString::Format("_%s",cat_names.at(c).c_str())        , RooArgList( *gaus, *cb ), RooArgList(*frac),1);
     
-    jjSig[c] = (RooAbsPdf*)  *sigmodel;
+    jjSig[c] = (RooAbsPdf*)  sigmodel;
     // int stopProgram = 1;
     //    for (int i = 0; i < 1; ++i) {
     // RooFitResult* fr = jjSig[c] -> fitTo(*sigToFit[c],Range(mass*0.8,mass*1.2),SumW2Error(kTRUE),Save(kTRUE));
@@ -576,7 +594,7 @@ void SigModelFit(RooWorkspace* w, Float_t mass, TString signalname, std::vector<
 
 
 
-RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<string> cat_names) {
+vector<RooFitResult*> BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<string> cat_names) {
   
   // Int_t ncat = NCAT;
   Int_t ncat_min = NCAT;
@@ -603,7 +621,11 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
 
   RooDataSet* data[21];
   RooBernstein* bkg_fit[21];
-  RooFitResult* fitresult[21];;
+  //RooFitResult* fitresult[21];
+  vector<RooFitResult*> fitresult;
+  for( int i=0;i<21;i++){
+   fitresult.push_back(0);   
+  }
   RooPlot* plotbkg_fit[21];
 
   // dobands and dosignal
@@ -685,7 +707,7 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
 
     if (dobands) {
 
-      RooAbsPdf *cpdf; cpdf = bkg_fitTmp0;
+      RooAbsPdf *cpdf; cpdf = bkg_fitTmp;
       TGraphAsymmErrors *onesigma = new TGraphAsymmErrors();
       TGraphAsymmErrors *twosigma = new TGraphAsymmErrors();
       
@@ -766,7 +788,7 @@ void SetConstantParams(const RooArgSet* params) {
 
 }
 
-void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString signalname, std::vector<string> cat_names) {
+void MakePlots(RooWorkspace* w, Float_t mass, vector<RooFitResult*> fitresults, TString signalname, std::vector<string> cat_names) {
   
   cout << "Start plotting" << endl;
   
@@ -977,16 +999,16 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
   }
 
 
-  c4->SaveAs(TString::Format("/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/plots/backgrounds_log.pdf",c));
+  c4->SaveAs(TString::Format("/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/plots/backgrounds_log.pdf"));
 
 
   TCanvas* c5 = new TCanvas("c5","jj Background Categories",0,0,2000,2000);
   c5->Divide(3,7);
 
-  RooPlot* plotbkg_fit[21];
+  RooPlot* plotbkg_fit2[21];
   // for (int c = 0; c < ncat; ++c) {
   for (int c = ncat_min; c < ncat_min+ncat; ++c) {
-    plotbkg_fit[c] = mgg->frame(nBinsMass);
+    plotbkg_fit2[c] = mgg->frame(nBinsMass);
     data[c]->plotOn(plotbkg_fit[c],LineColor(kWhite),MarkerColor(kWhite));    
     bkg_fit[c]->plotOn(plotbkg_fit[c],LineColor(kBlue),Range("fitrange"),NormRange("fitrange"),PrintEvalErrors(-1)); 
     data[c]->plotOn(plotbkg_fit[c]);    
@@ -996,7 +1018,7 @@ void MakePlots(RooWorkspace* w, Float_t mass, RooFitResult* fitresults, TString 
     plotbkg_fit[c]->Draw();  
   }
 
-  c5->SaveAs(TString::Format("/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/plots/backgrounds.pdf",c));
+  c5->SaveAs(TString::Format("/mnt/t3nfs01/data01/shome/dschafer/DijetCombineLimitCode/plots/backgrounds.pdf"));
   //c5->SaveAs(TString::Format("plots/backgrounds.C",c));
 
 }
@@ -1165,9 +1187,9 @@ void MakeBkgWS(RooWorkspace* w, const char* fileBaseName, std::vector<string> ca
     double max = (wAll->var(TString::Format("bkg_fit_%s_norm",cat_names.at(c).c_str())))->getMax();
     wAll->factory(TString::Format("CMS_bkg_fit_%s_13TeV_norm[%g,%g,%g]", cat_names.at(c).c_str(), mean, min, max));
 
-    double mean = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getVal();
-    double min = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getMin();
-    double max = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getMax();
+    mean = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getVal();
+    min = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getMin();
+    max = (wAll->var(TString::Format("bkg_fit_slope1_%s",cat_names.at(c).c_str())))->getMax();
 
     // if(c==2 || c==3 || c==4){
     //   wAll->factory(TString::Format("CMS_bkg_fit_slope1_%s_13TeV[%g,%g,%g]", cat_names.at(c).c_str(), mean, mean, mean));
@@ -1190,9 +1212,9 @@ void MakeBkgWS(RooWorkspace* w, const char* fileBaseName, std::vector<string> ca
     
       wAll->factory(TString::Format("CMS_bkg_fit_slope3_%s_13TeV[%g,%g,%g]", cat_names.at(c).c_str(), mean, min, max));
       
-      double mean = (wAll->var(TString::Format("bkg_fit_slope4_%s",cat_names.at(c).c_str())))->getVal();
-      double min  = (wAll->var(TString::Format("bkg_fit_slope4_%s",cat_names.at(c).c_str())))->getMin();
-      double max  = (wAll->var(TString::Format("bkg_fit_slope4_%s",cat_names.at(c).c_str())))->getMax();
+      mean = (wAll->var(TString::Format("bkg_fit_slope4_%s",cat_names.at(c).c_str())))->getVal();
+      min  = (wAll->var(TString::Format("bkg_fit_slope4_%s",cat_names.at(c).c_str())))->getMin();
+      max  = (wAll->var(TString::Format("bkg_fit_slope4_%s",cat_names.at(c).c_str())))->getMax();
       wAll->factory(TString::Format("CMS_bkg_fit_slope4_%s_13TeV[%g,%g,%g]", cat_names.at(c).c_str(), mean, min, max));
     }
     
@@ -1258,80 +1280,80 @@ void MakeBkgWS(RooWorkspace* w, const char* fileBaseName, std::vector<string> ca
 }
 
 
-Double_t effSigma(TH1 *hist) {
-
-  TAxis *xaxis = hist->GetXaxis();
-  Int_t nb = xaxis->GetNbins();
-  if(nb < 10) {
-    std::cout << "effsigma: Not a valid histo. nbins = " << nb << std::endl;
-    return 0.;
-  }
-
-  Double_t bwid = xaxis->GetBinWidth(1);
-  if(bwid == 0) {
-    std::cout << "effsigma: Not a valid histo. bwid = " << bwid << std::endl;
-    return 0.;
-  }
-  Double_t xmax = xaxis->GetXmax();
-  Double_t xmin = xaxis->GetXmin();
-  Double_t ave = hist->GetMean();
-  Double_t rms = hist->GetRMS();
-
-  Double_t total=0.;
-  for(Int_t i=0; i<nb+2; i++) {
-    total+=hist->GetBinContent(i);
-  }
-  if(total < 100.) {
-    std::cout << "effsigma: Too few entries " << total << std::endl;
-    return 0.;
-  }
-  Int_t ierr=0;
-  Int_t ismin=999;
-
-  Double_t rlim=0.683*total;
-  Int_t nrms=rms/(bwid);    // Set scan size to +/- rms
-  if(nrms > nb/10) nrms=nb/10; // Could be tuned...
-
-  Double_t widmin=9999999.;
-  for(Int_t iscan=-nrms;iscan<nrms+1;iscan++) { // Scan window centre
-    Int_t ibm=(ave-xmin)/bwid+1+iscan;
-    Double_t x=(ibm-0.5)*bwid+xmin;
-    Double_t xj=x;
-    Double_t xk=x;
-    Int_t jbm=ibm;
-    Int_t kbm=ibm;
-    Double_t bin=hist->GetBinContent(ibm);
-    total=bin;
-    for(Int_t j=1;j<nb;j++){
-      if(jbm < nb) {
-        jbm++;
-        xj+=bwid;
-        bin=hist->GetBinContent(jbm);
-        total+=bin;
-        if(total > rlim) break;
-      }
-      else ierr=1;
-      if(kbm > 0) {
-        kbm--;
-        xk-=bwid;
-        bin=hist->GetBinContent(kbm);
-        total+=bin;
-        if(total > rlim) break;
-      }
-      else ierr=1;
-    }
-    Double_t dxf=(total-rlim)*bwid/bin;
-    Double_t wid=(xj-xk+bwid-dxf)*0.5;
-    if(wid < widmin) {
-      widmin=wid;
-      ismin=iscan;
-    }
-  }
-  if(ismin == nrms || ismin == -nrms) ierr=3;
-  if(ierr != 0) std::cout << "effsigma: Error of type " << ierr << std::endl;
-
-  return widmin;
-}
+// Double_t effSigma(TH1 *hist) {
+// 
+//   TAxis *xaxis = hist->GetXaxis();
+//   Int_t nb = xaxis->GetNbins();
+//   if(nb < 10) {
+//     std::cout << "effsigma: Not a valid histo. nbins = " << nb << std::endl;
+//     return 0.;
+//   }
+// 
+//   Double_t bwid = xaxis->GetBinWidth(1);
+//   if(bwid == 0) {
+//     std::cout << "effsigma: Not a valid histo. bwid = " << bwid << std::endl;
+//     return 0.;
+//   }
+//   Double_t xmax = xaxis->GetXmax();
+//   Double_t xmin = xaxis->GetXmin();
+//   Double_t ave = hist->GetMean();
+//   Double_t rms = hist->GetRMS();
+// 
+//   Double_t total=0.;
+//   for(Int_t i=0; i<nb+2; i++) {
+//     total+=hist->GetBinContent(i);
+//   }
+//   if(total < 100.) {
+//     std::cout << "effsigma: Too few entries " << total << std::endl;
+//     return 0.;
+//   }
+//   Int_t ierr=0;
+//   Int_t ismin=999;
+// 
+//   Double_t rlim=0.683*total;
+//   Int_t nrms=rms/(bwid);    // Set scan size to +/- rms
+//   if(nrms > nb/10) nrms=nb/10; // Could be tuned...
+// 
+//   Double_t widmin=9999999.;
+//   for(Int_t iscan=-nrms;iscan<nrms+1;iscan++) { // Scan window centre
+//     Int_t ibm=(ave-xmin)/bwid+1+iscan;
+//     Double_t x=(ibm-0.5)*bwid+xmin;
+//     Double_t xj=x;
+//     Double_t xk=x;
+//     Int_t jbm=ibm;
+//     Int_t kbm=ibm;
+//     Double_t bin=hist->GetBinContent(ibm);
+//     total=bin;
+//     for(Int_t j=1;j<nb;j++){
+//       if(jbm < nb) {
+//         jbm++;
+//         xj+=bwid;
+//         bin=hist->GetBinContent(jbm);
+//         total+=bin;
+//         if(total > rlim) break;
+//       }
+//       else ierr=1;
+//       if(kbm > 0) {
+//         kbm--;
+//         xk-=bwid;
+//         bin=hist->GetBinContent(kbm);
+//         total+=bin;
+//         if(total > rlim) break;
+//       }
+//       else ierr=1;
+//     }
+//     Double_t dxf=(total-rlim)*bwid/bin;
+//     Double_t wid=(xj-xk+bwid-dxf)*0.5;
+//     if(wid < widmin) {
+//       widmin=wid;
+//       ismin=iscan;
+//     }
+//   }
+//   if(ismin == nrms || ismin == -nrms) ierr=3;
+//   if(ierr != 0) std::cout << "effsigma: Error of type " << ierr << std::endl;
+// 
+//   return widmin;
+// }
 
 
 
@@ -1574,7 +1596,7 @@ void MakeDataCard_1Channel(RooWorkspace* w, const char* fileBaseName, const char
 }
 
 
-Double_t effSigma(TH1 *hist) {
+ Double_t effSigma(TH1 *hist) {
 
   TAxis *xaxis = hist->GetXaxis();
   Int_t nb = xaxis->GetNbins();
@@ -1669,4 +1691,5 @@ void X2VVFitter(double mass, int signalsamples=0, int channel=0,std::string post
     runfits(mass, 6, channel);
     runfits(mass, 7, channel);
   }
+  std::cout << signalsamples << std::endl;
 }
