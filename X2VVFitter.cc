@@ -7,7 +7,7 @@ Double_t MMIN = 955.;
 Double_t MMAX = 4500.;
 Double_t CHANNEL = 1; //1==VV 2==qV 3==noPurity
 std::string filePOSTfix="";
-double signalScaler=12900.*0.01/(100000.); // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script. Dividing out BR(V-->had)=70% for non-inclusive samples
+double signalScaler=36814.*0.01/(100000.); // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script. Dividing out BR(V-->had)=70% for non-inclusive samples
 double scaleFactorHP=1.027; // tau21 and jet mass scale factors data/MC
 double scaleFactorLP=0.880; // tau21 and jet mass scale factors data/MC
 
@@ -648,14 +648,17 @@ RooFitResult* BkgModelFitBernstein(RooWorkspace* w, Bool_t dobands, std::vector<
 
     RooAbsPdf* bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "pow(1-@0, @1)/pow(@0, @2)", RooArgList(*x, *p1mod, *p2mod)); // 3 parameter fit
     
-    if(c==3 || c==4 || c==6){
-      cout << "Using 2 parameter fit for channels WWLP, WZHP and ZZHP!!" << endl;
-      bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "1./pow(@0, @1)", RooArgList(*x, *p1mod)); 
-    }
-    else{
-      cout << "Using 3 parameter fit for this category!!!!!" << endl;
-      bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "pow(1-@0, @1)/pow(@0, @2)", RooArgList(*x, *p1mod, *p2mod)); // 3 parameter fit
-    }
+    // 15.02.17: with Moriond17 MC and data JEC V3: all double tag categories need 2 parameter fit:
+    bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "1./pow(@0, @1)", RooArgList(*x, *p1mod)); 
+    
+//     if(c==3 || c==4 || c==6){
+//       cout << "Using 2 parameter fit for channels WWLP, WZHP and ZZHP!!" << endl;
+//       bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "1./pow(@0, @1)", RooArgList(*x, *p1mod)); 
+//     }
+//     else{
+//       cout << "Using 3 parameter fit for this category!!!!!" << endl;
+//       bkg_fitTmp = new RooGenericPdf(TString::Format("bkg_fit_%s",cat_names.at(c).c_str()), "pow(1-@0, @1)/pow(@0, @2)", RooArgList(*x, *p1mod, *p2mod)); // 3 parameter fit
+ //   }
    
     RooAbsReal* bkg_fitTmp2  = new RooRealVar(TString::Format("bkg_fit_%s_norm",cat_names.at(c).c_str()),"",data[c]->sumEntries(),1.0,1000000000);
     w->import(*bkg_fitTmp);

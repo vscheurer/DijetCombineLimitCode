@@ -40,31 +40,32 @@ if len(sys.argv)>3:
 else:
    suffix=""
 
+
 # print "suffix = %s"%suffix
 histnames= [
             # "DijetMassHighPuriVV", # VV high purity
             # "DijetMassNoPuriVV", # VV medium purity
             # "DijetMassLowPuriVV", # not used
 
-            "DijetMassHighPuriWW", # WW high purity
-            "DijetMassLowPuriWW", # WW low purity
-            "DijetMassNoPuriWW", # WW no purity
-            "DijetMassHighPuriWZ", # WZ high purity
-            "DijetMassLowPuriWZ", # WZ low purity
-            "DijetMassNoPuriWZ", # WZ no purity
-            "DijetMassHighPuriZZ", # ZZ high purity
-            "DijetMassLowPuriZZ", # ZZ low purity
-            "DijetMassNoPuriZZ", # ZZ no purity
+            #"DijetMassHighPuriWW", # WW high purity
+            #"DijetMassLowPuriWW", # WW low purity
+            #"DijetMassNoPuriWW", # WW no purity
+            #"DijetMassHighPuriWZ", # WZ high purity
+            #"DijetMassLowPuriWZ", # WZ low purity
+            #"DijetMassNoPuriWZ", # WZ no purity
+            #"DijetMassHighPuriZZ", # ZZ high purity
+            #"DijetMassLowPuriZZ", # ZZ low purity
+            #"DijetMassNoPuriZZ", # ZZ no purity
             
-            #"DijetMassHighPuriqV", # qV high purity
-            #"DijetMassNoPuriqV", # qV medium purity
-            #"DijetMassLowPuriqV", # qV kow purity
-            #"DijetMassHighPuriqW", # qV high purity
-            #"DijetMassLowPuriqW", # qW low purity
-            #"DijetMassNoPuriqW", # qW no purity
-            #"DijetMassHighPuriqZ", # qZ high purity
-            #"DijetMassLowPuriqZ", # qZ low purity
-            #"DijetMassNoPuriqZ", # qZ no purity
+            "DijetMassHighPuriqV", # qV high purity
+            "DijetMassNoPuriqV", # qV medium purity
+            "DijetMassLowPuriqV", # qV kow purity
+            "DijetMassHighPuriqW", # qV high purity
+            "DijetMassLowPuriqW", # qW low purity
+            "DijetMassNoPuriqW", # qW no purity
+            "DijetMassHighPuriqZ", # qZ high purity
+            "DijetMassLowPuriqZ", # qZ low purity
+            "DijetMassNoPuriqZ", # qZ no purity
             ]
 
 if "Wprime" in inputRoot:
