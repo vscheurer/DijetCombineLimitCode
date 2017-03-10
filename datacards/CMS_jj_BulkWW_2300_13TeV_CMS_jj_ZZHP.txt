@@ -9,17 +9,17 @@ shapes BulkWW_jj CMS_jj_ZZHP ../workspaces/CMS_jj_BulkWW_2300_13TeV.root w_all:B
 shapes BulkZZ_jj CMS_jj_ZZHP ../workspaces/CMS_jj_BulkZZ_2300_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_ZZHP
 ---------------
 bin          CMS_jj_ZZHP
-observation   2905
+observation   1846
 ------------------------------
 bin                      CMS_jj_ZZHP       CMS_jj_ZZHP      CMS_jj_ZZHP      
 process                 BulkWW_jj     BulkZZ_jj     bkg_fit_jj     
 process                     -1            0             1          
-rate                        0.972829         0             1
+rate                        0.035867         0             1
 --------------------------------
-# signal scaled by 0.00129 to a cross section of 0.01 pb and also scale factor of 1.05473 are applied.
-lumi_13TeV                          lnN  1.062  1.062    - 
-CMS_eff_vtag_tau21_sf_13TeV        lnN   1.1556/0.855625   1.1556/0.855625      - # tau21 efficiency
-CMS_pu_13TeV                        lnN  1.0150  1.0150      - # pileup
+# signal scaled by 0.035867 to a cross section of 0.01 pb and also scale factor of 1 are applied.
+lumi_13TeV                          lnN  1.026  1.026    - 
+CMS_acc_13TeV                       lnN  1.02  1.02      - # PDF unc. on acceptance
+CMS_pu_13TeV                        lnN  1.02  1.02      - # pileup
 --------------------------------
 # Parametric shape uncertainties, entered by hand.
 CMS_sig_p1_jes_13TeV                param   0.0   1.0   # dijet mass shift due to JES uncertainty
@@ -28,12 +28,11 @@ CMS_bkg_fit_CMS_jj_ZZHP_13TeV_norm           flatParam  # Normalization uncertai
 CMS_bkg_fit_slope1_CMS_jj_ZZHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
 --------------------------------
 
-CMS_mass_scale_j_13TeV       lnN      1.16043/0.88235      1.16043/0.88235      -                          
-CMS_mass_res_j_13TeV         lnN      1.13904/0.86631      1.13904/0.86631      -                          
-CMS_scale_j_13TeV            lnN      1.00535/0.99465      1.00535/0.99465      -  # jet energy scale      
-CMS_res_j_13TeV              lnN      0.9893/1.0107      0.9893/1.0107      -  # jet energy resolution 
-
-CMS_XS_gg_PDF                lnN				    1.303        1.303        -
-CMS_XS_gg_scale              lnN				    1.168        1.168        -
+CMS_mass_scale_j_13TeV       lnN      1.25/0.82353      1.25/0.82353      -                          
+CMS_mass_res_j_13TeV         lnN      1.10294/0.86765      1.10294/0.86765      -                          
+CMS_scale_j_13TeV            lnN      1.01471/1.0      1.01471/1.0      -  # jet energy scale      
+CMS_res_j_13TeV              lnN      1.0/1.0      1.0/1.0      -  # jet energy resolution 
 
 CMS_eff_vtag_tau21_pt_13TeV  lnN       1.217/0.804           1.217/0.804        -
+
+CMS_eff_vtag_tau21_sf_13TeV        lnN     1.210/0.810           1.210/0.810        -

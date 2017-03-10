@@ -30,9 +30,12 @@ def get_sys_pt_qv(mass):
    
 
 indir = 'datacards/'
-outdir = 'datacards_test/'
+outdir = 'datacards/'
 
-signals  = ["BulkWW","BulkZZ","WZ","ZprimeWW","qW","qZ"]
+signals  = ["altqW"]#,"altBulkZZ"]
+signals  = ["WZ","ZprimeWW"]#
+signals  = ["BulkZZ","BulkWW","WZ","ZprimeWW"]
+signals  = ["qW","qZ"]
 purities = ["LP","HP"]
 
 for signal in signals:  

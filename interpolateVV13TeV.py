@@ -47,25 +47,25 @@ histnames= [
             # "DijetMassNoPuriVV", # VV medium purity
             # "DijetMassLowPuriVV", # not used
 
-            #"DijetMassHighPuriWW", # WW high purity
-            #"DijetMassLowPuriWW", # WW low purity
-            #"DijetMassNoPuriWW", # WW no purity
-            #"DijetMassHighPuriWZ", # WZ high purity
-            #"DijetMassLowPuriWZ", # WZ low purity
-            #"DijetMassNoPuriWZ", # WZ no purity
-            #"DijetMassHighPuriZZ", # ZZ high purity
-            #"DijetMassLowPuriZZ", # ZZ low purity
-            #"DijetMassNoPuriZZ", # ZZ no purity
+            "DijetMassHighPuriWW", # WW high purity
+            "DijetMassLowPuriWW", # WW low purity
+            "DijetMassNoPuriWW", # WW no purity
+            "DijetMassHighPuriWZ", # WZ high purity
+            "DijetMassLowPuriWZ", # WZ low purity
+            "DijetMassNoPuriWZ", # WZ no purity
+            "DijetMassHighPuriZZ", # ZZ high purity
+            "DijetMassLowPuriZZ", # ZZ low purity
+            "DijetMassNoPuriZZ", # ZZ no purity
             
-            "DijetMassHighPuriqV", # qV high purity
-            "DijetMassNoPuriqV", # qV medium purity
-            "DijetMassLowPuriqV", # qV kow purity
-            "DijetMassHighPuriqW", # qV high purity
-            "DijetMassLowPuriqW", # qW low purity
-            "DijetMassNoPuriqW", # qW no purity
-            "DijetMassHighPuriqZ", # qZ high purity
-            "DijetMassLowPuriqZ", # qZ low purity
-            "DijetMassNoPuriqZ", # qZ no purity
+            #"DijetMassHighPuriqV", # qV high purity
+            #"DijetMassNoPuriqV", # qV medium purity
+            #"DijetMassLowPuriqV", # qV kow purity
+            #"DijetMassHighPuriqW", # qV high purity
+            #"DijetMassLowPuriqW", # qW low purity
+            #"DijetMassNoPuriqW", # qW no purity
+            #"DijetMassHighPuriqZ", # qZ high purity
+            #"DijetMassLowPuriqZ", # qZ low purity
+            #"DijetMassNoPuriqZ", # qZ no purity
             ]
 
 if "Wprime" in inputRoot:
@@ -145,7 +145,8 @@ for histname in histnames:
  
  output.cd()
  #su = 0.
- foutmjj = TH1F(histname, histname, 5000, 0, 5000 )
+ #foutmjj = TH1F(histname, histname, 5000, 0, 5000 )
+ foutmjj = TH1F(histname, histname, 7000, 0, 7000 )
  hists += [foutmjj]
  #foutmjjfrac = TH1F( 'frac'+str(outmjj), 'frac'+str(outmjj), 10000, 0.3, 1.3)
  #foutmjjfit =  TH1F('doublefit'+str(outmjj), 'doublefit'+str(outmjj), 5000, 0, 5000 )
