@@ -30,6 +30,12 @@ CMS_bkg_fit_slope1_CMS_jj_WZHP_13TeV         flatParam  # Mean and absolute unce
 
 
 
-CMS_eff_vtag_tau21_pt_13TeV  lnN       1.123/0.884           1.123/0.884        -
 
-CMS_eff_vtag_tau21_sf_13TeV        lnN     1.210/0.810           1.210/0.810        -
+
+
+
+
+
+CMS_eff_vtag_tau21_pt_13TeV  lnN       1.179/0.835           1.179/0.835        -
+
+CMS_eff_vtag_tau21_sf_13TeV        lnN     1.232/0.792           1.232/0.792        -
