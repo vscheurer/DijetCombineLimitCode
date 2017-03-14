@@ -25,7 +25,7 @@ iPeriod=4
 legend_text = "CMS data"
 suffix = "_MC_SR_test"
 if legend_text.find("CMS")!=-1:
-    suffix = "_SR"
+    suffix = "_SB"
 sqrtS = 13000.
 lumi =  36500.#12900.
 
@@ -290,19 +290,6 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
   if( FunctionType==-2 ):
     nPar=2
     BKGfit = TF1("BKGfit%i"%FunctionType," [0] / ( TMath::Power(x/13000,[1]) )",fFitXmin,fFitXmax)
-    # sideband region:
-    if fLabel.find("W") != -1 and fLabel.find("HP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,1.98680e-09)
-      BKGfit.SetParameter(1,8.66744e+00)
-    elif fLabel.find("W") != -1 and fLabel.find("LP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,1.13062e-07)
-      BKGfit.SetParameter(1,7.85359e+00)  
-    elif fLabel.find("Z") != -1 and fLabel.find("HP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,7.09589e-09)
-      BKGfit.SetParameter(1,8.54541e+00)
-    elif fLabel.find("Z") != -1 and fLabel.find("LP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,1.50873e-07)
-      BKGfit.SetParameter(1,8.03595e+00)
  
      # signal region: 
     if fLabel.find("WW") != -1 and fLabel.find("HP") != -1:
@@ -323,28 +310,25 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
     elif fLabel.find("ZZ") != -1 and fLabel.find("LP") != -1:
       BKGfit.SetParameter(0,6.82046e-08)
       BKGfit.SetParameter(1,8.08889e+00)
-        
+      # sideband region: 
+    if fLabel.find("WW") != -1 and fLabel.find("HP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,1.98680e-09)
+      BKGfit.SetParameter(1,8.66744e+00)
+    elif fLabel.find("W") != -1 and fLabel.find("LP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,1.13062e-07)
+      BKGfit.SetParameter(1,7.85359e+00)  
+    elif fLabel.find("Z") != -1 and fLabel.find("HP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,7.09589e-09)
+      BKGfit.SetParameter(1,8.54541e+00)
+    elif fLabel.find("Z") != -1 and fLabel.find("LP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,1.50873e-07)
+      BKGfit.SetParameter(1,8.03595e+00)
+      
   if( FunctionType==0 ):
     print "Fitting three parameter default function!"
     nPar=3
     BKGfit = TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)
-    # sideband region:
-    if fLabel.find("W") != -1 and fLabel.find("HP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0, 9.01237e-12)
-      BKGfit.SetParameter(1,-1.58982e+01)
-      BKGfit.SetParameter(2, 1.02766e+01)
-    elif fLabel.find("W") != -1 and fLabel.find("LP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,3.75544e-07)
-      BKGfit.SetParameter(1,3.37623e+00)
-      BKGfit.SetParameter(2,7.49005e+00) 
-    elif fLabel.find("Z") != -1 and fLabel.find("HP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,1.82729e-09)
-      BKGfit.SetParameter(1,8.92196e+00)
-      BKGfit.SetParameter(2,9.48734e+00)
-    elif fLabel.find("Z") != -1 and fLabel.find("LP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,6.82046e-08)
-      BKGfit.SetParameter(2,8.08889e+00)
-      BKGfit.SetParameter(1,0.00000000 )
+   
     
     # signal region:
     if fLabel.find("WW") != -1 and fLabel.find("HP") != -1:
@@ -377,32 +361,30 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(0,6.82046e-08)
       BKGfit.SetParameter(2,8.08889e+00)
       BKGfit.SetParameter(1,0.00000000 )
+    
+    # sideband region:
+    if fLabel.find("WW") != -1 and fLabel.find("HP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0, 9.01237e-12)
+      BKGfit.SetParameter(1,-1.58982e+01)
+      BKGfit.SetParameter(2, 1.02766e+01)
+    elif fLabel.find("WW") != -1 and fLabel.find("LP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,3.75544e-07)
+      BKGfit.SetParameter(1,3.37623e+00)
+      BKGfit.SetParameter(2,7.49005e+00) 
+    elif fLabel.find("ZZ") != -1 and fLabel.find("HP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,1.82729e-09)
+      BKGfit.SetParameter(1,8.92196e+00)
+      BKGfit.SetParameter(2,9.48734e+00)
+    elif fLabel.find("ZZ") != -1 and fLabel.find("LP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,6.82046e-08)
+      BKGfit.SetParameter(2,8.08889e+00)
+      BKGfit.SetParameter(1,0.00000000 )
+    
           
   elif( FunctionType==1 ):
     print "Fitting four parameter default function!"
     nPar=4
     BKGfit = TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )",fFitXmin,fFitXmax)
-    # sideband region:
-    if fLabel.find("W") != -1 and fLabel.find("HP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0, 9.01257e-12)
-      BKGfit.SetParameter(1,-1.09759e+01)
-      BKGfit.SetParameter(2, 8.55014e+00)
-      BKGfit.SetParameter(3,-2.54954e-01)
-    elif fLabel.find("W") != -1 and fLabel.find("LP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,3.72696e-07)
-      BKGfit.SetParameter(1,3.35574e+00)
-      BKGfit.SetParameter(2,7.49238e+00)
-      BKGfit.SetParameter(3,-4.10905e-07)
-    elif fLabel.find("Z") != -1 and fLabel.find("HP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,1.82729e-09)
-      BKGfit.SetParameter(1,8.92196e+00)
-      BKGfit.SetParameter(2, 4.76973e+00)
-      BKGfit.SetParameter(3,-7.21037e-01)
-    elif fLabel.find("Z") != -1 and fLabel.find("LP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,6.82046e-08)
-      BKGfit.SetParameter(2,8.08889e+00)
-      BKGfit.SetParameter(1,0.00000000 )
-      BKGfit.SetParameter(3,0.00000000 )
     
     
     # signal region: 
@@ -446,31 +428,34 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       BKGfit.SetParameter(1,0.00000000 )
       BKGfit.SetParameter(3,0.00000000 )
       
+    # sideband region:
+    if fLabel.find("WW") != -1 and fLabel.find("HP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0, 9.01257e-12)
+      BKGfit.SetParameter(1,-1.09759e+01)
+      BKGfit.SetParameter(2, 8.55014e+00)
+      BKGfit.SetParameter(3,-1 )# -2.54954e-01)
+      BKGfit.SetParLimits(3,-10,0)
+    elif fLabel.find("WW") != -1 and fLabel.find("LP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,3.72696e-07)
+      BKGfit.SetParameter(1,3.35574e+00)
+      BKGfit.SetParameter(2,7.49238e+00)
+      BKGfit.SetParameter(3,-4.10905e-07)
+    elif fLabel.find("ZZ") != -1 and fLabel.find("HP") != -1 and fLabel.find("SB")!=-1 :
+      BKGfit.SetParameter(0,1.82729e-09)
+      BKGfit.SetParameter(1,8.92196e+00)
+      BKGfit.SetParameter(2, 4.76973e+00)
+      BKGfit.SetParameter(3,-7.21037e-01)
+    elif fLabel.find("ZZ") != -1 and fLabel.find("LP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,6.82046e-08)
+      BKGfit.SetParameter(2,8.08889e+00)
+      BKGfit.SetParameter(1,0.00000000 )
+      BKGfit.SetParameter(3,0.00000000 )
+      
   elif( FunctionType==3 ):
     print "Fitting four parameter alternate function!"
     nPar=4
     BKGfit =  TF1("BKGfit%i"%FunctionType,"( [0]*TMath::Power(1-x/13000 + [3]*TMath::Power(x/13000,2),[1]) ) / ( TMath::Power(x/13000,[2]) )",fFitXmin,fFitXmax)
-    #sideband region:
-    if fLabel.find("W") != -1 and fLabel.find("HP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,2.21926e-13) 
-      BKGfit.SetParameter(1,2.25629e+00) 
-      BKGfit.SetParameter(2,1.15338e+01) 
-      BKGfit.SetParameter(3,2.11319e+02) 
-    elif fLabel.find("W") != -1 and fLabel.find("LP") != -1 and fLabel.find("WW")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0,1.44775e-05 ) 
-      BKGfit.SetParameter(1,2.05225e+01 ) 
-      BKGfit.SetParameter(2,6.50590e+00 ) 
-      BKGfit.SetParameter(3,1.86664e+00 ) 
-    elif fLabel.find("Z") != -1 and fLabel.find("HP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0, 1.82729e-09)
-      BKGfit.SetParameter(1, 8.92196e+00)
-      BKGfit.SetParameter(2, 4.76973e+00)
-      BKGfit.SetParameter(3,-7.21037e-01)
-    elif fLabel.find("Z") != -1 and fLabel.find("LP") != -1 and fLabel.find("ZZ")==-1 and fLabel.find("WZ")==-1:
-      BKGfit.SetParameter(0, 1.74162e-06)
-      BKGfit.SetParameter(1,-8.47400e-01)
-      BKGfit.SetParameter(2, 7.05095e+00)
-      BKGfit.SetParameter(3, 1.79446e+02)
+    
       
     
     # signal region:
@@ -503,6 +488,28 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
       #BKGfit.SetParLimits(2, 8.80612e+00, 8.80612e+00)
       #BKGfit.SetParLimits(3, 2.05830e+00, 2.05830e+00)
     elif fLabel.find("ZZ") != -1 and fLabel.find("LP") != -1:
+      BKGfit.SetParameter(0, 1.74162e-06)
+      BKGfit.SetParameter(1,-8.47400e-01)
+      BKGfit.SetParameter(2, 7.05095e+00)
+      BKGfit.SetParameter(3, 1.79446e+02)
+      
+    #sideband region:
+    if fLabel.find("W") != -1 and fLabel.find("HP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,2.21926e-13) 
+      BKGfit.SetParameter(1,2.25629e+00) 
+      BKGfit.SetParameter(2,1.15338e+01) 
+      BKGfit.SetParameter(3,2.11319e+02) 
+    elif fLabel.find("W") != -1 and fLabel.find("LP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0,1.44775e-05 ) 
+      BKGfit.SetParameter(1,2.05225e+01 ) 
+      BKGfit.SetParameter(2,6.50590e+00 ) 
+      BKGfit.SetParameter(3,1.86664e+00 ) 
+    elif fLabel.find("Z") != -1 and fLabel.find("HP") != -1 and fLabel.find("SB")!=-1:
+      BKGfit.SetParameter(0, 1.82729e-09)
+      BKGfit.SetParameter(1, 8.92196e+00)
+      BKGfit.SetParameter(2, 4.76973e+00)
+      BKGfit.SetParameter(3,-7.21037e-01)
+    elif fLabel.find("Z") != -1 and fLabel.find("LP") != -1 and fLabel.find("SB")!=-1:
       BKGfit.SetParameter(0, 1.74162e-06)
       BKGfit.SetParameter(1,-8.47400e-01)
       BKGfit.SetParameter(2, 7.05095e+00)
@@ -796,7 +803,7 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   addInfo = TPaveText(0.1397805,0.01676406,0.4371859,0.2227225,"NDC")
   addInfo.AddText(fLabel)
   addInfo.AddText("|#eta| #leq 2.5, p_{T} > 200 GeV")
-  addInfo.AddText("M_{jj} > 1070 GeV, |#Delta#eta_{jj}| #leq 1.3")
+  addInfo.AddText("M_{jj} > 1050 GeV, |#Delta#eta_{jj}| #leq 1.3")
   addInfo.SetFillColor(0)
   addInfo.SetLineColor(0)
   addInfo.SetFillStyle(0)
@@ -923,9 +930,9 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
 # ---------------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
   outdir = '/mnt/t3nfs01/data01/shome/dschafer/AnalysisOutput/figures/bkgfit/ReReco2016/'
-  orig_stdout = sys.stdout
-  f = file(outdir+"Sideband-fits-Ftest2.txt", 'w')
-  sys.stdout = f
+  #orig_stdout = sys.stdout
+  #f = file(outdir+"Sideband-fits-Ftest2.txt", 'w')
+  #sys.stdout = f
 
 
   massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, #change bin 944 to 955!! and 1058 to 1055
@@ -933,19 +940,19 @@ if __name__ == '__main__':
              4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
   
   channels = ["WW",'WZ','ZZ']
-  #channels = ['WW','ZZ']
+  channels = ['WW']
   fitmax = 7000
   # file for data sideband: Data_VV_qV_SB_Run2016All.root
   # file for QCD pythia 8: QCD_pythia8_VV.root
   
   #infile = "../../ExoDiBosonAnalysis/results/Data_VVdijet_test40GeV_SB.root"
-  infile = "../../ExoDiBosonAnalysis/results/ReRecoData_VVdijet.root"
+  infile = "../../ExoDiBosonAnalysis/results/ReRecoData_VVdijet_SB.root"
   
   for ch in channels:
     #performFit("input/JetHT_VV.root", "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 955, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
     #performFit("input/JetHT_VV.root", "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 955, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
-    performFit(infile, "DijetMassHighPuri%s"%ch , len(massBins)-1, massBins, 1118, fitmax, "%s category, HP"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = False)
-    performFit(infile, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1118, fitmax, "%s category, LP"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = False)
+    performFit(infile, "DijetMassHighPuri%s"%ch , len(massBins)-1, massBins, 1118, fitmax, "%s category, HPSB"%ch, "%s/%sHP"%(outdir,ch), doSigmaBand = False)
+    #performFit(infile, "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 1118, fitmax, "%s category, LP"%ch, "%s/%sLP"%(outdir,ch), doSigmaBand = False)
     
   # sys.stdout = orig_stdout
 

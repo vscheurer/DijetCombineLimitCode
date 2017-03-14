@@ -10,16 +10,40 @@ prefix = "EXOVVSystematics/dijet"
 
 purities = ["LP","HP"]
 channels = ["WW","WZ","ZZ"]
+
 signals=["BulkWW","BulkZZ","WZ","ZprimeWW"]
+#signals=["altBulkZZ"]
+masses_interpolated =[m*100 for m in range(12,45+1)]
+massesInSystematics = [1200,1400,1600,1800,2000,2500,3500,4000]
 
-masses_interpolated =[m*100 for m in range(10,42+1)]
-massesInSystematics = [1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
 
-#
-# signals=["qW","qZ"]
-# channels = ["qW","qZ"]
-# masses_interpolated =[m*100 for m in range(12,62+1)]
-# massesInSystematics = [1200,1400,1600,1800,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500]
+
+#signals=["BulkZZ"]#,"WZ","ZprimeWW"]
+
+#masses_interpolated =[m*100 for m in range(12,45+1)]
+#massesInSystematics = [1200,1400,1600,1800,2000,2500,3000,3500,4000]
+
+#signals=["ZprimeWW"]
+
+#masses_interpolated =[m*100 for m in range(12,45+1)]
+#massesInSystematics = [1200,1400,1600,1800,2000,2500,3000,3500,4000]
+
+
+#signals=["WZ"]
+
+#masses_interpolated =[m*100 for m in range(12,45+1)]
+#massesInSystematics = [1200,1400,1600,1800,2000,2500,3000,3500,4000]
+
+
+signals=["qW"]
+channels = ["qW","qZ"]
+masses_interpolated =[m*100 for m in range(12,60+1)]
+massesInSystematics = [1200,1400,1600,1800,2000,2500,3000,3500,4000,4500,5000,6000,6500]
+
+#signals=["qZ"]
+#channels = ["qW","qZ"]
+#masses_interpolated =[m*100 for m in range(12,60+1)]
+#massesInSystematics = [1200,1400,1600,1800,2000,2500,3000,4500,6000]
 
 # purities = ["HP"]
 # signals=["qZ"]
@@ -61,8 +85,10 @@ for purity in purities:
         
         with open(fname_JMS,"r") as JMS:
           for l in JMS:
+            print l
             if l.find('mass') != -1: continue
             for m in masses_interpolated:
+              #print " find mass "+str(m)+ " found : "+str( l.find("%i"%m))
               if not l.find("%i"%m) != -1: continue
               JMSup = 1 + float(l.split(' ')[1])/100. 
               JMSdown = 1 + float(l.split(' ')[2])/100.

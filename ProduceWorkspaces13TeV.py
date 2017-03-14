@@ -1,8 +1,8 @@
 import os,sys,time
 
-masses =[m*100 for m in range(11,45+1)]
+masses =[m*100 for m in range(11,11+1)]#45+1)]
 # masses =[m*100 for m in range(12,62+1)]
-samples = [2,4]  # 0==RS1WW/ZZ 2==W'/Z' 4==BulkG WW/ZZ 6==qW/qZ
+samples = [4]  # 0==RS1WW/ZZ 2==W'/Z' 4==BulkG WW/ZZ 6==qW/qZ
 for sample in samples:
   for mass in masses:
     channel = 1    # 1==VV 2==qV 3==No purity
@@ -11,7 +11,7 @@ for sample in samples:
     sample1 = "BulkWW"
     sample2 = "BulkZZ"
     if sample == 2:
-      sample1 = "WZ"
+      sample1 = "WprimeWZ"
       sample2 = "ZprimeWW"  
     if sample == 6:
       sample1 = "qW"

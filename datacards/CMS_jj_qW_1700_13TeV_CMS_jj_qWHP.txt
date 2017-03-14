@@ -9,17 +9,17 @@ shapes qW_jj CMS_jj_qWHP ../workspaces/CMS_jj_qW_1700_13TeV.root w_all:qW_jj_sig
 shapes qZ_jj CMS_jj_qWHP ../workspaces/CMS_jj_qZ_1700_13TeV.root w_all:qZ_jj_sig_CMS_jj_qWHP
 ---------------
 bin          CMS_jj_qWHP
-observation   187479
+observation   230890
 ------------------------------
 bin                      CMS_jj_qWHP      CMS_jj_qWHP      CMS_jj_qWHP      
 process                 qW_jj     qZ_jj     bkg_fit_jj     
 process                 -1          0           1          
-rate                    15.2077       0           1
+rate                    34.7342       0           1
 --------------------------------
-# signal scaled by 0.00129 to a cross section of 10/fb and also scale factor of 1.027 are applied.
-lumi_13TeV                          lnN  1.062  1.062    - 
-CMS_eff_vtag_tau21_sf_13TeV        lnN  1.075/0.925  1.075/0.925      - # tau21 efficiency
-CMS_pu_13TeV                        lnN  1.0150  1.0150      - # pileup
+# signal scaled by 0.0035867 to a cross section of 10/fb and also scale factor of 0.99 are applied.
+lumi_13TeV                          lnN  1.026  1.026    - 
+CMS_acc_13TeV                       lnN  1.02  1.02      - # PDF unc. on acceptance
+CMS_pu_13TeV                        lnN  1.02  1.02      - # pileup
 --------------------------------
 # Parametric shape uncertainties, entered by hand.
 CMS_sig_p1_jes_13TeV                param   0.0   1.0   # dijet mass shift due to JES uncertainty
@@ -27,13 +27,12 @@ CMS_sig_p2_jer_13TeV                param   0.0   1.0   # dijet mass resolution 
 CMS_bkg_fit_CMS_jj_qWHP_13TeV_norm           flatParam  # Normalization uncertainty on background slope
 CMS_bkg_fit_slope1_CMS_jj_qWHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
 CMS_bkg_fit_slope2_CMS_jj_qWHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
-CMS_bkg_fit_slope3_CMS_jj_qWHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
-CMS_bkg_fit_slope4_CMS_jj_qWHP_13TeV         flatParam  # Mean and absolute uncertainty on background slope
---------------------------------
 
-CMS_mass_scale_j_13TeV       lnN      0.98025/1.01697      0.98025/1.01697      -                          
-CMS_mass_res_j_13TeV         lnN      0.96455/1.03267      0.96455/1.03267      -                          
-CMS_scale_j_13TeV            lnN      1.00051/0.99747      1.00051/0.99747      -  # jet energy scale      
-CMS_res_j_13TeV              lnN      1.00127/0.99873      1.00127/0.99873      -  # jet energy resolution 
+CMS_eff_vtag_tau21_pt_13TeV  lnN       1.123/0.877           1.123/0.877        -
 
-CMS_eff_vtag_tau21_pt_13TeV  lnN       1.085/0.915           1.085/0.915        -
+CMS_eff_vtag_tau21_sf_13TeV        lnN     1.110/0.890           1.110/0.890        -
+
+CMS_mass_scale_j_13TeV       lnN      0.98206/1.01892      0.98206/1.01892      -                          
+CMS_mass_res_j_13TeV         lnN      0.97553/1.0248      0.97553/1.0248      -                          
+CMS_scale_j_13TeV            lnN      0.92659/1.00228      0.92659/1.00228      -  # jet energy scale      
+CMS_res_j_13TeV              lnN      0.99869/1.00033      0.99869/1.00033      -  # jet energy resolution 

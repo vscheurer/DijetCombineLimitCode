@@ -40,6 +40,7 @@ if len(sys.argv)>3:
 else:
    suffix=""
 
+
 # print "suffix = %s"%suffix
 histnames= [
             # "DijetMassHighPuriVV", # VV high purity
@@ -144,7 +145,8 @@ for histname in histnames:
  
  output.cd()
  #su = 0.
- foutmjj = TH1F(histname, histname, 5000, 0, 5000 )
+ #foutmjj = TH1F(histname, histname, 5000, 0, 5000 )
+ foutmjj = TH1F(histname, histname, 7000, 0, 7000 )
  hists += [foutmjj]
  #foutmjjfrac = TH1F( 'frac'+str(outmjj), 'frac'+str(outmjj), 10000, 0.3, 1.3)
  #foutmjjfit =  TH1F('doublefit'+str(outmjj), 'doublefit'+str(outmjj), 5000, 0, 5000 )
