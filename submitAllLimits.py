@@ -22,13 +22,33 @@ import time
             
             
             
-#masses =[m*100 for m in range(12,43+1)]
+masses =[m*100 for m in range(12,43+1)]
 #models = ["ZprimeWW","BulkWW","BulkZZ","WZ"]
+models = ["BulkWW"]
+channels = ["WWHP","WWLP","ZZHP","ZZLP","WZHP","WZLP","VVnew"]
+channels = ["ZZHP","ZZLP","VVnew"]
 #models =["BulkWW"]
 #masses =[4000]
 #channels = ["VVHPnew","VVLPnew","VVnew"]
 #channels = ["VVnew"]
-#workspaceBKG = " CMS_jj_bkg_VV_13TeV"
+#channels = ["WWHP","WWLP","ZZHP","ZZLP","WZHP","WZLP","VVnew"]
+workspaceBKG = " CMS_jj_bkg_VV_13TeV"
+for channel in channels:
+    for model in models:
+        if model.find("q") != -1:
+            masses =[m*100 for m in range(12,60+1)]
+        for mass in masses:
+            workspaceSignal = "CMS_jj_"+model+"_"+str(int(mass))+"_13TeV"
+            command = 'qsub -q all.q submitLimits.sh CMS_jj_'+model+'_'+str(int(mass))+'_13TeV_CMS_jj_'+channel+' '+str(int(mass))+' CMS_jj_'+str(int(mass))+'_'+model+'_13TeV_CMS_jj_'+channel+'_asymptoticCLs_new.root '+workspaceBKG+' '+workspaceSignal
+            print command
+            os.system(command)
+            #time.sleep(1)
+            
+            
+#masses =[m*100 for m in range(12,43+1)]
+#models = ["qW","qZ"]
+#channels = ["qVHPnew","qVLPnew","qVnew"]
+#workspaceBKG = "CMS_jj_bkg_qV_13TeV"
 #for channel in channels:
     #for model in models:
         #if model.find("q") != -1:
@@ -46,7 +66,8 @@ import time
 masses =[m*100 for m in range(12,43+1)]
 #masses =[2700]
 models = ["altBulkWW"]
-channels = ["VVnew"]
+#channels = ["WWHP","WWLP","ZZHP","ZZLP","WZHP","WZLP","VVnew"]
+channels = ["ZZHP","ZZLP","VVnew"]
 workspaceBKG = " CMS_jj_bkg_VValt_13TeV"
 for channel in channels:
     for model in models:

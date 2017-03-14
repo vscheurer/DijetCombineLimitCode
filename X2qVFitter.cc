@@ -7,9 +7,9 @@ Double_t MMIN = 1050.;
 Double_t MMAX = 6200.;
 Double_t CHANNEL = 1; //1==VV 2==qV 3==noPurity
 std::string filePOSTfix="";
-double signalScaler=35867.*0.01/(10000.); // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script. Dividing out BR(V-->had)=70% for non-inclusive samples
-double scaleFactorHP=1.0; // ICHEP 1.03 tau21 and jet mass scale factors data/MC
-double scaleFactorLP=0.96; // ICHEP 0.88 tau21 and jet mass scale factors data/MC
+double signalScaler=35867.*0.01/(100000.); // assume signal cross section of 0.01pb=10fb and 1263.890/pb of luminosity (The factor 10000. is the number of gen events that is set to 10000. for all samples in the interpolation script. Dividing out BR(V-->had)=70% for non-inclusive samples
+double scaleFactorHP=0.99; // ICHEP 1.03 tau21 and jet mass scale factors data/MC
+double scaleFactorLP=1.03; // ICHEP 0.88 tau21 and jet mass scale factors data/MC
 
 TColor *col = new TColor();
 

@@ -140,7 +140,7 @@ echo "mv  higgsCombineTest.Asymptotic.mH${MASS}.root ${OUTFILENAME}" >> myout.tx
 combine ${DATACARD}.txt -M Asymptotic -m ${MASS} -n test --rMax 100 --rMin 0.000001 >> myout.txt 2>>myerr.txt
 mv  higgs*.root /mnt/t3nfs01/data01/shome/dschafer/CMSSW_7_4_7/src/DijetCombineLimitCode/test/${OUTFILENAME} >> myout.txt 2>>myerr.txt
 mv myerr.txt ../
-mv mout.txt ../
+mv myout.txt ../
 
 #### RETRIEVAL OF OUTPUT FILES AND CLEANING UP ############################
 cd $WORKDIR
