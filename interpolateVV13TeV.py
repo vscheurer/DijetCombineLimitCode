@@ -41,20 +41,22 @@ else:
    suffix=""
 
 # print "suffix = %s"%suffix
+
+#Names of the input histograms
 histnames= [
             # "DijetMassHighPuriVV", # VV high purity
             # "DijetMassNoPuriVV", # VV medium purity
             # "DijetMassLowPuriVV", # not used
 
-            "DijetMassHighPuriWW", # WW high purity
-            "DijetMassLowPuriWW", # WW low purity
-            "DijetMassNoPuriWW", # WW no purity
-            "DijetMassHighPuriWZ", # WZ high purity
-            "DijetMassLowPuriWZ", # WZ low purity
-            "DijetMassNoPuriWZ", # WZ no purity
-            "DijetMassHighPuriZZ", # ZZ high purity
-            "DijetMassLowPuriZZ", # ZZ low purity
-            "DijetMassNoPuriZZ", # ZZ no purity
+            #"DijetMassHighPuriWW", # WW high purity
+            #"DijetMassLowPuriWW", # WW low purity
+            #"DijetMassNoPuriWW", # WW no purity
+            #"DijetMassHighPuriWZ", # WZ high purity
+            #"DijetMassLowPuriWZ", # WZ low purity
+            #"DijetMassNoPuriWZ", # WZ no purity
+            #"DijetMassHighPuriZZ", # ZZ high purity
+            #"DijetMassLowPuriZZ", # ZZ low purity
+            #"DijetMassNoPuriZZ", # ZZ no purity
             
             # "DijetMassHighPuriqV", # qV high purity
             # "DijetMassNoPuriqV", # qV medium purity
@@ -65,7 +67,15 @@ histnames= [
             # "DijetMassHighPuriqZ", # qZ high purity
             # "DijetMassLowPuriqZ", # qZ low purity
             # "DijetMassNoPuriqZ", # qZ no purity
-            ]
+            
+            'VVHP_',
+            'VVLP_',
+            'ZZHP_',
+            'ZZLP_',
+            'WZHP_',
+            'WZLP_',
+            'WWHP_',
+            'WWLP_']
 
 if "WprimeWZ" in inputRoot:
   masses=[1000,1200,1400,1600,1800,2500,3000,3500,4000,4500]
@@ -77,10 +87,10 @@ if "ZprimeWW" in inputRoot:
   # masses=[1000,2000,3000,4000]
   ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
   
-if "BulkZZ" in inputRoot:
-  masses=[1000,1200,1400,1800,2000,2500,3000,3500,4000]
+if "BulkGtoZZ" in inputRoot:
+  masses=[1400,1800,2000,2500,3000,3500,4000]
   # masses=[1000,2000,3000,4000]
-  ngenevents=[1.,1.,1.,1.,1.,1.,1.,1.,1.,1.]
+  ngenevents=[1.,1.,1.,1.,1.,1.,1.]
   
 if "BulkWW" in inputRoot:
   masses=[1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
@@ -123,39 +133,68 @@ if outmjj>=masses[-1]:
    mjjlow = masses[-2]
    mjjhigh = masses[-1]
 
-inputlow = TFile( inputRoot + str(mjjlow) + suffix + '.root' )
-inputhigh = TFile( inputRoot + str(mjjhigh) + suffix +  '.root' )
-output = TFile( inputRoot +'10k_OUT' + str(outmjj) + suffix + '.root', 'recreate')
-# print "inputlow = %s"%inputlow
-# print "inputhigh = %s"%inputhigh
-# print "output = %s"%output
+inputlow = TFile("../ExoDiBosonAnalysis/"+ inputRoot + str(mjjlow) + suffix + '.root' )
+inputhigh = TFile( "../ExoDiBosonAnalysis/"+inputRoot + str(mjjhigh) + suffix +  '.root' )
+inputshape = TFile( "../ExoDiBosonAnalysis/"+inputRoot + str(2000) + suffix +  '.root' )
+output = TFile( inputRoot +'10k_OUT' + str(outmjj) + suffix +'.root', 'recreate')
+print "inputlow = %s"%inputlow
+print "inputhigh = %s"%inputhigh
+print "output = %s"%output
 
 print sys.argv[1], outmjj, mjjlow, mjjhigh
 
 hists=[]
 
 for histname in histnames:
- flow = inputlow.Get( histname )
+ print histname
+ flow = inputlow.Get( histname + str(mjjlow)+'GeV' )
  if not flow: continue
  flow.SetName( 'low' )
- fhigh = inputhigh.Get( histname )
+ fhigh = inputhigh.Get( histname + str(mjjhigh)+'GeV' )
  fhigh.SetName( 'high' ) 
- 
+ fshape = inputshape.Get( histname + str(2000)+'GeV' )
+ fshape.SetName( 'shape' ) 
+
  output.cd()
  #su = 0.
- foutmjj = TH1F(histname, histname, 5000, 0, 5000 )
+ foutmjj = TH1F(histname+ str(outmjj)+'GeV', histname+ str(outmjj)+'GeV', 4000, 1000, 5000 )
  hists += [foutmjj]
  #foutmjjfrac = TH1F( 'frac'+str(outmjj), 'frac'+str(outmjj), 10000, 0.3, 1.3)
  #foutmjjfit =  TH1F('doublefit'+str(outmjj), 'doublefit'+str(outmjj), 5000, 0, 5000 )
 
  old_interpolation=False
+ #noshape_interpolation = True
+
+ #if noshape_interpolation:
+
+   ## interpolate the shape linearly
+
+   #for i in range(4001) :
+     #x = 0.0 + i/4000.0*2.0 # interpolation range: [0*mass,2*mass]
+     #massout = x*outmjj
+     #foutmjj.SetBinContent( fshape.FindBin(massout+(outmjj-2000)),fshape.GetBinContent(fshape.FindBin(massout)))
+     
+   #print "!!!!!!!!!!!!!"
+   ## interpolate the peak height smoothly
+   #xvalues=r.vector('double')()
+   #yvalues=r.vector('double')()
+   #for x in masses:
+     #inputf = TFile("/shome/vscheure/ExoDiBosonAnalysis/"+ inputRoot + str(x) + suffix + '.root' )
+     #print inputf
+     #f = inputf.Get( histname + str(x)+'GeV')
+     #xvalues.push_back(x)
+     #yvalues.push_back(f.Integral(f.FindBin(x*0.8),f.FindBin(x*1.2))/ngenevents[masses.index(x)]*10000.) #100 000 is 2015 default, test 10 000
+   #interpolator=r.Math.Interpolator(xvalues,yvalues)
+   #integral=interpolator.Eval(outmjj)
+   #foutmjj.Scale( 10000)
+
 
  if old_interpolation:
    # interpolate the shape linearly
    su = 0
    su1 = 0.0
-   for i in range(5001) :
-     x = 0.0 + i/5000.0*2.0 # interpolation range: [0*mass,2*mass]
+   for i in range(4001) :
+     x = 0.0 + i/4000.0*2.0 # interpolation range: [0*mass,2*mass]
      masslow = x*mjjlow
      masshigh = x*mjjhigh
      #print masshigh
@@ -164,6 +203,7 @@ for histname in histnames:
      prob2 = fhigh.GetBinContent( fhigh.FindBin(masshigh) ) 
      #print x, prob1, prob2
      prob = prob1 + (prob2 - prob1)*(massout - mjjlow)/float(mjjhigh - mjjlow)
+    
      #print x, prob
      #foutmjjfrac.SetBinContent(i+1, max(0,prob))
      foutmjj.SetBinContent( foutmjj.FindBin(massout), max(0,prob))
@@ -171,19 +211,21 @@ for histname in histnames:
      su1 += prob2
    #print su
    #print su1
-
+   print "HALLO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
    # interpolate the peak height smoothly
    xvalues=r.vector('double')()
    yvalues=r.vector('double')()
    for x in masses:
      inputf = TFile( inputRoot + str(x) + suffix + '.root' )
-     f = inputf.Get( histname )
+     print inputf
+     f = inputf.Get( histname + str(x)+'GeV' )
      xvalues.push_back(x)
-     yvalues.push_back(f.Integral(f.FindBin(x*0.8),f.FindBin(x*1.2))/ngenevents[masses.index(x)]*10000.) #100 000 is 2015 default, test 10 000
+     yvalues.push_back(f.Integral(f.FindBin(x*0.8),f.FindBin(x*1.2))/ngenevents[masses.index(x)]*100000.) #100 000 is 2015 default, test 10 000
    interpolator=r.Math.Interpolator(xvalues,yvalues)
    integral=interpolator.Eval(outmjj)
    foutmjj.Scale( integral/foutmjj.Integral(foutmjj.FindBin(outmjj*0.8),foutmjj.FindBin(outmjj*1.2)) )
  else:
+   print "Alles gut!!"
    # interpolate the peak height+shape smoothly
    xvalues=r.vector('double')()
    yvalues=[]
@@ -192,12 +234,12 @@ for histname in histnames:
    for i in range(npoints+1) :
      yvalues+=[r.vector('double')()]
    for m in masses:
-     inputf = TFile( inputRoot + str(m) + suffix + '.root' )
-     f = inputf.Get( histname )
+     inputf = TFile("../ExoDiBosonAnalysis/"+ inputRoot + str(m) + suffix + '.root' )
+     f = inputf.Get( histname + str(m)+'GeV')
      xvalues.push_back(m)
      for i in range(npoints+1):
        x=0.0 + i/float(npoints)*2.0
-       yvalues[i].push_back(f.Integral(f.FindBin(m*x)-rebin+1,f.FindBin(m*x)+rebin-1)/float(2*rebin-1)/ngenevents[masses.index(m)]*10000.) #100 000 is 2015 default, test 10 000
+       yvalues[i].push_back(f.Integral(f.FindBin(m*x)-rebin+1,f.FindBin(m*x)+rebin-1)/float(2*rebin-1)/ngenevents[masses.index(m)]*100000.) #100 000 is 2015 default, test 10 000
    for i in range(npoints+1):
      x=0.0 + i/float(npoints)*2.0
      inter=r.Math.Interpolator(xvalues,yvalues[i])

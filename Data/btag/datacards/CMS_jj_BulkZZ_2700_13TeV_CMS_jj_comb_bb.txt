@@ -1,0 +1,98 @@
+Combination of CMS_jj_ZZHP=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_ZZHP.txt  CMS_jj_ZZLP=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_ZZLP.txt  CMS_jj_WZHP=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_WZHP.txt  CMS_jj_WZLP=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_WZLP.txt  CMS_jj_WWHP=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_WWHP.txt  CMS_jj_WWLP=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_WWLP.txt  CMS_jj_ZZHPB=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_ZZHPBtagged.txt  CMS_jj_ZZLPB=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_ZZLPBtagged.txt  CMS_jj_WZHPB=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_WZHPBtagged.txt  CMS_jj_WZLPB=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_WZLPBtagged.txt  CMS_jj_WWHPB=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_WWHPBtagged.txt  CMS_jj_WWLPB=/usr/users/vscheurer/DijetCombineLimitCode/datacards/CMS_jj_BulkZZ_2700_13TeV_CMS_jj_WWLPBtagged.txt
+imax 12 number of bins
+jmax 2 number of processes minus 1
+kmax 12 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes BulkWW_jj     CMS_jj_WWHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_WWHP
+shapes BulkZZ_jj     CMS_jj_WWHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_WWHP
+shapes bkg_fit_jj    CMS_jj_WWHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_WWHP_13TeV
+shapes data_obs      CMS_jj_WWHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_WWHP
+shapes BulkWW_jj     CMS_jj_WWHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_WWHPBtagged
+shapes BulkZZ_jj     CMS_jj_WWHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_WWHPBtagged
+shapes bkg_fit_jj    CMS_jj_WWHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_WWHPBtagged_13TeV
+shapes data_obs      CMS_jj_WWHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_WWHPBtagged
+shapes BulkWW_jj     CMS_jj_WWLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_WWLP
+shapes BulkZZ_jj     CMS_jj_WWLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_WWLP
+shapes bkg_fit_jj    CMS_jj_WWLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_WWLP_13TeV
+shapes data_obs      CMS_jj_WWLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_WWLP
+shapes BulkWW_jj     CMS_jj_WWLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_WWLPBtagged
+shapes BulkZZ_jj     CMS_jj_WWLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_WWLPBtagged
+shapes bkg_fit_jj    CMS_jj_WWLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_WWLPBtagged_13TeV
+shapes data_obs      CMS_jj_WWLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_WWLPBtagged
+shapes BulkWW_jj     CMS_jj_WZHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_WZHP
+shapes BulkZZ_jj     CMS_jj_WZHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_WZHP
+shapes bkg_fit_jj    CMS_jj_WZHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_WZHP_13TeV
+shapes data_obs      CMS_jj_WZHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_WZHP
+shapes BulkWW_jj     CMS_jj_WZHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_WZHPBtagged
+shapes BulkZZ_jj     CMS_jj_WZHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_WZHPBtagged
+shapes bkg_fit_jj    CMS_jj_WZHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_WZHPBtagged_13TeV
+shapes data_obs      CMS_jj_WZHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_WZHPBtagged
+shapes BulkWW_jj     CMS_jj_WZLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_WZLP
+shapes BulkZZ_jj     CMS_jj_WZLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_WZLP
+shapes bkg_fit_jj    CMS_jj_WZLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_WZLP_13TeV
+shapes data_obs      CMS_jj_WZLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_WZLP
+shapes BulkWW_jj     CMS_jj_WZLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_WZLPBtagged
+shapes BulkZZ_jj     CMS_jj_WZLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_WZLPBtagged
+shapes bkg_fit_jj    CMS_jj_WZLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_WZLPBtagged_13TeV
+shapes data_obs      CMS_jj_WZLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_WZLPBtagged
+shapes BulkWW_jj     CMS_jj_ZZHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_ZZHP
+shapes BulkZZ_jj     CMS_jj_ZZHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_ZZHP
+shapes bkg_fit_jj    CMS_jj_ZZHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_ZZHP_13TeV
+shapes data_obs      CMS_jj_ZZHP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_ZZHP
+shapes BulkWW_jj     CMS_jj_ZZHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_ZZHPBtagged
+shapes BulkZZ_jj     CMS_jj_ZZHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_ZZHPBtagged
+shapes bkg_fit_jj    CMS_jj_ZZHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_ZZHPBtagged_13TeV
+shapes data_obs      CMS_jj_ZZHPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_ZZHPBtagged
+shapes BulkWW_jj     CMS_jj_ZZLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_ZZLP
+shapes BulkZZ_jj     CMS_jj_ZZLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_ZZLP
+shapes bkg_fit_jj    CMS_jj_ZZLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_ZZLP_13TeV
+shapes data_obs      CMS_jj_ZZLP   /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_ZZLP
+shapes BulkWW_jj     CMS_jj_ZZLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkWW_2700_13TeV.root w_all:BulkWW_jj_sig_CMS_jj_ZZLPBtagged
+shapes BulkZZ_jj     CMS_jj_ZZLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_BulkZZ_2700_13TeV.root w_all:BulkZZ_jj_sig_CMS_jj_ZZLPBtagged
+shapes bkg_fit_jj    CMS_jj_ZZLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:CMS_bkg_fit_CMS_jj_ZZLPBtagged_13TeV
+shapes data_obs      CMS_jj_ZZLPB  /usr/users/vscheurer/DijetCombineLimitCode/datacards/../workspaces/CMS_jj_bkg_VV_13TeV.root w_all:data_obs_CMS_jj_ZZLPBtagged
+----------------------------------------------------------------------------------------------------------------------------------
+bin          CMS_jj_ZZHP   CMS_jj_ZZLP   CMS_jj_WZHP   CMS_jj_WZLP   CMS_jj_WWHP   CMS_jj_WWLP   CMS_jj_ZZHPB  CMS_jj_ZZLPB  CMS_jj_WZHPB  CMS_jj_WZLPB  CMS_jj_WWHPB  CMS_jj_WWLPB
+observation  1520.0        12496.0       2177.0        24191.0       879.0         10788.0       326.0         2315.0        540.0         4644.0        211.0         2259.0      
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                            CMS_jj_ZZHP   CMS_jj_ZZHP   CMS_jj_ZZHP   CMS_jj_ZZLP   CMS_jj_ZZLP   CMS_jj_ZZLP   CMS_jj_WZHP   CMS_jj_WZHP   CMS_jj_WZHP   CMS_jj_WZLP   CMS_jj_WZLP   CMS_jj_WZLP   CMS_jj_WWHP   CMS_jj_WWHP   CMS_jj_WWHP   CMS_jj_WWLP   CMS_jj_WWLP   CMS_jj_WWLP   CMS_jj_ZZHPB  CMS_jj_ZZHPB  CMS_jj_ZZHPB  CMS_jj_ZZLPB  CMS_jj_ZZLPB  CMS_jj_ZZLPB  CMS_jj_WZHPB  CMS_jj_WZHPB  CMS_jj_WZHPB  CMS_jj_WZLPB  CMS_jj_WZLPB  CMS_jj_WZLPB  CMS_jj_WWHPB  CMS_jj_WWHPB  CMS_jj_WWHPB  CMS_jj_WWLPB  CMS_jj_WWLPB  CMS_jj_WWLPB
+process                                        BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj    BulkWW_jj     BulkZZ_jj     bkg_fit_jj  
+process                                        -1            0             1             -1            0             1             -1            0             1             -1            0             1             -1            0             1             -1            0             1             -1            0             1             -1            0             1             -1            0             1             -1            0             1             -1            0             1             -1            0             1           
+rate                                           0.0000        15.7838       1.0000        0.0000        21.1139       1.0000        0.0000        9.0941        1.0000        0.0000        19.5998       1.0000        0.0000        1.5010        1.0000        0.0000        4.4291        1.0000        0.0000        11.7456       1.0000        0.0000        15.5911       1.0000        0.0000        9.8036        1.0000        0.0000        20.6493       1.0000        0.0000        1.8515        1.0000        0.0000        5.5905        1.0000      
+----------------------------------------------------------------------------------------------------------------------------------
+CMS_acc_13TeV           lnN                    1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -           
+CMS_eff_btag_sf_13TeV   lnN                    -             -             -             -             -             -             -             -             -             -             -             -             -             -             -             -             -             -             1.040/0.920   1.040/0.920   -             1.040/0.920   1.040/0.920   -             1.040/0.920   1.040/0.920   -             1.040/0.920   1.040/0.920   -             1.040/0.920   1.040/0.920   -             1.040/0.920   1.040/0.920   -           
+CMS_eff_tau21_sf_13TeV   lnN                   1.232/0.792   1.232/0.792   -             0.855/1.095   0.855/1.095   -             1.232/0.792   1.232/0.792   -             0.855/1.095   0.855/1.095   -             1.232/0.792   1.232/0.792   -             0.855/1.095   0.855/1.095   -             1.232/0.792   1.232/0.792   -             0.855/1.095   0.855/1.095   -             1.232/0.792   1.232/0.792   -             0.855/1.095   0.855/1.095   -             1.232/0.792   1.232/0.792   -             0.855/1.095   0.855/1.095   -           
+CMS_eff_vtag_tau21_pt_13TeV   lnN              1.351/0.702   1.351/0.702   -             1.249/0.775   1.249/0.775   -             1.351/0.702   1.351/0.702   -             1.249/0.775   1.249/0.775   -             1.351/0.702   1.351/0.702   -             1.249/0.775   1.249/0.775   -             1.351/0.702   1.351/0.702   -             1.249/0.775   1.249/0.775   -             1.351/0.702   1.351/0.702   -             1.249/0.775   1.249/0.775   -             1.351/0.702   1.351/0.702   -             1.249/0.775   1.249/0.775   -           
+CMS_mass_res_j_13TeV    lnN                    0.928/1.075   0.928/1.075   -             0.913/1.081   0.913/1.081   -             0.986/1.008   0.986/1.008   -             0.968/1.018   0.968/1.018   -             1.067/0.893   1.067/0.893   -             1.055/0.952   1.055/0.952   -             0.928/1.075   0.928/1.075   -             0.913/1.081   0.913/1.081   -             0.986/1.008   0.986/1.008   -             0.968/1.018   0.968/1.018   -             1.067/0.893   1.067/0.893   -             1.055/0.952   1.055/0.952   -           
+CMS_mass_scale_j_13TeV   lnN                   1.038/0.946   1.038/0.946   -             1.054/0.934   1.054/0.934   -             0.972/1.038   0.972/1.038   -             0.984/1.021   0.984/1.021   -             0.861/1.150   0.861/1.150   -             0.918/1.112   0.918/1.112   -             1.038/0.946   1.038/0.946   -             1.054/0.934   1.054/0.934   -             0.972/1.038   0.972/1.038   -             0.984/1.021   0.984/1.021   -             0.861/1.150   0.861/1.150   -             0.918/1.112   0.918/1.112   -           
+CMS_pu_13TeV            lnN                    1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -             1.02          1.02          -           
+CMS_res_j_13TeV         lnN                    1.000/0.999   1.000/0.999   -             1.003/1.002   1.003/1.002   -             0.998/1.001   0.998/1.001   -             1.000/1.002   1.000/1.002   -             0.994/1.009   0.994/1.009   -             1.002/1.006   1.002/1.006   -             1.000/0.999   1.000/0.999   -             1.003/1.002   1.003/1.002   -             0.998/1.001   0.998/1.001   -             1.000/1.002   1.000/1.002   -             0.994/1.009   0.994/1.009   -             1.002/1.006   1.002/1.006   -           
+CMS_scale_j_13TeV       lnN                    1.000/1.000   1.000/1.000   -             1.003/1.002   1.003/1.002   -             1.000/1.000   1.000/1.000   -             0.996/1.001   0.996/1.001   -             1.004/0.998   1.004/0.998   -             1.005/0.998   1.005/0.998   -             1.000/1.000   1.000/1.000   -             1.003/1.002   1.003/1.002   -             1.000/1.000   1.000/1.000   -             0.996/1.001   0.996/1.001   -             1.004/0.998   1.004/0.998   -             1.005/0.998   1.005/0.998   -           
+lumi_13TeV              lnN                    1.025         1.025         -             1.025         1.025         -             1.025         1.025         -             1.025         1.025         -             1.025         1.025         -             1.025         1.025         -             1.025         1.025         -             1.025         1.025         -             1.025         1.025         -             1.025         1.025         -             1.025         1.025         -             1.025         1.025         -           
+CMS_sig_p2_jer_13TeV  param  0.0 1.0
+CMS_sig_p1_jes_13TeV  param  0.0 1.0
+CMS_bkg_fit_slope1_CMS_jj_ZZLPBtagged_13TeV  flatParam
+CMS_bkg_fit_slope1_CMS_jj_WZLPBtagged_13TeV  flatParam
+CMS_bkg_fit_slope1_CMS_jj_ZZLP_13TeV  flatParam
+CMS_bkg_fit_slope1_CMS_jj_WWHP_13TeV  flatParam
+CMS_bkg_fit_CMS_jj_WZLPBtagged_13TeV_norm  flatParam
+CMS_bkg_fit_slope1_CMS_jj_WZHPBtagged_13TeV  flatParam
+CMS_bkg_fit_CMS_jj_ZZLPBtagged_13TeV_norm  flatParam
+CMS_bkg_fit_CMS_jj_ZZLP_13TeV_norm  flatParam
+CMS_bkg_fit_CMS_jj_WWLP_13TeV_norm  flatParam
+CMS_bkg_fit_CMS_jj_WWLPBtagged_13TeV_norm  flatParam
+CMS_bkg_fit_CMS_jj_WZHP_13TeV_norm  flatParam
+CMS_bkg_fit_CMS_jj_WWHP_13TeV_norm  flatParam
+CMS_bkg_fit_CMS_jj_WWHPBtagged_13TeV_norm  flatParam
+CMS_bkg_fit_slope1_CMS_jj_WWLPBtagged_13TeV  flatParam
+CMS_bkg_fit_CMS_jj_ZZHP_13TeV_norm  flatParam
+CMS_bkg_fit_slope1_CMS_jj_ZZHP_13TeV  flatParam
+CMS_bkg_fit_slope1_CMS_jj_ZZHPBtagged_13TeV  flatParam
+CMS_bkg_fit_CMS_jj_WZLP_13TeV_norm  flatParam
+CMS_bkg_fit_slope1_CMS_jj_WWHPBtagged_13TeV  flatParam
+CMS_bkg_fit_CMS_jj_WZHPBtagged_13TeV_norm  flatParam
+CMS_bkg_fit_CMS_jj_ZZHPBtagged_13TeV_norm  flatParam
+CMS_bkg_fit_slope1_CMS_jj_WZHP_13TeV  flatParam
+CMS_bkg_fit_slope1_CMS_jj_WZLP_13TeV  flatParam
+CMS_bkg_fit_slope1_CMS_jj_WWLP_13TeV  flatParam

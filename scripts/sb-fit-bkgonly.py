@@ -26,7 +26,7 @@ massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176,
 xbins = array('d',massBins)
 
 
-fileIN = rt.TFile.Open("input/JetHT_VV.root")
+fileIN = rt.TFile.Open("../BulkGtoZZ_bb_QCD.root")
 
 alphas    = [8.34260e-01,2.26698,1.53339,1.17580,2.99999,2.2626,0.663441,0.800000]                       #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forBulkZZ),VVLP(forBulkZZ)
 sigfracs  = [4.58877e-01,3.00000e-01,2.94266e-07,1.64950e-02,0.867402,0.278371,6.42551e-01,5.00000e-01]     #WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP,VVHP (forBulkZZ),VVLP(forBulkZZ)
@@ -39,13 +39,14 @@ sigmas    = [5.73275e+01,6.08280e+01,67.4016,8.25785e+01,6.54552e+01,59.7554,1.0
 signalrate      = [7.8398,6.6185,18.9913,13.0669,16.3109,9.3828] #2016 exp expected signalrate for signal with 0.01pb xSec in each category (#WWHP,WWLP,WZHP,WZLP,ZZHP,ZZLP)
 scaleToExcluded = [2.,2.,0.9,0.9,0.8,0.8]#2016 exp
 
-parameters=[3,2,2,3,2,3] 
+parameters=[2,2,2,3,2,3] 
 # xsec=[0.01437920,0.01437920,0.029456,0.029456,0.019470,0.019470,0.019470,0.019470] #8TeV
 xsec=[0.02,0.02,0.009,0.009,0.008,0.008] #2016 exp excluded xsec in combined category!
 categories = ["WW, high-purity","WW, low-purity","WZ, high-purity","WZ, low-purity","ZZ, high-purity","ZZ, low-purity"]#,"VV, high-purity","VV, low-purity"]
 legends=["G(2 TeV)#rightarrowWW","G(2 TeV)#rightarrowWW","W'(2 TeV)#rightarrowWZ","W'(2 TeV)#rightarrowWZ","G(2 TeV)#rightarrowZZ","G(2 TeV)#rightarrowZZ"]         
-histos = ["DijetMassHighPuriWW","DijetMassLowPuriWW","DijetMassHighPuriWZ", "DijetMassLowPuriWZ", "DijetMassHighPuriZZ","DijetMassLowPuriZZ"]#,"DijetMassHighPuriVV","DijetMassLowPuriVV"]
-lumi = 12900
+#histos = ["DijetMassHighPuriWW","DijetMassLowPuriWW","DijetMassHighPuriWZ", "DijetMassLowPuriWZ", "DijetMassHighPuriZZ","DijetMassLowPuriZZ"]#,"DijetMassHighPuriVV","DijetMassLowPuriVV"]
+histos = ["MVV"]
+lumi = 35867.
 maxVals =[2659,2895,2895,3416,3147,3600,3416,3416]
 
 #
@@ -58,7 +59,7 @@ for h in histos:
     print h
     htmp = fileIN.Get(h)
     
-    firstbin = 955.
+    firstbin = 1058.
     lastbin = htmp.GetBinCenter(htmp.FindLastBinAbove(0.99999))
     lower = (nsmallest(2, massBins, key=lambda x: abs(x-lastbin)))[0]
     higher  = (nsmallest(2, massBins, key=lambda x: abs(x-lastbin)))[1]
@@ -75,7 +76,7 @@ for h in histos:
 
     dataDistOLD = htmp.Rebin(len(xbins)-1,"hMass_rebinned",xbins)
     minVal = firstbin
-    maxVal = fFitXmax
+    maxVal = 5000
 
 
     bins = []
@@ -195,7 +196,7 @@ for h in histos:
     frame.GetYaxis().SetTitleOffset(0.98)
     # frame.GetYaxis().SetLabelSize(0.09)
     frame.SetMinimum(0.2)
-    frame.SetMaximum(1E5)
+    frame.SetMaximum(1E8)
     frame.SetName("mjjFit")
     frame.GetYaxis().SetTitle("Events / 100 GeV")
     frame.SetTitle("")
@@ -274,7 +275,7 @@ for h in histos:
     c1.Update()
 
     print title
-    canvname = "80X/MLBkgFit_%s.pdf"%histos[ii]
+    canvname = "MLBkgFit_%s.pdf"%histos[ii]
     c1.SaveAs(canvname)
     c1.SaveAs(canvname.replace("pdf","C"),"C")
 

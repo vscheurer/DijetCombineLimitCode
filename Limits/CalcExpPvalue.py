@@ -20,37 +20,42 @@ gStyle.SetLabelSize(0.05, "XYZ")
 gStyle.SetNdivisions(510, "XYZ")
 gStyle.SetLegendBorderSize(0)
 
-channel=[0, 1]
+channel=[0]
 sigWW=[]
 pvalWW=[]
 
 sigZZ=[]
 pvalZZ=[]
 
-sChan=["WW","ZZ"]
+sChan=["ZZ"]
 #bin=[0,1,2,3,4,5]
-bin=["012","012345"]
+bin=["012"]
 
-masses =[1000.0, 1100.0, 1200.0, 1300.0, 1400.0, 1500.0, 1600.0, 1700.0, 1800.0, 1900.0, 2000.0, 2100.0, 2200.0, 2300.0]
+#masses =[1400.0, 1500.0, 1600.0, 1700.0, 1800.0, 1900.0, 2000.0, 2100.0, 2200.0, 2300.0, 2400.0, 2500.0, 2600.0, 2700.0]
+masses = [1500.0,1700.0, 1800.0,1900.0, 2000.0,2100.0, 2300.0,2500.0, 2700.0,3000.0,3500.0,4000.0]
+#masses = [3000.0,3500.0,4000.0]
 
 toysPerJob=300
-jobs=10
+jobs=1
 
 for ibin in bin:
     for chan in channel:
-        for mass in masses:
+        for dmass in masses:
 	  for job in range(jobs):
-            outputname = "Xvv.mX"+str(mass)+"_"+sChan[chan]+"_8TeV_channel"+str(ibin)+"_exp_submit"+str(job)+".src"
-            logname = "Xvv.mX"+str(mass)+"_"+sChan[chan]+"_8TeV_channel"+str(ibin)+"_exp_toys"+str(job)+".out"
+            mass = int(dmass)  
+            outputname = "pvalue"+str(mass)+"_"+sChan[chan]+".src"
+            logname = "pvalue"+str(mass)+"_"+sChan[chan]+".out"
             outputfile = open(outputname,'w')
             outputfile.write('#!/bin/bash\n')
-            outputfile.write("cd ${CMSSW_BASE}/src/DijetCombineLimitCode; eval `scramv1 run -sh`\n")
-            outputfile.write("combine datacards/Xvv.mX"+str(mass)+"_"+sChan[chan]+"_8TeV_channel"+str(ibin)+".txt -M ProfileLikelihood -v2 -m "+str(mass) + " --signif --expectSignal 0.5 -t "+str(toysPerJob)+" -s "+str(job)+"\n")
+            outputfile.write("cd ..; eval `scramv1 run -sh`\n")
+            outputfile.write("combine datacards/CMS_jj_BulkZZ_"+str(mass)+"_13TeV_CMS_jj_comb_bb.txt -M ProfileLikelihood -v2 -m "+str(mass) + " --signif --expectSignal=1 -t -1 -s "+str(job)+"\n")
+            
             outputfile.close()
   
-            command="rm "+logname
-	    print command
-            os.system(command)
-            command="bsub -q 1nh -o "+logname+" source "+outputname
+            #command="rm "+logname
+	    #print command
+            #os.system(command)
+            command = "combine ../datacards/CMS_jj_BulkZZ_"+str(mass)+"_13TeV_CMS_jj_comb_bb.txt -M ProfileLikelihood -v2 -m "+str(mass) +"  --signif  --expectSignal=1 -t -1 "
+            #command="bsub -q 1nh -o "+logname+" source "+outputname
 	    print command
             os.system(command)

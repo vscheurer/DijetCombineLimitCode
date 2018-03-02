@@ -13,7 +13,7 @@ from heapq import nsmallest
 
 tdrstyle.setTDRStyle()
 gStyle.SetOptFit(0) 
-CMS_lumi.lumi_13TeV = "12.9 fb^{-1}"
+CMS_lumi.lumi_13TeV = "35.9 fb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -23,7 +23,7 @@ iPeriod=4
 
 
 sqrtS = 13000.
-lumi = 12900.
+lumi = 35867.
 
 def get_palette(mode):
  palette = {}
@@ -229,31 +229,31 @@ def performFit(fInputFile, fPlot, fNbins, fBins,fFitXmin, fFitXmax,fLabel,  fOut
   print "\caption{Residuals, \chi^{2}, and degrees of freedom for %s category. A %i parameter fit is needed to describe these data.}"%(fLabel,prmt)
   print "\label{tab:%s}"%fLabel
   print "\end{table}"
-  with open("ftest_2016/f-test_VV.tex", "a") as text_file:
-    text_file.write("\\begin{table}[htb]\n")
-    text_file.write("\centering\n")
-    text_file.write("\\begin{tabular}{|l c c c |}\n")
-    text_file.write("\hline\n")
-    text_file.write( "\multicolumn{4}{|c|}{%s}\\\\\n"%fLabel)
-    text_file.write( "\hline\n")
-    text_file.write( "Function & Residuals & $\chi^2$ & ndof \\\\\n")
-    text_file.write( "\hline\n")
-    text_file.write( "2 par & %.3f & %.3f & %i \\\\\n"%(rss[0],chi2[0],dof[0]))
-    text_file.write( "3 par & %.3f & %.3f & %i \\\\\n"%(rss[1],chi2[1],dof[1]))
-    text_file.write( "4 par & %.3f & %.3f & %i \\\\\n"%(rss[2],chi2[2],dof[2]))
+  #with open("ftest_2016/f-test_VV.tex", "a") as text_file:
+    #text_file.write("\\begin{table}[htb]\n")
+    #text_file.write("\centering\n")
+    #text_file.write("\\begin{tabular}{|l c c c |}\n")
+    #text_file.write("\hline\n")
+    #text_file.write( "\multicolumn{4}{|c|}{%s}\\\\\n"%fLabel)
+    #text_file.write( "\hline\n")
+    #text_file.write( "Function & Residuals & $\chi^2$ & ndof \\\\\n")
+    #text_file.write( "\hline\n")
+    #text_file.write( "2 par & %.3f & %.3f & %i \\\\\n"%(rss[0],chi2[0],dof[0]))
+    #text_file.write( "3 par & %.3f & %.3f & %i \\\\\n"%(rss[1],chi2[1],dof[1]))
+    #text_file.write( "4 par & %.3f & %.3f & %i \\\\\n"%(rss[2],chi2[2],dof[2]))
     # text_file.write( "5 par & %.3f & %.3f & %i \\\\\n"%(rss[3],chi2[3],dof[3]))
     # text_file.write( "Alt. 4 par& %.3f & %.3f & %i \\"%(rss[4],chi2[4],dof[4])
-    text_file.write( "\hline\n")
-    text_file.write( "\hline\n")
-    text_file.write( "Fishers23 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\\\\n"%(fisher[0],ConfidenceLevel2[0]))
-    text_file.write( "Fishers34 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\\\\n"%(fisher[1],ConfidenceLevel2[1]))
+    #text_file.write( "\hline\n")
+    #text_file.write( "\hline\n")
+    #text_file.write( "Fishers23 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\\\\n"%(fisher[0],ConfidenceLevel2[0]))
+    #text_file.write( "Fishers34 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\\\\n"%(fisher[1],ConfidenceLevel2[1]))
     # text_file.write( "Fishers45 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\\\\n"%(fisher[2],ConfidenceLevel2[2]))
     # text_file.write( "Fishers3Alt4 \multicolumn{2}{l}{%.3f}&CL \multicolumn{2}{l|}{%.3f}\\"%(fisher[3],ConfidenceLevel[3]))
-    text_file.write( "\hline\n")
-    text_file.write( "\end{tabular}\n")
-    text_file.write( "\caption{Residuals, $\chi^{2}$, and degrees of freedom for the %s category. A %i parameter fit is needed to describe these data.}\n"%(fLabel,prmt))
-    text_file.write( "\label{tab:%s}\n"%fLabel)
-    text_file.write( "\end{table}\n")
+    #text_file.write( "\hline\n")
+    #text_file.write( "\end{tabular}\n")
+    #text_file.write( "\caption{Residuals, $\chi^{2}$, and degrees of freedom for the %s category. A %i parameter fit is needed to describe these data.}\n"%(fLabel,prmt))
+    #text_file.write( "\label{tab:%s}\n"%fLabel)
+    #text_file.write( "\end{table}\n")
 
   # DrawFit(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile) #when final fit is decided, plots only one fit
   FitComparisons(hMassNEW,g,fits,residuals,FunctionType,nPar,fFitXmin,fFitXmax,fLabel,fOutputFile,chi2,dof,doSigmaBand,histoCI) #draw all fit functions with residuals
@@ -444,7 +444,7 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
   hist_fit_residual_vsMass =  TH1D("hist_fit_residual_vsMass","hist_fit_residual_vsMass",fNbins,xbins)
   
   for bin in range (1,hMassNEW.GetNbinsX()):
-    if( hMassNEW.GetXaxis().GetBinLowEdge(bin+1)>=fFitXmin and hMassNEW.GetXaxis().GetBinUpEdge(bin-1)<=fFitXmax ):
+    if( hMassNEW.GetXaxis().GetBinLowEdge(bin)>=fFitXmin and hMassNEW.GetXaxis().GetBinUpEdge(bin)<=fFitXmax ):
        NumberOfVarBins += 1
        data = hMassNEW.GetBinContent(bin)
        # data = g.Integral(hMassNEW.GetXaxis().GetBinLowEdge(bin) , hMassNEW.GetXaxis().GetBinUpEdge(bin) )
@@ -457,7 +457,12 @@ def doFit(FunctionType,hMassNEW,g,fFitXmin,fFitXmax,fNbins,xbins,fLabel):
          err_tot = err_data_high
        else:
          err_tot = err_data_low
-       fit_residual = (data - fit) / err_tot
+       if err_tot!=0:  
+         fit_residual = (data - fit) / err_tot
+       else:
+         print "Warning: err_tot = 0 !"
+         fit_residual = 0
+
        err_fit_residual = 1
        
        if (hMassNEW.GetBinContent(bin)>0):
@@ -517,10 +522,10 @@ def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin
   addInfo = TPaveText(0.2358691,0.04035043,0.5050171,0.1870085,"NDC")
   
   addInfo.AddText(fLabel)
-  # addInfo.AddText("65 GeV < M_{P} < 105 GeV")
-  # addInfo.AddText("|#eta| < 2.4, p_{T} > 200 GeV")
-  # addInfo.AddText("Pruned mass sideband")
-  # addInfo.AddText("M_{jj} > 1 TeV, |#Delta#eta_{jj}| < 1.3")
+  addInfo.AddText("65 GeV < M_{P} < 105 GeV")
+  addInfo.AddText("|#eta| < 2.4, p_{T} > 200 GeV")
+  addInfo.AddText("Pruned mass sideband")
+  addInfo.AddText("M_{jj} > 1 TeV, |#Delta#eta_{jj}| < 1.3")
   addInfo.SetFillColor(0)
   addInfo.SetLineColor(0)
   addInfo.SetFillStyle(0)
@@ -563,7 +568,7 @@ def DrawFit(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fFitXmin
   legend.AddEntry(M1Bkg[0], "Fit","l")
   # legend.AddEntry(M1Bkg[3], "Fit","l")
   legend.Draw("same")
-  addInfo.Draw("same")
+  #addInfo.Draw("same")
   p11_1.RedrawAxis()
   p11_1.Update()
   p11_1.GetFrame().Draw()
@@ -658,8 +663,8 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   addInfo.SetLineColor(0)
   addInfo.SetFillStyle(0)
   addInfo.SetBorderSize(0)
-  # addInfo.SetTextFont(42)
-  # addInfo.SetTextSize(0.040)
+  addInfo.SetTextFont(42)
+  addInfo.SetTextSize(0.040)
   addInfo.SetTextAlign(12)
   
   vFrame = p11_1.DrawFrame(fFitXmin,0.0005,fFitXmax,hMassNEW.GetMaximum()*20.0)  
@@ -772,8 +777,8 @@ def FitComparisons(hMassNEW,g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,f
   
   cname = fOutputFile+".pdf"
   c2.SaveAs(cname)
-  c2.SaveAs(cname.replace("pdf","root"),"root")
-  c2.SaveAs(cname.replace("pdf","C"),"C")
+  #c2.SaveAs(cname.replace("pdf","root"),"root")
+  #c2.SaveAs(cname.replace("pdf","C"),"C")
   time.sleep(10)
 
  
@@ -790,11 +795,14 @@ if __name__ == '__main__':
              4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808]
   
   channels = ["WW",'WZ','ZZ']
-  # channels = ['ZZ']
+  #channels = ['ZZ']
   fitmax = 7000
   for ch in channels:
-    performFit("input/JetHT_VV.root", "DijetMassHighPuri%s"%ch, len(massBins)-1, massBins, 955, fitmax, "%s category, HP"%ch, "ftest_2016/%sHP"%ch, doSigmaBand = False)
-    performFit("input/JetHT_VV.root", "DijetMassLowPuri%s"%ch , len(massBins)-1, massBins, 955, fitmax, "%s category, LP"%ch, "ftest_2016/%sLP"%ch, doSigmaBand = False)
+    performFit("../processedData.root", ch +"HP", len(massBins)-1, massBins, 1050, fitmax, "%s category, HP"%ch, "%sHP"%ch, doSigmaBand = False)
+    performFit("../processedData.root", ch+"LP" , len(massBins)-1, massBins, 1050, fitmax, "%s category, LP"%ch, "%sLP"%ch, doSigmaBand = False)
+    performFit("../processedData.root", ch+"HPBtagged", len(massBins)-1, massBins, 1050, fitmax, "%s category, HPBtagged"%ch, "%sHPBtagged"%ch, doSigmaBand = False)
+    performFit("../processedData.root", ch+"LPBtagged" , len(massBins)-1, massBins, 1050, fitmax, "%s category, LPBtagged"%ch, "%sLPBtagged"%ch, doSigmaBand = False)
+  wait = raw_input()
   # sys.stdout = orig_stdout
 
  

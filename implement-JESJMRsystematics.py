@@ -1,19 +1,18 @@
 from ROOT import *
 import fileinput
 
-path = "/shome/thaarres/EXOVVAnalysisRunII/LimitCode/CMSSW_7_1_5/src/DijetCombineLimitCode/JESJERsystematics/"
-
+path = "/usr/users/dschaefer/SFrame_setup/ExoDiBosonAnalysis/forSystematics/"
 prefixDCin = "datacards/CMS_jj_"
 prefixDCout = "datacards/CMS_jj_"
 
 prefix = "EXOVVSystematics/dijet"
 
-purities = ["LP","HP"]
+purities = ["LP","HP","LPBtagged","HPBtagged"]
 channels = ["WW","WZ","ZZ"]
-signals=["BulkWW","BulkZZ","WZ","ZprimeWW"]
-
-masses_interpolated =[m*100 for m in range(10,42+1)]
-massesInSystematics = [1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+#signals=["BulkWW","BulkZZ","WZ","ZprimeWW"]
+signals = ["BulkZZ"]
+masses_interpolated =[m*100 for m in range(12,40+1)]
+massesInSystematics = [1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
 
 #
 # signals=["qW","qZ"]
@@ -34,16 +33,20 @@ for purity in purities:
       ii += 1
       for ch in channels:
         chnl = ch + "_"
+        if purity == "HPBtagged" or purity == "HP":
+            testPurity = "HP"
+        if purity == "LPBtagged" or purity == "LP":
+            testPurity = "LP"
         if signal.find("BulkWW")  !=-1: label = "BulkWW"
         if signal.find("BulkZZ")  !=-1: label = "BulkZZ"
         if signal.find("WZ")      !=-1: label = "WprimeWZ"
         if signal.find("ZprimeWW")!=-1: label = "ZprimeWW"
         if signal.find("qW") !=-1: label = "QstarQW"
         if signal.find("qZ") !=-1: label = "QstarQZ"
-        fname_JMS = path+"/JMS/JMSsys_"+purity+chnl+label+".txt"
-        fname_JMR = path+"/JMR/JMRsys_"+purity+chnl+label+".txt"
-        fname_JES = path+"/JES/JESsys_"+purity+chnl+label+".txt"
-        fname_JER = path+"/JER/JERsys_"+purity+chnl+label+".txt"
+        fname_JMS = path+"/JMS/JMSsys_"+testPurity+chnl+label+".txt"
+        fname_JMR = path+"/JMR/JMRsys_"+testPurity+chnl+label+".txt"
+        fname_JES = path+"/JES/JESsys_"+testPurity+chnl+label+".txt"
+        fname_JER = path+"/JER/JERsys_"+testPurity+chnl+label+".txt"
         JMSUP={}
         JMSDOWN={}
         JMRUP={}
